@@ -203,7 +203,7 @@ $(document).ready(function() {
 						// $(".delete-div").html(deleteContent);
 
 					} else {
-						$("div.img-validate, .build-next").removeClass('scnd_step');
+						// $("div.img-validate, .build-next").removeClass('scnd_step');
 					}
 
 				});
@@ -225,6 +225,7 @@ $(document).ready(function() {
 	activeWhizard.find('p').css('font-weight', 'bold');
 
 	$("div.img-validate, .build-next").addClass('scnd_step');
+	$("div.img-download").addClass('thrd_step');
 
 	
 	// Build Whizerd
@@ -459,8 +460,7 @@ $(document).ready(function() {
 									
 								}else{
 
-									console.log("Testing");
-									console.log($this);
+									
 									$("input.validate_visisted").val('');
 									if($.tooltipster.instances($('.build-next')).length > 0){
 
@@ -484,6 +484,10 @@ $(document).ready(function() {
 										},
 									})
 									.done(function(response) {
+
+										$('<br><i class="fa fa-refresh fa-spin refresh_definition" style="font-size:24px"></i>').insertAfter($(".system_defination_btn").find('div button.build-next'));
+
+
 										var definition_id = response;
 										var close_interval;
 										close_interval = setInterval(function(){
@@ -495,14 +499,18 @@ $(document).ready(function() {
 													strategy_definition_id: definition_id
 												},
 											})
-											.done(function(response) {
+											.done(function(response) {											
+
 												if(response.length > 8){
+
+													$("i.refresh_definition").hide();
 
 													if($.tooltipster.instances($('.build-next')).length > 0){
 
 														$(".build-next").tooltipster('destroy');			
 
 													}
+
 													var definition = '<div style="width: 320px; position: relative;"><span class="close_tooltip"><i class="fa fa-close"></i></span>'+response+'</div>'
 													$('span.append_response').html(definition);
 
