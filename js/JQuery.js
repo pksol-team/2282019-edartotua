@@ -321,9 +321,9 @@ $(document).ready(function() {
 				var error_txt = $("input.error_code_data").attr('data-error');
 				
 				var error_0 = error_txt+" "+$("input.error_code_data").attr('data-error-0');
-				var error_1 = error_txt+" "+$("input.error_code_data").attr('data-error-1');
-				var error_2 = error_txt+" "+$("input.error_code_data").attr('data-error-2');
-				var error_3 = error_txt+" "+$("input.error_code_data").attr('data-error-3');
+				// var error_1 = error_txt+" "+$("input.error_code_data").attr('data-error-1');
+				// var error_2 = error_txt+" "+$("input.error_code_data").attr('data-error-2');
+				// var error_3 = error_txt+" "+$("input.error_code_data").attr('data-error-3');
 				
 				ajaxIndex++;    
 
@@ -331,58 +331,64 @@ $(document).ready(function() {
 				if (ajaxIndex == 1) {
 
 					if (xhr.responseText.length > 20 || settings.url.includes('system_defination')) {
-						var check_li_first =[];
-						var check_li_last =[];
-						var chack_two_arrow = [];
 
-						// Validation elements arrangement
-						$('#nav-tabContent2 .omc.tab-pane').each(function(index, tabs) {
+						
+						// var check_li_first =[];
+						// var check_li_last =[];
+						// var chack_two_arrow = [];
 
-							var $tabs = $(tabs);
-							var RowData = '';
+						// // Validation elements arrangement
+						// $('#nav-tabContent2 .omc.tab-pane').each(function(index, tabs) {
+
+						// 	var $tabs = $(tabs);
+						// 	var RowData = '';
 
 
-							$tabs.find('.trash').each(function(index, rows) {
+						// 	$tabs.find('.trash').each(function(index, rows) {
 
-								var $rows = $(rows);
+						// 		var $rows = $(rows);
 
-								var li_length = $rows.find('li').length;
+						// 		var li_length = $rows.find('li').length;
 
-								var third_last_li = li_length-2;
+						// 		var third_last_li = li_length-2;
 
-								var first_li = $rows.find('li:first-child');
+						// 		var first_li = $rows.find('li:first-child');
 								
-								var scnd_li = $rows.find('li:nth-child('+third_last_li+')');
+						// 		var scnd_li = $rows.find('li:nth-child('+third_last_li+')');
 
 
-								check_li_first.push(first_li.hasClass('sequence_li'));
-								check_li_last.push(scnd_li.hasClass('sequence_li'));
+						// 		check_li_first.push(first_li.hasClass('sequence_li'));
+						// 		check_li_last.push(scnd_li.hasClass('sequence_li'));
 								
-								$rows.find('li').each(function(index, li) {
+						// 		$rows.find('li').each(function(index, li) {
 
-									var $li = $(li);
+						// 			var $li = $(li);
 									
-									var boolean_ = $li.hasClass('sequence_li') && $li.next().hasClass('sequence_li');
-									chack_two_arrow.push(boolean_);
+						// 			var boolean_ = $li.hasClass('sequence_li') && $li.next().hasClass('sequence_li');
+						// 			chack_two_arrow.push(boolean_);
 
 									
-								});
-							});
-						});
+						// 		});
+						// 	});
+						// });
 
-						// Disply error popup
-						if(jQuery.inArray(true, check_li_last) != '-1' || jQuery.inArray(true, check_li_first) != '-1' || jQuery.inArray(true, chack_two_arrow) != '-1'){
-							if(jQuery.inArray(true, check_li_first) != '-1'){
-								alert(error_1);
-							}
-							if(jQuery.inArray(true, check_li_last) != '-1'){
-								alert(error_2);
-							}
-							if(jQuery.inArray(true, chack_two_arrow) != '-1'){
-								alert(error_3);
-							}						
-						}
-						else{
+						// // Disply error popup
+						// if(jQuery.inArray(true, check_li_last) != '-1' || jQuery.inArray(true, check_li_first) != '-1' || jQuery.inArray(true, chack_two_arrow) != '-1'){
+						// 	if(jQuery.inArray(true, check_li_first) != '-1'){
+						// 		alert(error_1);
+						// 	}
+						// 	if(jQuery.inArray(true, check_li_last) != '-1'){
+						// 		alert(error_2);
+						// 	}
+						// 	if(jQuery.inArray(true, chack_two_arrow) != '-1'){
+						// 		alert(error_3);
+						// 	}						
+						// }
+						// else{
+
+							// console.log(validate_strategy($));
+						if(validate_strategy($) == true){
+
 							// Display validation screen
 							if(!$this.hasClass('build-next')){
 
@@ -658,6 +664,9 @@ $(document).ready(function() {
 	$(document).on('click', '.thrd_step', function() {
 
 
+	 			// $('#save_data').trigger('click');	
+	 			console.log(validate_strategy($));
+		if(validate_strategy($) == true){
 
 		$(".system_defination_btn").hide();
 		$("input.validate_visisted").val('');
@@ -774,6 +783,7 @@ $(document).ready(function() {
 		}).animate({
 			"left": "0"
 		}, 'slow');
+	}
 	});
 
 	// Previous Arrow
@@ -1096,6 +1106,70 @@ function setTdWidth($) {
 	$('table tr td').width($('#nav-tab2').outerWidth() - 24);
 }
 
+
+function validate_strategy($){
+
+	var error_txt = $("input.error_code_data").attr('data-error');
+	
+	// var error_0 = error_txt+" "+$("input.error_code_data").attr('data-error-0');
+	var error_1 = error_txt+" "+$("input.error_code_data").attr('data-error-1');
+	var error_2 = error_txt+" "+$("input.error_code_data").attr('data-error-2');
+	var error_3 = error_txt+" "+$("input.error_code_data").attr('data-error-3');
+
+	var check_li_first =[];
+	var check_li_last =[];
+	var chack_two_arrow = [];
+
+	// Validation elements arrangement
+	$('#nav-tabContent2 .omc.tab-pane').each(function(index, tabs) {
+
+		var $tabs = $(tabs);
+		var RowData = '';
+
+
+		$tabs.find('.trash').each(function(index, rows) {
+
+			var $rows = $(rows);
+
+			var li_length = $rows.find('li').length;
+
+			var third_last_li = li_length-2;
+
+			var first_li = $rows.find('li:first-child');
+			
+			var scnd_li = $rows.find('li:nth-child('+third_last_li+')');
+
+
+			check_li_first.push(first_li.hasClass('sequence_li'));
+			check_li_last.push(scnd_li.hasClass('sequence_li'));
+			
+			$rows.find('li').each(function(index, li) {
+
+				var $li = $(li);
+				
+				var boolean_ = $li.hasClass('sequence_li') && $li.next().hasClass('sequence_li');
+				chack_two_arrow.push(boolean_);
+
+				
+			});
+		});
+	});
+
+	// Disply error popup
+	if(jQuery.inArray(true, check_li_last) != '-1' || jQuery.inArray(true, check_li_first) != '-1' || jQuery.inArray(true, chack_two_arrow) != '-1'){
+		if(jQuery.inArray(true, check_li_first) != '-1'){
+			alert(error_1);
+		}
+		if(jQuery.inArray(true, check_li_last) != '-1'){
+			alert(error_2);
+		}
+		if(jQuery.inArray(true, chack_two_arrow) != '-1'){
+			alert(error_3);
+		}						
+	}else{
+		return true;
+	}
+}
 
 $(document).on('click', '.open_scnd_tooltip', function(event) {
 	event.preventDefault();
