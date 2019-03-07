@@ -185,19 +185,22 @@ $(document).ready(function() {
 				})
 				.done(function(response) {
 
-					var new_data = $("input.element_data_new").val();
+					
 
-					if(new_data == ''){
-						$("input.element_data_new").val(response);						
-					}else{
-						$("input.element_data_old").val(new_data);
-						$("input.element_data_new").val(response);
-					}
+					
 					// console.log(response);
 					button.find('img').hide();
 					button.find('span').text('Saved');
 
 					if (response.length > 20) {
+						var new_data = $("input.element_data_new").val();
+
+						if(new_data == ''){
+							$("input.element_data_new").val(response);						
+						}else{
+							$("input.element_data_old").val(new_data);
+							$("input.element_data_new").val(response);
+						}
 						$("div.img-validate, .build-next").addClass('scnd_step');
 						$("div.img-validate img, .build-next, div.right-arrow img").css('cursor', 'pointer');
 						// $(".delete-div").html(deleteContent);
@@ -484,8 +487,10 @@ $(document).ready(function() {
 										},
 									})
 									.done(function(response) {
-
-										$('<br><i class="fa fa-refresh fa-spin refresh_definition" style="font-size:24px"></i>').insertAfter($(".system_defination_btn").find('div button.build-next'));
+										var btn_text = $(".system_defination_btn").find('div button.build-next span').html();
+										var refresh_icon = btn_text+'<i class="fa fa-refresh fa-spin refresh_definition" style="font-size:18px; margin-left: 10px;"></i>';
+										$(".system_defination_btn").find('div button.build-next span').html(refresh_icon);
+									
 
 
 										var definition_id = response;
@@ -539,8 +544,6 @@ $(document).ready(function() {
 										}, 1000);
 									});
 								}
-								
-
 							}
 							// else{
 							// 	var old_value = $("input.element_data_old").val();
@@ -632,7 +635,7 @@ $(document).ready(function() {
 							// }
 						}												
 					}
-					 else {		
+					else {		
 
 					 	if(settings.url.includes('save_data')){
 							alert(error_0);
@@ -642,7 +645,7 @@ $(document).ready(function() {
 				}
 
 			});
-
+			console.log("validate");
 			setTimeout(function(){
 			$(".system_defination_btn").show();
 			   
@@ -655,11 +658,12 @@ $(document).ready(function() {
 	$(document).on('click', '.thrd_step', function() {
 
 
+
 		$(".system_defination_btn").hide();
 		$("input.validate_visisted").val('');
-
 		var old_value = $("input.element_data_old").val();
 		var new_value = $("input.element_data_new").val();
+		 console.log(old_value)
 		if(old_value != new_value){															
 			if(!$("button.build-next").hasClass('button_clicked')){
 				$(".system-defination").html('<div style="position: relative;top: 50%;"><img src="images/ajax-loader-green.gif" style="margin-top: -2%;"></div>');
