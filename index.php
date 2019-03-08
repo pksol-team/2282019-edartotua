@@ -3,12 +3,22 @@
 <?php
 	
 	require('connection.php');
-	// require(dirname(dirname(dirname(dirname(dirname(__FILE__))))).'/wp-authenticate.php');
+	require(dirname(dirname(dirname(dirname(dirname(__FILE__))))).'/wp-authenticate.php');
 	
 	
 	global $lang_id;
 	$lang_ob = mysqli_query($con,"SELECT * FROM `languajes` WHERE `DEFAULT`='1'");
 	$lang_id = mysqli_fetch_assoc($lang_ob)['LANGUAJE_ID'];
+	function encodes($text) {
+				
+				if ($GLOBALS['lang_id'] == 'ES') {
+					$text = htmlentities($text, ENT_QUOTES, "ISO-8859-1");
+					$text = html_entity_decode($text);
+					return $text;
+				} else {
+					return $text;
+				}
+			}
 ?>
 
 
@@ -24,10 +34,10 @@
 	
 <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
 <?php 	
+
 		if ( $_GET['action'] === 'save_data' ) {		
 
-		$user_id = 0;
-		// $user_id = get_current_user_id();
+		$user_id = get_current_user_id();
 		$open_scenario = $_POST['OPEN'];
 		$modify_scenario = $_POST['MODIFY'];
 		$close_scenario = $_POST['CLOSE'];
@@ -52,9 +62,7 @@
 var_dump($response);
 	}
 	else if($_GET['action'] == 'validate_data'){
-		$user_id = 0;
-				
-				// $user_id = get_current_user_id();
+				$user_id = get_current_user_id();
 				$ticker = $_POST['ticker'];
 				$timeFrame = $_POST['time_frame'];
 				$start_time = $_POST['start-date'];
@@ -210,8 +218,7 @@ var_dump($response);
 			$check = $_POST['insert_data'];
 			if(!empty($check)){
 
-		$user_id = 0;
-				// $user_id = get_current_user_id();
+				$user_id = get_current_user_id();
 				$session_id = $_POST['session_id'];
 				$status = 'N';
 
@@ -236,7 +243,7 @@ var_dump($response);
 				$id = $_POST['strategy_definition_id'];
 				$value = mysqli_query($con,"SELECT * FROM session_strategy_definition WHERE session_strat_def_id = $id AND estatus = 'F'");
 				if(mysqli_num_rows($value) > 0){
-					echo mysqli_fetch_assoc($value)['definition_text'];				
+					echo encodes(mysqli_fetch_assoc($value)['definition_text']);				
 				}
 			}
 			
@@ -288,16 +295,7 @@ var_dump($response);
 				LANG_ID = '".$lang_id."'
 			");
 
-			function encodes($text) {
-				
-				if ($GLOBALS['lang_id'] == 'ES') {
-					$text = htmlentities($text, ENT_QUOTES, "ISO-8859-1");
-					$text = html_entity_decode($text);
-					return $text;
-				} else {
-					return $text;
-				}
-			}
+			
 
 			$save_text = mysqli_fetch_assoc($el_save_obj)['TEXT'];
 			$fetchcing_add_seq = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='STRATEGY_TEXT5' AND LANG_ID='$lang_id'");
@@ -889,6 +887,27 @@ var_dump($response);
 					</div>
 				</div>
 
+				<!-- <div class="row">
+					<div class="col-sm-12">
+						
+						<?php $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>
+						
+						<input type="hidden" name="siteLink" value="<?= $actual_link?>?action=chart_data" data-validateId = "">
+
+						<button type="button" id="save_data" class="btn btn-success" data-action="<?= $actual_link; ?>?action=save_data" style="float: right;"> <img src="images/ajax-loader.gif" style="display: none;">  <span>Save Strategy</span> </button>
+						
+						<?php
+							$strategy_summary_text = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='STRATEGY_TEXT3' AND LANG_ID='$lang_id'");
+						?>
+						<button type="button" id="close_tooltipseter_" class="btn build-next" data-tooltip-content="#tooltip_content_definition" data-action="<?= $actual_link; ?>?action=system_defination" style="margin-top: 20px; margin-left: -14px;float: left;">  <span><?= encodes(mysqli_fetch_assoc($strategy_summary_text)['TEXT']); ?></span> </button>
+						<br>
+
+					</div>
+				</div> -->
+		
+	
+
+
 				</div>
 			</div>
 		</div>
@@ -914,7 +933,6 @@ var_dump($response);
 							<?php
 								$strategyText = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='STRATEGY_TEXT3' AND LANG_ID='$lang_id'");								
 							?>
-							
 						</div>
 						<div class="col-sm-4">		
 							<form class="validate-form">
@@ -973,9 +991,8 @@ var_dump($response);
 								</div>					
 								<!--  Extra Fields -->
 								<?php
-								$user_id = 0;
 
-								// $user_id = get_current_user_id();
+								$user_id = get_current_user_id();
 									$strategy_id = mysqli_query($con,"SELECT sesion_id FROM session_strategy WHERE user_id = $user_id");
 									
 									$id = mysqli_fetch_assoc($strategy_id);								 
@@ -1006,18 +1023,15 @@ var_dump($response);
 							</div>				
 						</div>	
 						<!-- <div class="col-sm-12">
+							
 							<button type="button" class="btn summary-btn" style="float: left;">  <span><?= encodes(mysqli_fetch_assoc($strategyText)['TEXT']); ?></span> </button>	
-						</div> -->							
+						</div> -->	 
 				</div>
-
-				
-				
 			</div>
 		</div>
+
+
 	
-
-		
-
 		<div class="download-tab">	
 			<div class="container-fluid h-100 py-6">			
 				<div class="row">
@@ -1055,13 +1069,11 @@ var_dump($response);
 				<?php
 					$strategy_summary_text = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='STRATEGY_TEXT3' AND LANG_ID='$lang_id'");
 				?>
-				<button type="button" id="close_tooltipseter_" class="btn build-next" data-tooltip-content="#tooltip_content_definition" data-action="<?= $actual_link; ?>?action=system_defination" style="margin-top: 20px; margin-left: -14px;float: left;">  <span><?= encodes(mysqli_fetch_assoc($strategy_summary_text)['TEXT']); ?> </span> </button>
-
+				<button type="button" id="close_tooltipseter_" class="btn build-next" data-tooltip-content="#tooltip_content_definition" data-action="<?= $actual_link; ?>?action=system_defination" style="margin-top: 20px; margin-left: 7px;float: left;">  <span><?= encodes(mysqli_fetch_assoc($strategy_summary_text)['TEXT']); ?></span> </button>
 				<!-- <button type="button" class="btn build-next" style="margin-top: 20px; margin-left: -14px;float: left;">  <span><?= encodes(mysqli_fetch_assoc($strategy_summary_text)['TEXT']); ?></span> </button> -->
 				<br>
 
 			</div>
-			<!-- <br> -->
 		</div>
 	
 	<?php
@@ -1093,7 +1105,7 @@ var_dump($response);
 
 		<input type="hidden" class="error_code_data" data-error="<?= encodes(mysqli_fetch_assoc($error_data)['TEXT'])?>" data-error-0="<?= encodes(mysqli_fetch_assoc($error_code_0)['ERROR_DESC'])?>" data-error-1="<?= encodes(mysqli_fetch_assoc($error_code_1)['ERROR_DESC'])?>" data-error-2="<?= encodes(mysqli_fetch_assoc($error_code_2)['ERROR_DESC'])?>" data-error-3="<?= encodes(mysqli_fetch_assoc($error_code_3)['ERROR_DESC'])?>">
 	
-		<input type="hidden" class="validate_visisted">
+		<input type="hidden" class="validate_visisted">	
 		<input type="hidden" class="element_data_old">
 		<input type="hidden" class="element_data_new">
 	

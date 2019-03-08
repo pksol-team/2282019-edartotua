@@ -120,7 +120,7 @@ function drag_and_drop_elements($, type, counter) {
 
 				$(".build-next").tooltipster('destroy');			
 
-			}	
+			}
 
 			$(".build-next").removeClass('button_clicked');						
 
@@ -217,7 +217,8 @@ function drag_and_drop_elements($, type, counter) {
 
 				$(".build-next").tooltipster('destroy');			
 
-			}	
+			}
+
 			$(".build-next").removeClass('button_clicked');			
 			
 			var current_row_tr = ui.draggable.closest('tr').find('.trash');
@@ -426,7 +427,7 @@ $(document).ready(function() {
 
 				$(".build-next").tooltipster('destroy');			
 
-			}	
+			}
 
 			$(".build-next").removeClass('button_clicked');			
 
@@ -500,13 +501,14 @@ $(document).ready(function() {
 
 	   // Delete arrow 
 	    $(document).on('click', '.delete_arrow', function(e) {   
+	    	
 	    	e.stopPropagation();
 			
 			if($.tooltipster.instances($('.build-next')).length > 0){
 
 				$(".build-next").tooltipster('destroy');			
 
-			}	
+			}
 
 			$(".build-next").removeClass('button_clicked');			
 
@@ -597,7 +599,7 @@ $(document).ready(function() {
 
 	    		$(".build-next").tooltipster('destroy');			
 
-	    	}	
+	    	}
 
 			$(".build-next").removeClass('button_clicked');			
 

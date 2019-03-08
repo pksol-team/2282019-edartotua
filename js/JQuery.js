@@ -185,10 +185,7 @@ $(document).ready(function() {
 				})
 				.done(function(response) {
 
-					
-
-					
-					// console.log(response);
+					console.log(response);
 					button.find('img').hide();
 					button.find('span').text('Saved');
 
@@ -229,10 +226,10 @@ $(document).ready(function() {
 
 	$("div.img-validate, .build-next").addClass('scnd_step');
 	$("div.img-download").addClass('thrd_step');
-
+	
 	
 	// Build Whizerd
-	$('div.img-build').on('click', function(e) {
+	$('div.img-build').on('click', function() {
 
 		$('div.whizerd:eq(1)').find('p').css('font-weight', 'bold');
 		$('div.whizerd:eq(1)').addClass('active');
@@ -279,11 +276,10 @@ $(document).ready(function() {
 			position: 'absolute',
 			left: '9999px'
 		});
-
 		$(".system_defination_btn").show(1);
 
-
 	});
+
 		$(document).on('click', '.scnd_step', function() {
 
 			$this = $(this);
@@ -315,15 +311,9 @@ $(document).ready(function() {
 
 			$(document).ajaxComplete(function(event, xhr, settings) {
 
-				// console.log(settings);
-
-
 				var error_txt = $("input.error_code_data").attr('data-error');
 				
 				var error_0 = error_txt+" "+$("input.error_code_data").attr('data-error-0');
-				// var error_1 = error_txt+" "+$("input.error_code_data").attr('data-error-1');
-				// var error_2 = error_txt+" "+$("input.error_code_data").attr('data-error-2');
-				// var error_3 = error_txt+" "+$("input.error_code_data").attr('data-error-3');
 				
 				ajaxIndex++;    
 
@@ -332,63 +322,7 @@ $(document).ready(function() {
 
 					if (xhr.responseText.length > 20 || settings.url.includes('system_defination')) {
 
-						
-						// var check_li_first =[];
-						// var check_li_last =[];
-						// var chack_two_arrow = [];
-
-						// // Validation elements arrangement
-						// $('#nav-tabContent2 .omc.tab-pane').each(function(index, tabs) {
-
-						// 	var $tabs = $(tabs);
-						// 	var RowData = '';
-
-
-						// 	$tabs.find('.trash').each(function(index, rows) {
-
-						// 		var $rows = $(rows);
-
-						// 		var li_length = $rows.find('li').length;
-
-						// 		var third_last_li = li_length-2;
-
-						// 		var first_li = $rows.find('li:first-child');
-								
-						// 		var scnd_li = $rows.find('li:nth-child('+third_last_li+')');
-
-
-						// 		check_li_first.push(first_li.hasClass('sequence_li'));
-						// 		check_li_last.push(scnd_li.hasClass('sequence_li'));
-								
-						// 		$rows.find('li').each(function(index, li) {
-
-						// 			var $li = $(li);
-									
-						// 			var boolean_ = $li.hasClass('sequence_li') && $li.next().hasClass('sequence_li');
-						// 			chack_two_arrow.push(boolean_);
-
-									
-						// 		});
-						// 	});
-						// });
-
-						// // Disply error popup
-						// if(jQuery.inArray(true, check_li_last) != '-1' || jQuery.inArray(true, check_li_first) != '-1' || jQuery.inArray(true, chack_two_arrow) != '-1'){
-						// 	if(jQuery.inArray(true, check_li_first) != '-1'){
-						// 		alert(error_1);
-						// 	}
-						// 	if(jQuery.inArray(true, check_li_last) != '-1'){
-						// 		alert(error_2);
-						// 	}
-						// 	if(jQuery.inArray(true, chack_two_arrow) != '-1'){
-						// 		alert(error_3);
-						// 	}						
-						// }
-						// else{
-
-							// console.log(validate_strategy($));
 						if(validate_strategy($) == true){
-
 							// Display validation screen
 							if(!$this.hasClass('build-next')){
 
@@ -457,7 +391,6 @@ $(document).ready(function() {
 									"left": "9999px"
 								}, 'slow');
 								// $(".build-next").removeClass('button_clicked');
-
 							}
 							else{
 								
@@ -551,94 +484,6 @@ $(document).ready(function() {
 									});
 								}
 							}
-							// else{
-							// 	var old_value = $("input.element_data_old").val();
-							// 	var new_value = $("input.element_data_new").val();
-							// 	if(old_value == new_value){															
-							// 		var old_defintion = $(".system-defination").html();
-							// 		if($.tooltipster.instances($('.build-next')).length > 0){
-
-							// 			$(".build-next").tooltipster('destroy');			
-
-							// 		}
-							// 		var definition = '<div style="width: 320px; position: relative;">'+old_defintion+'</div>'
-							// 		$('span.append_response').html(definition);
-
-							// 		$('.build-next').tooltipster({
-							// 		    	contentCloning: true,
-							// 		    	trigger: 'hover',
-							// 		    	theme: 'tooltipster-light',
-							// 				interactive: true,
-							// 		});
-
-							// 		$(".build-next").tooltipster('show');
-							// 	}else{
-							// 		$this.addClass('button_clicked');
-							// 		$(".system-defination").html('<div style="position: relative;top: 50%;"><img src="images/ajax-loader-green.gif" style="margin-top: -2%;"></div>');
-
-							// 		$this.attr('disabled', true);
-							// 		var session_id = $("input[name=session_strategy_id]").val();
-							// 		var url = $this.attr('data-action');
-									
-																	
-							// 		$.ajax({
-							// 			url: url,
-							// 			type: 'POST',
-							// 			data: {
-							// 				insert_data: 'insertion',
-							// 				session_id: session_id
-							// 			},
-							// 		})
-							// 		.done(function(response) {
-							// 			var definition_id = response;
-							// 			var close_interval;
-							// 			close_interval = setInterval(function(){
-							// 				$.ajax({
-							// 					url: url,
-							// 					type: 'POST',
-							// 					data: {
-							// 						insert_data: '',
-							// 						strategy_definition_id: definition_id
-							// 					},
-							// 				})
-							// 				.done(function(response) {
-							// 					if(response.length > 8){
-
-							// 						if($.tooltipster.instances($('.build-next')).length > 0){
-
-							// 							$(".build-next").tooltipster('destroy');			
-
-							// 						}
-							// 						var definition = '<div style="width: 320px; position: relative;">'+response+'</div>'
-							// 						$('span.append_response').html(definition);
-
-							// 						$('.build-next').tooltipster({
-							// 						    	contentCloning: true,
-							// 						    	trigger: 'hover',
-							// 						    	theme: 'tooltipster-light',
-							// 								interactive: true,
-							// 								// functionReady: function(origin, tooltip) {
-
-							// 								// 		$(document).on("click", function() {
-							// 								// 			if(!($("div.thrd_step").hasClass('active')) || !($("div.img-build").hasClass('active'))) {
-							// 								// 				origin.hide();																
-							// 								// 			}
-							// 								// 		});
-							// 								// },
-							// 						});
-
-							// 						$(".build-next").tooltipster('show');
-
-							// 						clearInterval(close_interval);
-							// 						$(".build-next").attr('disabled', false);
-							// 						$(".system-defination").html(response).show();
-							// 					}																		
-							// 				});
-											
-							// 			}, 1000);
-							// 		});
-							// 	}
-							// }
 						}												
 					}
 					else {		
@@ -660,130 +505,162 @@ $(document).ready(function() {
 		});
 
 
+
 	// Download Whizerd
 	$(document).on('click', '.thrd_step', function() {
 
+		var ajaxIndex = 0;
 
-	 			// $('#save_data').trigger('click');	
-	 			console.log(validate_strategy($));
-		if(validate_strategy($) == true){
-
-		$(".system_defination_btn").hide();
-		$("input.validate_visisted").val('');
-		var old_value = $("input.element_data_old").val();
-		var new_value = $("input.element_data_new").val();
-		 console.log(old_value)
-		if(old_value != new_value){															
-			if(!$("button.build-next").hasClass('button_clicked')){
-				$(".system-defination").html('<div style="position: relative;top: 50%;"><img src="images/ajax-loader-green.gif" style="margin-top: -2%;"></div>');
-				$(".build-next").addClass('button_clicked');
-
-				$(".build-next").attr('disabled', true);
-				var session_id = $("input[name=session_strategy_id]").val();
-				var url = $(".build-next").attr('data-action');
-				$.ajax({
-					url: url,
-					type: 'POST',
-					data: {
-						insert_data: 'insertion',
-						session_id: session_id
-					},
-				})
-				.done(function(response) {
-					var definition_id = response;
-					var close_interval;
-					close_interval = setInterval(function(){
-						$.ajax({
-							url: url,
-							type: 'POST',
-							data: {
-								insert_data: '',
-								strategy_definition_id: definition_id
-							},
-						})
-						.done(function(response) {
-							if(response.length > 8){
-
-								if($.tooltipster.instances($('.build-next')).length > 0){
-
-									$(".build-next").tooltipster('destroy');			
-
-								}
-								var definition = '<div style="width: 320px; position: relative;"><span class="close_tooltip"><i class="fa fa-close"></i></span>'+response+'</div>'
-								$('span.append_response').html(definition);
-
-								$('.build-next').tooltipster({
-								    	contentCloning: true,
-								    	trigger: 'click',
-								    	theme: 'tooltipster-light',
-										interactive: true,
-										functionReady: function(origin, tooltip) {
-
-											$('.close_tooltip').on("click", function() {
-												origin.hide();
-											});																
-
-										},
-													
-								});
-
-								// $(".build-next").tooltipster('show');
-
-								clearInterval(close_interval);
-								$(".build-next").attr('disabled', false);
-								$(".system-defination").html(response).show();
-								$(".build-next").addClass('button_clicked');
-							}																		
-						});
-						
-					}, 1000);
-				});
-			}			
+		if($("input.validate_visisted").val() != 'visited'){
+			
+			prev_value = $("input.element_data_old").val();
+			next_value = $("input.element_data_new").val(); 			
 		}
 
-		$this = $(this);
-		$("p.active-tab-left").html($('div.whizerd:eq(3)').find('p').html());
-		$('div.whizerd:eq(1)').removeClass('active');
-		$('div.whizerd:eq(1)').find('p').css('font-weight', 'normal');
+		$('#save_data').trigger('click');	
 
-		$('div.whizerd:eq(3)').removeClass('active');
-		$('div.whizerd:eq(3)').find('img').attr('src', 'images/newValidate.png');
-		$('div.whizerd:eq(3)').find('p').css('font-weight', 'normal');
-
-		$('div.whizerd:eq(5)').addClass('active');
-		$('div.whizerd:eq(5)').find('img').attr('src', 'images/download-active.png');
-		$('div.whizerd:eq(5)').find('p').css('font-weight', 'bold');
-
-		// Arrows
-		$('.right-arrow').css('visibility', 'hidden');
-		$('.left-arrow').css('visibility', 'visible');
+		$("input.element_data_old").val(prev_value);
+		$("input.element_data_new").val(next_value);
 
 
-		$("div.build-tab").css({
-			display: 'none',
-			position: 'absolute',
-			right: '9999px'
+		$(document).ajaxComplete(function(event, xhr, settings) {
+
+			var error_txt = $("input.error_code_data").attr('data-error');
+			
+			var error_0 = error_txt+" "+$("input.error_code_data").attr('data-error-0');
+			
+			ajaxIndex++;    
+
+
+			if (ajaxIndex == 1) {
+
+				if (xhr.responseText.length > 20 || settings.url.includes('system_defination')) {
+					if(validate_strategy($) == true){
+
+						$(".system_defination_btn").hide();
+						$("input.validate_visisted").val('');
+						var old_value = $("input.element_data_old").val();
+						var new_value = $("input.element_data_new").val();
+						 console.log(old_value)
+						if(old_value != new_value){															
+							if(!$("button.build-next").hasClass('button_clicked')){
+								$(".system-defination").html('<div style="position: relative;top: 50%;"><img src="images/ajax-loader-green.gif" style="margin-top: -2%;"></div>');
+								$(".build-next").addClass('button_clicked');
+
+								$(".build-next").attr('disabled', true);
+								var session_id = $("input[name=session_strategy_id]").val();
+								var url = $(".build-next").attr('data-action');
+								$.ajax({
+									url: url,
+									type: 'POST',
+									data: {
+										insert_data: 'insertion',
+										session_id: session_id
+									},
+								})
+								.done(function(response) {
+									var definition_id = response;
+									var close_interval;
+									close_interval = setInterval(function(){
+										$.ajax({
+											url: url,
+											type: 'POST',
+											data: {
+												insert_data: '',
+												strategy_definition_id: definition_id
+											},
+										})
+										.done(function(response) {
+											if(response.length > 8){
+
+												if($.tooltipster.instances($('.build-next')).length > 0){
+
+													$(".build-next").tooltipster('destroy');			
+
+												}
+												var definition = '<div style="width: 320px; position: relative;"><span class="close_tooltip"><i class="fa fa-close"></i></span>'+response+'</div>'
+												$('span.append_response').html(definition);
+
+												$('.build-next').tooltipster({
+												    	contentCloning: true,
+												    	trigger: 'click',
+												    	theme: 'tooltipster-light',
+														interactive: true,
+														functionReady: function(origin, tooltip) {
+
+															$('.close_tooltip').on("click", function() {
+																origin.hide();
+															});																
+
+														},
+																	
+												});
+
+												// $(".build-next").tooltipster('show');
+
+												clearInterval(close_interval);
+												$(".build-next").attr('disabled', false);
+												$(".system-defination").html(response).show();
+												$(".build-next").addClass('button_clicked');
+											}																		
+										});
+										
+									}, 1000);
+								});
+							}			
+						}
+
+						$this = $(this);
+						$("p.active-tab-left").html($('div.whizerd:eq(3)').find('p').html());
+						$('div.whizerd:eq(1)').removeClass('active');
+						$('div.whizerd:eq(1)').find('p').css('font-weight', 'normal');
+
+						$('div.whizerd:eq(3)').removeClass('active');
+						$('div.whizerd:eq(3)').find('img').attr('src', 'images/newValidate.png');
+						$('div.whizerd:eq(3)').find('p').css('font-weight', 'normal');
+
+						$('div.whizerd:eq(5)').addClass('active');
+						$('div.whizerd:eq(5)').find('img').attr('src', 'images/download-active.png');
+						$('div.whizerd:eq(5)').find('p').css('font-weight', 'bold');
+
+						// Arrows
+						$('.right-arrow').css('visibility', 'hidden');
+						$('.left-arrow').css('visibility', 'visible');
+
+
+						$("div.build-tab").css({
+							display: 'none',
+							position: 'absolute',
+							right: '9999px'
+						});
+						$("div.validate-tab").css({
+							display: 'none',
+							position: 'absolute',
+							right: '9999px',
+							left: 'unset'
+						});
+						$(".animate_bullets_right").animate({
+							backgroundPosition: '128px'
+						}, 200);
+						$(".animate_bullets_left").animate({
+							backgroundPosition: '128px'
+						}, 200);
+
+						$("div.download-tab").css({
+							display: 'block',
+							position: 'relative',
+						}).animate({
+							"left": "0"
+						}, 'slow');
+					}
+
+				}
+				else{
+					alert(error_0);
+				}
+			}
 		});
-		$("div.validate-tab").css({
-			display: 'none',
-			position: 'absolute',
-			right: '9999px',
-			left: 'unset'
-		});
-		$(".animate_bullets_right").animate({
-			backgroundPosition: '128px'
-		}, 200);
-		$(".animate_bullets_left").animate({
-			backgroundPosition: '128px'
-		}, 200);
 
-		$("div.download-tab").css({
-			display: 'block',
-			position: 'relative',
-		}).animate({
-			"left": "0"
-		}, 'slow');
-	}
 	});
 
 	// Previous Arrow
@@ -879,14 +756,14 @@ $(document).ready(function() {
 							}
 
 							else if(responseData.status == 'P' ) {	
-								// console.log(responseData.y_axix);
+								console.log(responseData.y_axix);
 
 								$(".validatingGraph").hide();
 								$("#chartContainer").show();
 
 								var y_axix = responseData.y_axix;
 
-								// console.log(y_axix);
+								console.log(y_axix);
 
 								if(y_axix.length > 0){
 
@@ -902,8 +779,8 @@ $(document).ready(function() {
 								
 
 								var x_interval = y_axis_points.length/4;
-								// console.log("x_interval = ");
-								// console.log(x_interval);
+								console.log("x_interval = ");
+								console.log(x_interval);
 								chart.options.axisY.minimum = Math.min.apply(Math,y_axis_points);	
 								chart.options.axisX.interval = Math.round(x_interval);	
 								// console.log(y_axis_points);
@@ -912,7 +789,7 @@ $(document).ready(function() {
 							}else if(responseData.status == 'F'){
 
 								var report = responseData.report;
-								// console.log(report);
+								console.log(report);
 								if(responseData.report != null){
 									var resultReport = "<p style='margin-left: 3%;'>";
 									var arrReport = report.split(';');
@@ -1096,17 +973,6 @@ function setScrollAndIndex($) {
 
 }
 
-
-$(document).ready(function() {
-	setTdWidth($);
-});
-
-
-function setTdWidth($) {
-	$('table tr td').width($('#nav-tab2').outerWidth() - 24);
-}
-
-
 function validate_strategy($){
 
 	var error_txt = $("input.error_code_data").attr('data-error');
@@ -1139,9 +1005,10 @@ function validate_strategy($){
 			
 			var scnd_li = $rows.find('li:nth-child('+third_last_li+')');
 
-
+			
 			check_li_first.push(first_li.hasClass('sequence_li'));
 			check_li_last.push(scnd_li.hasClass('sequence_li'));
+			
 			
 			$rows.find('li').each(function(index, li) {
 
@@ -1155,6 +1022,8 @@ function validate_strategy($){
 		});
 	});
 
+			// console.log(jQuery.inArray(true, check_li_last));
+
 	// Disply error popup
 	if(jQuery.inArray(true, check_li_last) != '-1' || jQuery.inArray(true, check_li_first) != '-1' || jQuery.inArray(true, chack_two_arrow) != '-1'){
 		if(jQuery.inArray(true, check_li_first) != '-1'){
@@ -1167,9 +1036,20 @@ function validate_strategy($){
 			alert(error_3);
 		}						
 	}else{
+
 		return true;
 	}
 }
+
+$(document).ready(function() {
+	setTdWidth($);
+});
+
+
+function setTdWidth($) {
+	$('table tr td').width($('#nav-tab2').outerWidth() - 24);
+}
+
 
 $(document).on('click', '.open_scnd_tooltip', function(event) {
 	event.preventDefault();
