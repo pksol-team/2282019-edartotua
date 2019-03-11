@@ -209,6 +209,12 @@ $(document).ready(function() {
 				});
 
 		}, 1000);
+		
+		if($.tooltipster.instances($('.build-next')).length > 0){
+
+			$(".build-next").tooltipster('destroy');			
+
+		}
 
 	});
 
@@ -397,8 +403,32 @@ $(document).ready(function() {
 								var old_value = $("input.element_data_old").val();
 								var new_value = $("input.element_data_new").val();
 								if(old_value == new_value){															
-									
-									$(".build-next").trigger('open_scnd_tooltip');
+									var old_defintion = $(".system-defination").html();
+
+									if($.tooltipster.instances($('.build-next')).length > 0){
+
+										$(".build-next").tooltipster('destroy');			
+
+									}		    
+									var definition = '<div class="checking" style="width: 320px; position: relative;"><span class="close_tooltip"><i class="fa fa-close"></i></span>'+old_defintion+'</div>';
+
+									$('span.append_response').html(definition);
+
+									$('.build-next').tooltipster({
+										contentCloning: true,
+										trigger: 'click',
+										theme: 'tooltipster-light',
+											interactive: true,
+											functionReady: function(origin, tooltip) {
+
+												$('.close_tooltip').on("click", function() {
+													origin.hide();
+												});
+											},
+
+									});
+									$(".build-next").tooltipster('show');
+// 									$(".build-next").trigger('open_scnd_tooltip');
 									
 								}else{
 
