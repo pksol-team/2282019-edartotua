@@ -209,19 +209,11 @@ $(document).ready(function() {
 				});
 
 		}, 1000);
-
-
+		
 		if($.tooltipster.instances($('.build-next')).length > 0){
 
 			$(".build-next").tooltipster('destroy');			
 
-		}
-
-		// Validate previous and current element data
-		var old_value = $("input.element_data_old").val();
-		var new_value = $("input.element_data_new").val();
-		if(old_value != new_value){	
-			$(".build-next").removeClass('button_clicked');						
 		}
 
 	});
@@ -410,13 +402,7 @@ $(document).ready(function() {
 								
 								var old_value = $("input.element_data_old").val();
 								var new_value = $("input.element_data_new").val();
-								console.log(old_value, new_value);
 								if(old_value == new_value){															
-									console.log("Matched");
-									// $(".build-next").addClass('open_scnd_tooltip');
-									
-									// $(".build-next").trigger('open_scnd_tooltip');
-
 									var old_defintion = $(".system-defination").html();
 
 									if($.tooltipster.instances($('.build-next')).length > 0){
@@ -425,13 +411,13 @@ $(document).ready(function() {
 
 									}		    
 									var definition = '<div class="checking" style="width: 320px; position: relative;"><span class="close_tooltip"><i class="fa fa-close"></i></span>'+old_defintion+'</div>';
-									
+
 									$('span.append_response').html(definition);
 
 									$('.build-next').tooltipster({
-									    	contentCloning: true,
-									    	trigger: 'click',
-									    	theme: 'tooltipster-light',
+										contentCloning: true,
+										trigger: 'click',
+										theme: 'tooltipster-light',
 											interactive: true,
 											functionReady: function(origin, tooltip) {
 
@@ -442,10 +428,9 @@ $(document).ready(function() {
 
 									});
 									$(".build-next").tooltipster('show');
+// 									$(".build-next").trigger('open_scnd_tooltip');
 									
 								}else{
-
-									console.log("Not Matched");
 
 									
 									$("input.validate_visisted").val('');
@@ -470,7 +455,7 @@ $(document).ready(function() {
 											session_id: session_id
 										},
 									})
-									.done(function(response) {										
+									.done(function(response) {
 										var btn_text = $(".system_defination_btn").find('div button.build-next span').html();
 										var refresh_icon = btn_text+'<i class="fa fa-refresh fa-spin refresh_definition" style="font-size:18px; margin-left: 10px;"></i>';
 										$(".system_defination_btn").find('div button.build-next span').html(refresh_icon);
@@ -490,11 +475,7 @@ $(document).ready(function() {
 											})
 											.done(function(response) {											
 
-												// console.log($(".download_pay"));
-
 												if(response.length > 8){
-
-													// $(".download_pay").attr('disabled', false);
 
 													$("i.refresh_definition").hide();
 
@@ -550,13 +531,13 @@ $(document).ready(function() {
 			$(".system_defination_btn").show();
 			   
 			}, 450);
+
 		});
 
 
 
 	// Download Whizerd
 	$(document).on('click', '.thrd_step', function() {
-
 
 		var ajaxIndex = 0;
 
@@ -591,10 +572,7 @@ $(document).ready(function() {
 						var old_value = $("input.element_data_old").val();
 						var new_value = $("input.element_data_new").val();
 						 console.log(old_value)
-						if(old_value != new_value){
-							
-							$(".download_pay").attr('disabled', true);
-
+						if(old_value != new_value){															
 							if(!$("button.build-next").hasClass('button_clicked')){
 								$(".system-defination").html('<div style="position: relative;top: 50%;"><img src="images/ajax-loader-green.gif" style="margin-top: -2%;"></div>');
 								$(".build-next").addClass('button_clicked');
@@ -624,7 +602,6 @@ $(document).ready(function() {
 										})
 										.done(function(response) {
 											if(response.length > 8){
-												$(".download_pay").attr('disabled',false);
 
 												if($.tooltipster.instances($('.build-next')).length > 0){
 
@@ -754,9 +731,6 @@ $(document).ready(function() {
 		}
 
 	});
-
-	
-
 	$("#validate-next").on('click', function() {
 		$("#chartContainer").hide();
 		$(".validatingGraph").html('<div style="position: relative;top: 50%;"><img src="images/ajax-loader-green.gif" style="margin-top: -2%;"><span>Data Insertion...</span></div>').show();
@@ -795,79 +769,6 @@ $(document).ready(function() {
 
 				
 				var updateInterval = 500;
-				
-
-
-				// OLD WORK DYNAMIC GRAPH
-
-				// var updateChart = function(validateId) {
-
-				// 	$.ajax({
-				// 			url: url,
-				// 			type: 'POST',
-				// 			data: {
-				// 				sesion_val_id: validateId
-				// 			},
-				// 		}).done(function(response) {
-
-				// 			var responseData = jQuery.parseJSON(response.trim());
-
-				// 			var status = responseData.status;
-
-
-				// 			if (status == 'N') {
-				// 				$(".validatingGraph").html('<div style="position: relative;top: 50%;"><img src="images/ajax-loader-green.gif" style="margin-top: -2%;"><span>Loading Data...</span></div>');
-				// 			}
-				// 			if (responseData.y_axix != undefined && status != 'N') {
-				// 				$(".validatingGraph").hide();
-				// 				$("#chartContainer").show();
-
-
-				// 				dps.push({
-				// 					// x: i,
-				// 					// x: parseInt(responseData.x_axix),
-				// 					y: parseFloat(responseData.y_axix)
-				// 				});
-				// 				// i++;
-				// 				chart.render();
-				// 			}
-
-
-
-				// 			if (status == 'F' && responseData.y_axix == undefined) {
-
-
-				// 				var report = responseData.report;
-				// 				if(responseData.report == ''){
-				// 					resultReport = "<div style='position: relative;top: 50%;'><p style='margin-left: 3%;'>No record found...</p></div>";
-				// 					$("#chartContainer").hide();
-				// 					$(".validatingGraph").html(resultReport).show();
-
-				// 				}else{								
-				// 					var resultReport = "<p style='margin-left: 3%;'>";
-				// 					var arrReport = report.split(';');
-				// 					$.each( arrReport, function( index, value ) {
-				// 					    resultReport += value+"<br>"; 
-				// 					});
-				// 					resultReport += "</p>";
-				// 				}
-				// 				$(".validatingScreen").hide();
-				// 				$(".validatedScreen").html(resultReport).show();
-				// 				clearInterval(interval);
-				// 				if (response.length > 0) {
-				// 					$("div.img-download, .summary-btn").addClass('thrd_step');
-
-				// 				} else {
-				// 					$("div.img-download, .summary-btn").removeClass('thrd_step');
-				// 				}
-				// 				$('#validate-next').attr('disabled', false);
-				// 				$('#validate-next').css('cursor', 'pointer');
-
-
-				// 			}
-				// 		});
-				// };
-
 				var updateChart = function(validateId) {
 					$.ajax({
 							url: url,
@@ -1210,55 +1111,4 @@ $(document).on('click', '.open_scnd_tooltip', function(event) {
 	$(".build-next").tooltipster('show');
 
 });
-
-$(document).on('click', 'input[name="read_accept"], input[name="agree_condition"]', function(event) {
-	if($(this).attr('checked')){
-		$(this).removeAttr('checked');
-	}else{
-		$(this).attr('checked', true);		
-	}
-});
-
-$(document).on('click', '.download_pay', function(event) {
-	event.preventDefault();
-	var first_option = $('input[name="read_accept"]').attr('checked');
-	var scnd_option = $('input[name="agree_condition"]').attr('checked');
-
-	// console.log(first_option, scnd_option);
-	if(first_option != 'checked' || scnd_option != 'checked'){
-		if(first_option != 'checked' && scnd_option != 'checked'){
-			alert("Please check the options");
-		}
-		else if(first_option != 'checked'){
-			alert("Please check fst");
-		}else{
-			alert("Please check scnd");
-		}
-	}else{
-		$('.payment_loader').show();
-
-		setTimeout(function(){
-		$('.payment_loader').hide();
-		
-		$(".payment_stripe").fadeIn('fast', function() {
-			$(".download-tab").css('opacity', '0.2');
-			$(".payment_stripe").show();
-		});
-			
-		}, 3000)};
-
-});
-
-$(document).on('click', '.close_payment', function(event) {
-	event.preventDefault();
-
-	$(".payment_stripe").fadeOut('slow', function() {
-		
-		$(".download-tab").css('opacity', '1');
-		$(".payment_stripe").hide();
-
-	});
-
-});
-
 
