@@ -1,12 +1,9 @@
 <?php session_start(); ?>
 <?php error_reporting(E_ALL); ?>
 <?php
-	require_once('stripe-php/init.php');
-?>
-<?php
 	
 	require('connection.php');
-	// require(dirname(dirname(dirname(dirname(dirname(__FILE__))))).'/wp-authenticate.php');
+	require(dirname(dirname(dirname(dirname(dirname(__FILE__))))).'/wp-authenticate.php');
 	
 	
 	global $lang_id;
@@ -40,8 +37,7 @@
 
 		if ( $_GET['action'] === 'save_data' ) {		
 
-		$user_id = 0;
-		// $user_id = get_current_user_id();
+		$user_id = get_current_user_id();
 		$open_scenario = $_POST['OPEN'];
 		$modify_scenario = $_POST['MODIFY'];
 		$close_scenario = $_POST['CLOSE'];
@@ -66,9 +62,7 @@
 var_dump($response);
 	}
 	else if($_GET['action'] == 'validate_data'){
-		$user_id = 0;
-		
-				// $user_id = get_current_user_id();
+				$user_id = get_current_user_id();
 				$ticker = $_POST['ticker'];
 				$timeFrame = $_POST['time_frame'];
 				$start_time = $_POST['start-date'];
@@ -85,73 +79,6 @@ var_dump($response);
 			    
 			   	echo $last_validation_id;
 	}
-
-	
-	// OLD CODE DYNAMIC GRAPH
-		// else if($_GET['action'] == 'chart_data') {
-		// 	$sesion_val_id = $_POST['sesion_val_id'];
-		   	
-		// 	$sesion_validation_id = preg_replace( "/\r|\n/", "", $sesion_val_id );
-		// 	$status = mysqli_query($con,"SELECT * FROM `session_validation` WHERE `session_validation_id`= ".$sesion_validation_id."");
-		// 		$fetching_date = mysqli_fetch_assoc($status);
-	    	
-	 //    	$getStauts = $fetching_date['estatus'];
-	 //    	$report = $fetching_date['result_report'];
-	  		
-		    	
-	 //    	if($getStauts == 'P' || $getStauts == 'F'){
-		// 		if($_SESSION[$sesion_val_id.'previousID'] == NULL) {
-			    	
-		// 	    	$validation_id = mysqli_query($con,"SELECT * FROM session_validation_chart WHERE sesion_val_id = $sesion_val_id LIMIT 1");
-		// 		} 
-		// 		else{
-		// 			$prevCharId = $_SESSION[$sesion_val_id.'previousID'];
-		// 			$prev_id_array = '';
-		// 			foreach ($prevCharId as $key => $value) {
-		// 				$prev_id_array .= $value.',';
-		// 			}
-		// 			$not_in_list = substr($prev_id_array, 0, -1);			
-		// 			$validation_id = mysqli_query($con,"SELECT * FROM session_validation_chart WHERE sesion_val_id = $sesion_val_id AND chart_seq NOT IN (".$not_in_list.") LIMIT 1");
-		// 		}
-		//     	if(mysqli_num_rows($validation_id) > 0 ){
-		
-		// 			$fetch_data = mysqli_fetch_assoc($validation_id);
-		// 	    	$y_value = $fetch_data['value'];
-		// 	    	$chart_id = $fetch_data['chart_seq'];
-		// 	    	if($_SESSION[$sesion_val_id.'previousID'] == NULL)
-		// 	    		$_SESSION[$sesion_val_id.'previousID'] = [$chart_id];
-		// 	    	else
-		// 				array_push($_SESSION[$sesion_val_id.'previousID'], $chart_id);
-		// 	    	echo json_encode([
-		// 	    		'y_axix' => $y_value,
-		// 	    		'x_axix' => $chart_id,
-		// 	    		'status' => $getStauts,
-		// 	    		'report' => $report
-		// 	    	]);
-		//     	} 
-		//     	else {
-		//     		echo json_encode([
-		// 	    		'status' => $getStauts,
-		// 	    		'report' => $report
-		// 	    	]);
-		//     	}
-	 //    	}	
-	 //    	else
-	 //    	if($getStauts == 'F' && empty($report)){
-		//     		$report = '<p>:No: Data FOund</p>';
-		// 		    	echo json_encode([
-		// 		    		'status' => $getStauts,
-		// 		    		'no_result' => $report,
-		// 		    		'report' => ''
-		// 		    	]);
-		//     	}
-		//     	else{
-	 //    			echo json_encode([
-		// 	    		'status' => $getStauts,
-		// 	    		'report' => $report
-		// 	    	]);
-	 //    	}
-		// }
 	else if($_GET['action'] == 'chart_data') {
 
 				$y = array();
@@ -289,102 +216,43 @@ var_dump($response);
 		else if($_GET['action'] == 'system_defination') {
 
 			$check = $_POST['insert_data'];
-
-			// echo "id = ".$_POST['session_id'];
 			if(!empty($check)){
-				$user_id = 0;
+
+				$user_id = get_current_user_id();
 				$session_id = $_POST['session_id'];
-				$status = 'F';
+				$status = 'N';
 
 				$userAlready = $con->query("SELECT * FROM session_strategy_definition WHERE user_id = '$user_id'");
 
 		        if (mysqli_num_rows($userAlready) > 0) {
-		        	$sql = "UPDATE session_strategy_definition set `sesion_id`='$session_id', `estatus`= '$status' WHERE user_id = '$user_id'";
+		        	$sql = "UPDATE session_strategy_definition set `sesion_id`='$session_id', `estatus`= '$status' WHERE user_id = '$user_id' ";
 		        } else {
-		        	$sql = "INSERT INTO `session_strategy_definition` (`user_id`, `sesion_id`, `estatus`) VALUES ('$user_id', '$session_id', '$status')";
+		    	    $sql = "INSERT INTO session_strategy_definition (user_id, `sesion_id`, `estatus`)
+						 VALUES ( '$user_id', '$session_id', '$status')";
 		        }
 		        
-		        $con->query($sql);
+			    $con->query($sql);
 
 			    $definition_id = mysqli_query($con,"SELECT * FROM session_strategy_definition WHERE user_id = '$user_id'");
 
 			    $strategy_definition_id = mysqli_fetch_assoc($definition_id)['session_strat_def_id'];
+			    // $strategy_definition_id = $con->insert_id;
 			    
 			   	echo $strategy_definition_id;			
-			}
-			else{
+			}else{
 				$id = $_POST['strategy_definition_id'];
 				$value = mysqli_query($con,"SELECT * FROM session_strategy_definition WHERE session_strat_def_id = $id AND estatus = 'F'");
-
 				if(mysqli_num_rows($value) > 0){
-					echo encodes(mysqli_fetch_assoc($value)['definition_text']);										
+					echo encodes(mysqli_fetch_assoc($value)['definition_text']);				
 				}
 			}
 			
 		}
-
-		else if($_GET['action'] == 'stripe_payment'){
 			
-		    
-			$name = $_POST['data']['name'];
-			$amount = $_POST['data']['price']*100;
-			$currency = 'EUR';
-			$source = $_POST['stripe_token'];
-			$email = $_POST['data']['email'];
-			\Stripe\Stripe::setApiKey('sk_test_doaAddzso5GZH5xoQ4YwDbQO');
-			try{  			    
-			    //charge a credit or a debit card
-				$charge = \Stripe\Charge::create(array(
-				    'source'  => $source,
-				    'amount'   => $amount,
-				    'currency' => $currency,
-				    'description' => 'Description of element'			        
-				));
-
-				$json_data = explode("JSON: ", $charge);
-				// var_dump($json_data[1]);
-				if($charge->paid){
-
-					$user_id = 0;
-					$session_id = $_POST['session_id'];
-					$status = 'F';
-
-					$sql = "INSERT INTO `session_payment` (`session_pay_id`, `session_id`, `user_id`, `type_payment`, `estatus`, `estatus_text`) VALUES (NULL, '$session_id', '$user_id', '', 'N', 'ASDFSAF')";
-					
-				    $con->query($sql);
-
-			     	$last_pay_id = $con->insert_id;
-				     
-				    echo $last_pay_id."pay_id";
-
-				}else{
-					echo $charge;
-				}
-			} catch(\Exception $e){
-				echo $e->getMessage();
-			}	
-		
-		}
-		else if($_GET['action'] == 'link_status'){
-
-			$pay_id = $_POST['session_pay_id'];
-	 		
-	 		$query = mysqli_query($con,"SELECT * FROM session_payment WHERE session_pay_id = '$pay_id' AND estatus = 'F'");
-
-	 		if(mysqli_num_rows($query) > 0){
-	 			// Send download file link
-	 			echo encodes(mysqli_fetch_assoc($query)['estatus_text']);										
-	 		
-	 		}
-			
-		}
 	else{
 			echo "error";
 
 	}
-
-
-	
 	?>
 <?php else: ?>
 		<!DOCTYPE html>
@@ -405,17 +273,7 @@ var_dump($response);
 	    <link class="all_files" rel="stylesheet" type="text/css" href="plugin/tooltipster/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-light.min.css?time=<?= time(); ?>">
 	    <script class="all_files" type="text/javascript" src="plugin/tooltipster/dist/js/tooltipster.bundle.min.js?time=<?= time(); ?>"></script>
 		<link class="all_files" rel="stylesheet" type="text/css" href="css/style.css?time=<?= time(); ?>">
-		
-		<!-- <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet"> -->
 
-		<script src="https://js.stripe.com/v3/"></script>
-		<script src="js/index.js" data-rel-js></script>
-		
-		<link rel="stylesheet" type="text/css" href="css/stripe_base.css" data-rel-css="" />
-		<link rel="stylesheet" type="text/css" href="css/stripe_style.css" data-rel-css="" />
-		
 
 		<meta class="all_files" name="google" content="notranslate">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -1134,14 +992,12 @@ var_dump($response);
 								<!--  Extra Fields -->
 								<?php
 
-		$user_id = 0;
-								// $user_id = get_current_user_id();
-									$strategy_id = mysqli_query($con,"SELECT sesion_id FROM session_strategy WHERE user_id = '$user_id'");
+								$user_id = get_current_user_id();
+									$strategy_id = mysqli_query($con,"SELECT sesion_id FROM session_strategy WHERE user_id = $user_id");
 									
 									$id = mysqli_fetch_assoc($strategy_id);								 
 
 									?>								
-								<input type="hidden" name="user_id" value="<?= $user_id?>">
 								<input type="hidden" name="session_strategy_id" value="<?php echo $id['sesion_id'];?>">
 								<div class="submit-btn">									
 									<button type="button" id="validate-next" data-action="<?= $actual_link; ?>?action=validate_data"><?= $validate_trans?></button>	
@@ -1174,257 +1030,32 @@ var_dump($response);
 			</div>
 		</div>
 
-		<?php
-			// System defitnitoin Heading
-			$fetchcing_defintition_heading = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='STRAT_DEF_TEXT' AND LANG_ID='$lang_id'");
-			$definition_heading = encodes(mysqli_fetch_assoc($fetchcing_defintition_heading)['TEXT']);
-			
-			// Agree condition text
-			$fetchcing_condi_text = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='AGREE_COND' AND LANG_ID='$lang_id'");
-			$condi_text = encodes(mysqli_fetch_assoc($fetchcing_condi_text)['TEXT']);
 
-			$exploded = explode(" ", $condi_text);
-
-			if($lang_id == 'ES'){
-				$link_text = $exploded[0]." ".$exploded[1]." ".$exploded[2]." ".$exploded[3]." ".$exploded[4]." ";
-				$link = $exploded[5]." ".$exploded[6];
-			}else{
-				$link_text = $exploded[0]." ".$exploded[1]." ".$exploded[2]." ".$exploded[3]." ";
-				$link = $exploded[4]." ".$exploded[5];
-			}
-
-			// Link text
-
-			$fetchcing_condi_text_url = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='CONDITION_URL' AND LANG_ID='$lang_id'");
-			$condi_text_url = encodes(mysqli_fetch_assoc($fetchcing_condi_text_url)['TEXT']);
-
-			// Understand System definitoin
-			$sys_def_text_1 = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='UNDERSTAND_STRAT_TEXT' AND LANG_ID='$lang_id'");
-			$sys_def_text = encodes(mysqli_fetch_assoc($sys_def_text_1)['TEXT']);
-
-			// Download Button
-			$download_btn_text = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='DOWN_BUTTON' AND LANG_ID='$lang_id'");
-			$down_btn_trans = encodes(mysqli_fetch_assoc($download_btn_text)['TEXT']);
-
-
-
-		?>
 	
 		<div class="download-tab">	
 			<div class="container-fluid h-100 py-6">			
 				<div class="row">
 					<div class="col-sm-4">
-						<h3 style="margin-left: 3%;"><?= $definition_heading ?></h3>
-						<div class="system-defination">	
+						<div class="system-defination">							
 						</div>
 					</div>
 					<div class="col-sm-8">
 						<div class="right-options">
 							<form>
 								<div class="form-group">
-									<input type="checkbox" name="read_accept"> 
-									<?= $sys_def_text?>
+									<input type="checkbox" name="checkbox-1"> I've read and understand system definition
 								</div>
 								<div class="form-group">
-									<!-- Add a target balnk -->
-									<input type="checkbox" name="agree_condition"> <?= $link_text ?><a href="<?= $condi_text_url?>" target="_blank"><?= $link ?></a>
+									<input type="checkbox" name="checkbox-2"> I've read and I agree with <a href="#">general condition</a>
 								</div>
-								<button type="button" class="btn download_pay" id="download-next"><?= $down_btn_trans ?></button>				
+								<button type="button" id="download-next">Downloaded Next</button>				
 							</form>
 						</div>
 					</div>
 				</div>
-			</div>		
+			</div>						
 		</div>	
-			<img class="payment_loader" src="images/ajax-loader-green.gif" style="display: none; position: absolute; top: 45%; left: 43%; height: 100px;">
-	<?php
 
-	// $user_info = mysqli_query($wp_con,"SELECT * FROM wp_users WHERE id = 1");
-	// $user_fetched = mysqli_fetch_assoc($user_info);
-	// $user_name = $user_fetched['user_nicename'];
-	// $user_email = $user_fetched['user_email'];
-
-	// Pay title
-	$pay_text = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='PAY_TITLE' AND LANG_ID='$lang_id'");
-	$pay_text_trans = encodes(mysqli_fetch_assoc($pay_text)['TEXT']);
-
-	// Order title
-	$order_text = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='ORDER_TITLE' AND LANG_ID='$lang_id'");
-	$order_text_trans = encodes(mysqli_fetch_assoc($order_text)['TEXT']);
-
-	// Order Description
-	$order_desc_text = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='ORDER_DESC' AND LANG_ID='$lang_id'");
-	$order_desc_text_trans = encodes(mysqli_fetch_assoc($order_desc_text)['TEXT']);
-
-	// Price
-	$price_text = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='PRICE' AND LANG_ID='$lang_id'");
-	$price_text_trans = encodes(mysqli_fetch_assoc($price_text)['TEXT']);
-
-	// Subtotal
-	$subtotal_text = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='SUBTOTAL' AND LANG_ID='$lang_id'");
-	$subtotal_text_trans = encodes(mysqli_fetch_assoc($subtotal_text)['TEXT']);
-
-	// Total
-	$total_text = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='TOTAL' AND LANG_ID='$lang_id'");
-	$total_text_trans = encodes(mysqli_fetch_assoc($total_text)['TEXT']);
-
-	// Pay Text
-	$pay = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='PAY_TEXT' AND LANG_ID='$lang_id'");
-	$pay_trans = encodes(mysqli_fetch_assoc($pay)['TEXT']);
-
-	// Pay Text
-	$order_img = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='ORDER_IMG_URL' AND LANG_ID='$lang_id'");
-	$order_img_trans = encodes(mysqli_fetch_assoc($order_img)['TEXT']);
-
-	?>
-	
-			<main class="payment_stripe" style="display: none;">
-				<section class="container-lg">     
-				  <!--Example 5-->
-				  	<div class="cell example example5" id="example-5">
-				  		<span class="close_payment" style="position: relative; left: 100%; top: -20px; font-weight: bold; color: white;">
-				  			X
-				  		</span>
-				  		<div class="row">
-				  			<div class="col-sm-7">
-							    <form>
-							      <div id="example5-paymentRequest">
-							      </div>
-							      	<fieldset>
-								        <legend class="card-only" data-tid="elements_examples.form.pay_with_card" style="font-weight: bold"><?= $pay_text_trans?></legend>
-								        <legend class="payment-request-available" data-tid="elements_examples.form.enter_card_manually">Or enter card details</legend>
-								        <div class="row">
-								          <div class="field">
-								            <label for="example5-name" data-tid="elements_examples.form.name_label">Name</label>
-								            <input id="example5-name" data-tid="elements_examples.form.name_placeholder" class="input" type="text" value="admin" required="" autocomplete="name">
-								          </div>
-								        </div>
-								        <div class="row">
-								          <div class="field" style="width: 44%;">
-								            <label for="example5-email" data-tid="elements_examples.form.email_label">Email</label>
-								            <input id="example5-email" data-tid="elements_examples.form.email_placeholder" class="input" type="text" value="aksdjf@sdf.asdf" required="" autocomplete="email">
-								          </div>
-								          <div class="field" style="width: 44%;">
-								            <label for="example5-phone" data-tid="elements_examples.form.phone_label">Phone</label>
-								            <input id="example5-phone" data-tid="elements_examples.form.phone_placeholder" class="input" type="text" placeholder="(941) 555-0123" required="" autocomplete="tel">
-								          </div>
-								        </div>
-								        <div data-locale-reversible>
-								          <div class="row">
-								            <div class="field">
-								              <label for="example5-address" data-tid="elements_examples.form.address_label">Address</label>
-								              <input id="example5-address" data-tid="elements_examples.form.address_placeholder" class="input" type="text" placeholder="185 Berry St" required="" autocomplete="address-line1">
-								            </div>
-								          </div>
-								          <div class="row" data-locale-reversible>
-								            <div class="field" style="width: 28%;">
-								              <label for="example5-city" data-tid="elements_examples.form.city_label">City</label>
-								              <input id="example5-city" data-tid="elements_examples.form.city_placeholder" class="input" type="text" placeholder="San Francisco" required="" autocomplete="address-level2">
-								            </div>
-								            <div class="field" style="width: 28%;">
-								              <label for="example5-state" data-tid="elements_examples.form.state_label">State</label>
-								              <input id="example5-state" data-tid="elements_examples.form.state_placeholder" class="input empty" type="text" placeholder="CA" required="" autocomplete="address-level1">
-								            </div>
-								            <div class="field" style="width: 28%;">
-								              <label for="example5-zip" data-tid="elements_examples.form.postal_code_label">ZIP</label>
-								              <input id="example5-zip" data-tid="elements_examples.form.postal_code_placeholder" class="input empty" type="text" placeholder="94107" required="" autocomplete="postal-code">
-								            </div>
-								          </div>
-								        </div>
-								        <div class="row">
-								          <div class="field">
-								            <label for="example5-card" data-tid="elements_examples.form.card_label">Card</label>
-								            <div id="example5-card" class="input"></div>
-								          </div>
-								        </div>
-								        <input type="hidden" name="token">
-								        <input type="hidden" name="price" value="<?= $price_text_trans?>">
-								        <button class="pay_amount" name="pay_btn" type="submit" data-tid="elements_examples.form.pay_button"><?= $pay_trans." $". $price_text_trans?> </button>
-							    	</fieldset>
-							      <div class="error" role="alert"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17">
-							          <path class="base" fill="#000" d="M8.5,17 C3.80557963,17 0,13.1944204 0,8.5 C0,3.80557963 3.80557963,0 8.5,0 C13.1944204,0 17,3.80557963 17,8.5 C17,13.1944204 13.1944204,17 8.5,17 Z"></path>
-							          <path class="glyph" fill="#FFF" d="M8.5,7.29791847 L6.12604076,4.92395924 C5.79409512,4.59201359 5.25590488,4.59201359 4.92395924,4.92395924 C4.59201359,5.25590488 4.59201359,5.79409512 4.92395924,6.12604076 L7.29791847,8.5 L4.92395924,10.8739592 C4.59201359,11.2059049 4.59201359,11.7440951 4.92395924,12.0760408 C5.25590488,12.4079864 5.79409512,12.4079864 6.12604076,12.0760408 L8.5,9.70208153 L10.8739592,12.0760408 C11.2059049,12.4079864 11.7440951,12.4079864 12.0760408,12.0760408 C12.4079864,11.7440951 12.4079864,11.2059049 12.0760408,10.8739592 L9.70208153,8.5 L12.0760408,6.12604076 C12.4079864,5.79409512 12.4079864,5.25590488 12.0760408,4.92395924 C11.7440951,4.59201359 11.2059049,4.59201359 10.8739592,4.92395924 L8.5,7.29791847 L8.5,7.29791847 Z"></path>
-							        </svg>
-							        <span class="message"></span></div>
-							    </form>
-							    <!-- Display successfull payment -->
-							    <div class="success">
-							      <div class="icon">
-							        <svg width="84px" height="84px" viewBox="0 0 84 84" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-							          <circle class="border" cx="42" cy="42" r="40" stroke-linecap="round" stroke-width="4" stroke="#000" fill="none"></circle>
-							          <path class="checkmark" stroke-linecap="round" stroke-linejoin="round" d="M23.375 42.5488281 36.8840688 56.0578969 64.891932 28.0500338" stroke-width="4" stroke="#000" fill="none"></path>
-							        </svg>
-							      </div>
-							      <h3 class="title" data-tid="elements_examples.success.title"></h3>
-							      <p class="message"><span data-tid="elements_examples.success.message"></span><span class="token"></span></p>
-							      <a class="reset" href="#">
-							        <svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-							          <path fill="#000000" d="M15,7.05492878 C10.5000495,7.55237307 7,11.3674463 7,16 C7,20.9705627 11.0294373,25 16,25 C20.9705627,25 25,20.9705627 25,16 C25,15.3627484 24.4834055,14.8461538 23.8461538,14.8461538 C23.2089022,14.8461538 22.6923077,15.3627484 22.6923077,16 C22.6923077,19.6960595 19.6960595,22.6923077 16,22.6923077 C12.3039405,22.6923077 9.30769231,19.6960595 9.30769231,16 C9.30769231,12.3039405 12.3039405,9.30769231 16,9.30769231 L16,12.0841673 C16,12.1800431 16.0275652,12.2738974 16.0794108,12.354546 C16.2287368,12.5868311 16.5380938,12.6540826 16.7703788,12.5047565 L22.3457501,8.92058924 L22.3457501,8.92058924 C22.4060014,8.88185624 22.4572275,8.83063012 22.4959605,8.7703788 C22.6452866,8.53809377 22.5780351,8.22873685 22.3457501,8.07941076 L22.3457501,8.07941076 L16.7703788,4.49524351 C16.6897301,4.44339794 16.5958758,4.41583275 16.5,4.41583275 C16.2238576,4.41583275 16,4.63969037 16,4.91583275 L16,7 L15,7 L15,7.05492878 Z M16,32 C7.163444,32 0,24.836556 0,16 C0,7.163444 7.163444,0 16,0 C24.836556,0 32,7.163444 32,16 C32,24.836556 24.836556,32 16,32 Z"></path>
-							        </svg>
-							      </a>
-							    </div>				  				
-				  			</div>
-				  			<div class="col-sm-5 popup_left_title">
-				  				<p class="p-title"><?= $order_text_trans?></p>
-								<div class="row div_top">
-									<div class="col-sm-3">
-										<img class="payment_img" src="images/FDI.png">
-										<!-- <img class="payment_img" src="<?= $order_img_trans?>"> -->
-									</div>
-									<div class="col-sm-6"  style="margin-left: 30px;">
-										<p><?= $order_desc_text_trans?></p>
-									</div>
-									<div class="col-sm-2 price_right">
-										<p><?= $price_text_trans?> &#163;</p>
-									</div>
-								</div>
-								<div class="row div_top">
-									<div class="col-sm-6">
-										<p class="sub_total_text"><?= $subtotal_text_trans?></p>										
-									</div>
-									<div class="col-sm-6 price_right">
-										<p><?= $price_text_trans?> &#163;</p>										
-									</div>
-								</div>
-								<div class="row div_top">
-									<div class="col-sm-6">
-										<p class="sub_total_text"><?= $total_text_trans?></p>										
-									</div>
-									<div class="col-sm-6 price_right">
-										<p><?= $price_text_trans?> &#163;</p>										
-									</div>
-								</div>	
-								<div class="row div_top download_loader">
-									<?php
-										$JumperDownloadText = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='JUMPER_DOWN_TEXT' AND LANG_ID='$lang_id'");						
-									?>
-									<a class="download_link" href="" target="_blank">
-										<button>
-											<?= encodes(mysqli_fetch_assoc($JumperDownloadText)['TEXT'])?>											
-										</button>
-									</a>									
-                  					<!-- <i class="fa fa-refresh fa-spin" style="font-size:24px;"></i> -->
-                  					<svg class="spinner" width="174px" height="174px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
-                  					     <circle class="path" fill="transparent" stroke-width="2" cx="33" cy="33" r="30" stroke="#fff"/>
-                  					       <linearGradient id="gradient">
-                  					         <stop offset="50%" stop-color="#42d179" stop-opacity="1"/>
-                  					         <stop offset="65%" stop-color="#42d179" stop-opacity=".5"/>
-                  					         <stop offset="100%" stop-color="#42d179" stop-opacity="0"/>
-                  					       </linearGradient>
-                  					    </circle>
-                  					     <svg class="spinner-dot dot" width="5px" height="5px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg" x="37" y="1.5">
-                  					       <circle class="path" fill="#fff" cx="33" cy="33" r="30"/>
-                  					      </circle>
-                  					    </svg> 
-                  					  </svg> 
-
-								</div>		  				
-				  			</div>
-				  		</div>
-				  	</div>
-				</section>
-			</main>										
-		
 
 		<div class="row system_defination_btn">
 			<div class="col-sm-12">
@@ -1432,7 +1063,6 @@ var_dump($response);
 				<?php $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>
 				
 				<input type="hidden" name="siteLink" value="<?= $actual_link?>?action=chart_data" data-validateId = "">
-				<input type="hidden" name="check_link_status" value="<?= $actual_link?>?action=link_status" data-validateId = "">
 
 				<button type="button" id="save_data" class="btn btn-success" data-action="<?= $actual_link; ?>?action=save_data" style="float: right;"> <img src="images/ajax-loader.gif" style="display: none;">  <span>Save Strategy</span> </button>
 				
@@ -1493,9 +1123,7 @@ var_dump($response);
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 		
 
-	<script src="js/l10n.js" data-rel-js></script>
 
-	<script src="js/stripe_design.js" data-rel-js></script>
 
 
 	<script>
