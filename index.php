@@ -15,6 +15,7 @@
 	function encodes($text) {
 				
 				if ($GLOBALS['lang_id'] == 'ES') {
+					// $text = htmlentities($text, ENT_QUOTES, "ISO-639-1");
 					$text = htmlentities($text, ENT_QUOTES, "ISO-8859-1");
 					$text = html_entity_decode($text);
 					return $text;
@@ -22,6 +23,7 @@
 					return $text;
 				}
 			}
+// echo encodes("Elemento para validar la entrada/salida cuando se produce en mercado un cruce de medias móviles.");
 ?>
 
 
@@ -338,7 +340,7 @@ var_dump($response);
 				    'source'  => $source,
 				    'amount'   => $amount,
 				    'currency' => $currency,
-				    'description' => 'Description of element'			        
+				    'description' => 'Testing'			        
 				));
 
 				$json_data = explode("JSON: ", $charge);
@@ -349,7 +351,8 @@ var_dump($response);
 					$session_id = $_POST['session_id'];
 					$status = 'F';
 
-					$sql = "INSERT INTO `session_payment` (`session_pay_id`, `session_id`, `user_id`, `type_payment`, `estatus`, `estatus_text`) VALUES (NULL, '$session_id', '$user_id', '', 'N', 'ASDFSAF')";
+					$sql = "INSERT INTO `session_compiled` (`session_id`, `user_id`, `estatus`) VALUES ('$session_id', '$user_id','N')";
+					// $sql = "INSERT INTO `session_payment` (`session_pay_id`, `session_id`, `user_id`, `type_payment`, `estatus`, `estatus_text`) VALUES (NULL, '$session_id', '$user_id', '', 'N', 'ASDFSAF')";
 					
 				    $con->query($sql);
 
@@ -369,11 +372,11 @@ var_dump($response);
 
 			$pay_id = $_POST['session_pay_id'];
 	 		
-	 		$query = mysqli_query($con,"SELECT * FROM session_payment WHERE session_pay_id = '$pay_id' AND estatus = 'F'");
+	 		$query = mysqli_query($con,"SELECT * FROM session_compiled WHERE session_comp_id = '$pay_id' AND estatus = 'F'");
 
 	 		if(mysqli_num_rows($query) > 0){
 	 			// Send download file link
-	 			echo encodes(mysqli_fetch_assoc($query)['estatus_text']);										
+	 			echo encodes(mysqli_fetch_assoc($query)['url_file']);										
 	 		
 	 		}
 			
