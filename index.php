@@ -3,10 +3,11 @@
 <?php
 	require_once('stripe-php/init.php');
 ?>
+
 <?php
 	
-	require('connection.php');
 	// require(dirname(dirname(dirname(dirname(dirname(__FILE__))))).'/wp-authenticate.php');
+	require('connection.php');
 	
 	
 	global $lang_id;
@@ -16,16 +17,16 @@
 				
 				if ($GLOBALS['lang_id'] == 'ES') {
 					// $text = htmlentities($text, ENT_QUOTES, "ISO-639-1");
-					$text = htmlentities($text, ENT_QUOTES, "ISO-8859-1");
+					// $text = htmlentities($text, ENT_QUOTES, "ISO-8859-1");
+					$text = htmlspecialchars($text, ENT_NOQUOTES, 'ISO-8859-1');
 					$text = html_entity_decode($text);
 					return $text;
 				} else {
 					return $text;
 				}
 			}
-// echo encodes("Elemento para validar la entrada/salida cuando se produce en mercado un cruce de medias móviles.");
+// echo encodes("Telefonía Elemento para validar la entrada/salida cuando se produce en mercado un cruce de medias móviles.");
 ?>
-
 
 <?php if ($_SERVER['REQUEST_METHOD'] !== 'POST'): 
 
@@ -327,12 +328,13 @@ var_dump($response);
 
 		else if($_GET['action'] == 'stripe_payment'){
 			
-		    
 			$name = $_POST['data']['name'];
 			$amount = $_POST['data']['price']*100;
 			$currency = 'EUR';
 			$source = $_POST['stripe_token'];
 			$email = $_POST['data']['email'];
+		    $price = $_POST['data']['price'];
+			$date = date('Y-m-d');
 			\Stripe\Stripe::setApiKey('sk_test_doaAddzso5GZH5xoQ4YwDbQO');
 			try{  			    
 			    //charge a credit or a debit card
@@ -350,11 +352,19 @@ var_dump($response);
 					$user_id = 0;
 					$session_id = $_POST['session_id'];
 					$status = 'F';
+					// 4242 4242 4242 4242
+
+					$pay_ = "INSERT INTO `wp_payment` (`payment_id`, `session_id`, `user_id`, `payment_amount`, `date`) VALUES (NULL, '$session_id', '$user_id', '$price', '$date');";
+					$con->query($pay_);
+
+					// session_payment
+					// $session_pay_ = "INSERT INTO `session_payment` (`session_pay_id`, `session_id`, `user_id`, `type_payment`, `estatus`, `estatus_text`) VALUES (NULL, '$session_id', '$user_id', '$amount', '$date');";
+					// $con->query($session_pay_);
+					
 
 					$sql = "INSERT INTO `session_compiled` (`session_id`, `user_id`, `estatus`) VALUES ('$session_id', '$user_id','N')";
-					// $sql = "INSERT INTO `session_payment` (`session_pay_id`, `session_id`, `user_id`, `type_payment`, `estatus`, `estatus_text`) VALUES (NULL, '$session_id', '$user_id', '', 'N', 'ASDFSAF')";
-					
-				    $con->query($sql);
+
+				    $con->query($sql);				    
 
 			     	$last_pay_id = $con->insert_id;
 				     
@@ -393,7 +403,8 @@ var_dump($response);
 		<!DOCTYPE html>
 	   <html lang="<?= strtolower($lang_id); ?>">
 	   <head>
-		
+
+	   
 		<link class="all_files" rel="stylesheet" href="css/jquery-ui.css?time=<?= time(); ?>">
 		<link class="all_files" rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css?time=<?= time(); ?>" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 		<link class="all_files" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css?time=<?= time(); ?>" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -433,6 +444,14 @@ var_dump($response);
 				$('.all_files').appendTo('head');
 			});
 		</script>
+
+
+
+
+
+
+
+
 		</head>
 		<?php
 			$el_save_obj = mysqli_query($con, "SELECT * FROM `translations` WHERE 
@@ -1242,10 +1261,10 @@ var_dump($response);
 			<img class="payment_loader" src="images/ajax-loader-green.gif" style="display: none; position: absolute; top: 45%; left: 43%; height: 100px;">
 	<?php
 
-	// $user_info = mysqli_query($wp_con,"SELECT * FROM wp_users WHERE id = 1");
-	// $user_fetched = mysqli_fetch_assoc($user_info);
-	// $user_name = $user_fetched['user_nicename'];
-	// $user_email = $user_fetched['user_email'];
+	$user_info = mysqli_query($wp_con,"SELECT * FROM wp_users WHERE id = 1");
+	$user_fetched = mysqli_fetch_assoc($user_info);
+	$user_name = $user_fetched['user_nicename'];
+	$user_email = $user_fetched['user_email'];
 
 	// Pay title
 	$pay_text = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='PAY_TITLE' AND LANG_ID='$lang_id'");
@@ -1299,13 +1318,13 @@ var_dump($response);
 								        <div class="row">
 								          <div class="field">
 								            <label for="example5-name" data-tid="elements_examples.form.name_label">Name</label>
-								            <input id="example5-name" data-tid="elements_examples.form.name_placeholder" class="input" type="text" value="admin" required="" autocomplete="name">
+								            <input id="example5-name" data-tid="elements_examples.form.name_placeholder" class="input" type="text" value="<?= $user_name?>" required="" autocomplete="name">
 								          </div>
 								        </div>
 								        <div class="row">
 								          <div class="field" style="width: 44%;">
 								            <label for="example5-email" data-tid="elements_examples.form.email_label">Email</label>
-								            <input id="example5-email" data-tid="elements_examples.form.email_placeholder" class="input" type="text" value="aksdjf@sdf.asdf" required="" autocomplete="email">
+								            <input id="example5-email" data-tid="elements_examples.form.email_placeholder" class="input" type="text" value="<?= $user_email?>" required="" autocomplete="email">
 								          </div>
 								          <div class="field" style="width: 44%;">
 								            <label for="example5-phone" data-tid="elements_examples.form.phone_label">Phone</label>
@@ -1442,7 +1461,7 @@ var_dump($response);
 				<?php
 					$strategy_summary_text = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='STRATEGY_TEXT3' AND LANG_ID='$lang_id'");
 				?>
-				<button type="button" id="close_tooltipseter_" class="btn build-next" data-tooltip-content="#tooltip_content_definition" data-action="<?= $actual_link; ?>?action=system_defination" style="margin-top: 20px; margin-left: 7px;float: left;">  <span><?= encodes(mysqli_fetch_assoc($strategy_summary_text)['TEXT']); ?></span> </button>
+				<button type="button" id="close_tooltipseter_" class="btn build-next" data-tooltip-content="#tooltip_content_definition" data-action="<?= $actual_link; ?>?action=system_defination" style="margin-top: 20px; margin-left: 7px;float: left;">  <span><?= encodes(mysqli_fetch_assoc($strategy_summary_text)['TEXT']); ?> </span> </button>
 				<!-- <button type="button" class="btn build-next" style="margin-top: 20px; margin-left: -14px;float: left;">  <span><?= encodes(mysqli_fetch_assoc($strategy_summary_text)['TEXT']); ?></span> </button> -->
 				<br>
 
