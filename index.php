@@ -335,6 +335,8 @@ var_dump($response);
 			$email = $_POST['data']['email'];
 		    $price = $_POST['data']['price'];
 			$date = date('Y-m-d');
+			$user_id = 0;
+			$session_id = $_POST['session_id'];
 			\Stripe\Stripe::setApiKey('sk_test_doaAddzso5GZH5xoQ4YwDbQO');
 			try{  			    
 			    //charge a credit or a debit card
@@ -349,8 +351,8 @@ var_dump($response);
 				// var_dump($json_data[1]);
 				if($charge->paid){
 
-					$user_id = 0;
-					$session_id = $_POST['session_id'];
+					// $user_id = 0;
+					// $session_id = $_POST['session_id'];
 					$status = 'F';
 					// 4242 4242 4242 4242
 
@@ -358,8 +360,8 @@ var_dump($response);
 					$con->query($pay_);
 
 					// session_payment
-					// $session_pay_ = "INSERT INTO `session_payment` (`session_pay_id`, `session_id`, `user_id`, `type_payment`, `estatus`, `estatus_text`) VALUES (NULL, '$session_id', '$user_id', '$amount', '$date');";
-					// $con->query($session_pay_);
+					$session_pay_ = "INSERT INTO `session_payment` (`session_pay_id`, `session_id`, `user_id`, `type_payment`, `estatus`, `estatus_text`) VALUES (NULL, '$session_id', '$user_id', 'STRIPE', 'Success', 'Payment transaction successfull');";
+					$con->query($session_pay_);
 					
 
 					$sql = "INSERT INTO `session_compiled` (`session_id`, `user_id`, `estatus`) VALUES ('$session_id', '$user_id','N')";
@@ -371,9 +373,14 @@ var_dump($response);
 				    echo $last_pay_id."pay_id";
 
 				}else{
+					// $session_pay_ = "INSERT INTO `session_payment` (`session_pay_id`, `session_id`, `user_id`, `type_payment`, `estatus`, `estatus_text`) VALUES (NULL, '$session_id', '$user_id', 'STRIPE', 'Failed', '$charge');";
+					// $data = $con->query($session_pay_);
 					echo $charge;
 				}
 			} catch(\Exception $e){
+				$error = $e->getMessage();
+				$session_pay_ = "INSERT INTO `session_payment` (`session_pay_id`, `session_id`, `user_id`, `type_payment`, `estatus`, `estatus_text`) VALUES (NULL, '$session_id', '$user_id', 'STRIPE', 'Failed', '$error');";
+				$data = $con->query($session_pay_);				
 				echo $e->getMessage();
 			}	
 		

@@ -148,6 +148,7 @@ function registerElements(elements, exampleName) {
           // 4242 4242 4242 4242              
           // console.log(response);
           if(response.includes('pay_id')){  
+              $('.reset').hide();
               var payment_id = $.trim(response).slice(0, -2);              
               example.classList.add('submitted'); 
               $("h3.title").html("Payment successful");
@@ -166,6 +167,7 @@ function registerElements(elements, exampleName) {
                 .done(function(response) {
                     var trimmed_res = $.trim(response);                   
                   if(trimmed_res != ''){
+                    $('.reset').show();
                     $(".spinner").hide();
                     $(".div_top a").attr('href', trimmed_res);
                     $(".div_top a").fadeIn('slow', function() {
@@ -173,6 +175,7 @@ function registerElements(elements, exampleName) {
                     });
                     clearInterval(close_interval);                    
                   }else{
+                    $('.reset').hide();
                     $(".spinner").show();
                   }
 
@@ -245,7 +248,10 @@ function registerElements(elements, exampleName) {
     // Resetting the form (instead of setting the value to `''` for each input)
     // helps us clear webkit autofill styles.
       example.classList.remove('submitting');
-    
+    $(".div_top a").fadeOut('slow', function() {
+      // $(".div_top a").show();
+       $(".div_top a").hide();
+    }); 
     form.reset();
 
     // Clear each Element.
