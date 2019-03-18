@@ -350,9 +350,7 @@ var_dump($response);
 				$json_data = explode("JSON: ", $charge);
 				// var_dump($json_data[1]);
 				if($charge->paid){
-
-					// $user_id = 0;
-					// $session_id = $_POST['session_id'];
+					
 					$status = 'F';
 					// 4242 4242 4242 4242
 
@@ -363,18 +361,18 @@ var_dump($response);
 					$session_pay_ = "INSERT INTO `session_payment` (`session_pay_id`, `session_id`, `user_id`, `type_payment`, `estatus`, `estatus_text`) VALUES (NULL, '$session_id', '$user_id', 'STRIPE', 'Success', 'Payment transaction successfull');";
 					$con->query($session_pay_);
 					
+					echo $charge->paid."payment_done_success";
+	 				// $query = mysqli_query($con,"SELECT * FROM session_compiled WHERE session_comp_id = '$pay_id'");
 
-					$sql = "INSERT INTO `session_compiled` (`session_id`, `user_id`, `estatus`) VALUES ('$session_id', '$user_id','N')";
+					// $sql = "INSERT INTO `session_compiled` (`session_id`, `user_id`, `estatus`) VALUES ('$session_id', '$user_id','N')";
 
-				    $con->query($sql);				    
+				 //    $con->query($sql);				    
 
-			     	$last_pay_id = $con->insert_id;
+			  //    	$last_pay_id = $con->insert_id;
 				     
-				    echo $last_pay_id."pay_id";
+				 //    echo $last_pay_id."pay_id";
 
-				}else{
-					// $session_pay_ = "INSERT INTO `session_payment` (`session_pay_id`, `session_id`, `user_id`, `type_payment`, `estatus`, `estatus_text`) VALUES (NULL, '$session_id', '$user_id', 'STRIPE', 'Failed', '$charge');";
-					// $data = $con->query($session_pay_);
+				}else{					
 					echo $charge;
 				}
 			} catch(\Exception $e){
@@ -385,15 +383,42 @@ var_dump($response);
 			}	
 		
 		}
+
+
+		else if($_GET['action'] == 'session_compiled'){
+			$user_id = 0;
+			
+			$session_id = $_POST['session_id'];
+			
+			$sql = "INSERT INTO `session_compiled` (`session_id`, `user_id`, `estatus`) VALUES ('$session_id', '$user_id','N')";
+
+		    $con->query($sql);				    
+
+	     	$last_pay_id = $con->insert_id;
+		     
+		    echo $last_pay_id;
+		}
+
+
 		else if($_GET['action'] == 'link_status'){
 
-			$pay_id = $_POST['session_pay_id'];
+			$pay_id = $_POST['compile_id'];
 	 		
-	 		$query = mysqli_query($con,"SELECT * FROM session_compiled WHERE session_comp_id = '$pay_id' AND estatus = 'F'");
-
+	 		$query = mysqli_query($con,"SELECT * FROM session_compiled WHERE session_comp_id = '$pay_id'");
+	 		$fetched_data = mysqli_fetch_assoc($query);
 	 		if(mysqli_num_rows($query) > 0){
-	 			// Send download file link
-	 			echo encodes(mysqli_fetch_assoc($query)['url_file']);										
+
+	 			if($fetched_data['estatus'] == 'F'){
+		 			// Send download file link
+		 			echo encodes($fetched_data['url_file']);											 				
+	 			}else if($fetched_data['estatus'] == 'E'){
+	 				$error = mysqli_query($con,"SELECT * FROM error WHERE error_code = 3 AND lang_id = '$lang_id'");
+	 				if(mysqli_num_rows($error) > 0){
+		 				echo encodes(mysqli_fetch_assoc($error)['ERROR_DESC'])."complie_error";											 				
+	 				}else{
+	 					echo "error complie_error";	 					
+	 				}
+	 			}
 	 		
 	 		}
 			
@@ -1462,6 +1487,7 @@ var_dump($response);
 				
 				<input type="hidden" name="siteLink" value="<?= $actual_link?>?action=chart_data" data-validateId = "">
 				<input type="hidden" name="check_link_status" value="<?= $actual_link?>?action=link_status" data-validateId = "">
+				<input type="hidden" name="session_compiled" value="<?= $actual_link?>?action=session_compiled" data-validateId = "">
 
 				<button type="button" id="save_data" class="btn btn-success" data-action="<?= $actual_link; ?>?action=save_data" style="float: right;"> <img src="images/ajax-loader.gif" style="display: none;">  <span>Save Strategy</span> </button>
 				
@@ -1507,6 +1533,7 @@ var_dump($response);
 		<input type="hidden" class="validate_visisted">	
 		<input type="hidden" class="element_data_old">
 		<input type="hidden" class="element_data_new">
+		<input type="hidden" class="file_url_compiled">
 	
 		<div class="tooltip_templates">
 		    <span id="tooltip_content_definition" class="append_response">

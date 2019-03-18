@@ -624,7 +624,7 @@ $(document).ready(function() {
 										})
 										.done(function(response) {
 											if(response.length > 8){
-												$(".download_pay").attr('disabled',false);
+												// $(".download_pay").attr('disabled',false);
 
 												if($.tooltipster.instances($('.build-next')).length > 0){
 
@@ -1217,48 +1217,116 @@ $(document).on('click', 'input[name="read_accept"], input[name="agree_condition"
 	}else{
 		$(this).attr('checked', true);		
 	}
+	var first_option = $('input[name="read_accept"]').attr('checked');
+	var scnd_option = $('input[name="agree_condition"]').attr('checked');
+
+		console.log(first_option, scnd_option);
+		if(first_option == 'checked' && scnd_option == 'checked'){
+			$(".download_pay").attr('disabled', false);
+		}else{
+			$(".download_pay").attr('disabled', true);			
+		}
 });
+
+
+
+
+
 
 $(document).on('click', '.download_pay', function(event) {
 	event.preventDefault();
+	$('a.reset').trigger('click');
 	var first_option = $('input[name="read_accept"]').attr('checked');
 	var scnd_option = $('input[name="agree_condition"]').attr('checked');
 
 	// console.log(first_option, scnd_option);
-	if(first_option != 'checked' || scnd_option != 'checked'){
-		if(first_option != 'checked' && scnd_option != 'checked'){
-			alert("Please check the options");
-		}
-		else if(first_option != 'checked'){
-			alert("Please check fst");
-		}else{
-			alert("Please check scnd");
-		}
-	}else{
+	// if(first_option != 'checked' || scnd_option != 'checked'){
+		// $(".download_pay").attr('disabled', false);
+
+		// if(first_option != 'checked' && scnd_option != 'checked'){
+		// 	alert("Please check the options");
+		// }
+		// else if(first_option != 'checked'){
+		// 	alert("Please check fst");
+		// }else{
+		// 	alert("Please check scnd");
+		// }
+	// }else{
+
+		$(".download_pay").attr('disabled', true);
 		$('.payment_loader').show();
-
-		setTimeout(function(){
-		$('.payment_loader').hide();
-		
-		$(".payment_stripe").fadeIn('fast', function() {
-			$(".download-tab").css('opacity', '0.2');
-			$(".payment_stripe").show();
+		var session_id = $("input[name=session_strategy_id]").val();
+		var  url = $("input[name='session_compiled']").val();
+		$.ajax({
+			url: url,
+			type: 'POST',
+			data: {
+				session_id: session_id
+			},
+		})
+		.done(function(response) {
+			var compile_id = $.trim(response);
+			var close_interval;
+            var url = $("input[name='check_link_status']").val();
+			close_interval = setInterval(function(){
+				$.ajax({
+					url: url,
+					type: 'POST',
+					data: {
+						compile_id: compile_id
+					},
+				})
+				.done(function(response) {
+					var response_data = $.trim(response);
+					if(response_data != ''){
+						if(response_data.includes('complie_error')){	
+							var error = response_data.split("complie_error");
+							$(".download_pay").attr('disabled', true);
+							$('.payment_loader').hide();
+							$('input[name="read_accept"]').removeAttr('checked');
+							$('input[name="agree_condition"]').removeAttr('checked');
+							alert(error);
+						}else{
+							$("input.file_url_compiled").val(response_data);
+							$(".download_pay").attr('disabled', false);
+							$('.payment_loader').hide();
+							$(".payment_stripe").fadeIn('fast', function() {
+								$(".download-tab").css('opacity', '0.2');
+								$(".payment_stripe").show();
+							});
+						}
+		                clearInterval(close_interval);                    																		
+					}
+				});
+				
+			}, 1000);
 		});
-			
-		}, 3000)};
-
-});
-
-$(document).on('click', '.close_payment', function(event) {
-	event.preventDefault();
-
-	$(".payment_stripe").fadeOut('slow', function() {
 		
-		$(".download-tab").css('opacity', '1');
-		$(".payment_stripe").hide();
 
-	});
+		// setTimeout(function(){
+		// $('.payment_loader').hide();
+		
+		// $(".payment_stripe").fadeIn('fast', function() {
+		// 	$(".download-tab").css('opacity', '0.2');
+		// 	$(".payment_stripe").show();
+		// });
+			
+		// }, 3000);
+	// }
+
 
 });
+
+// $(document).on('click', '.close_payment', function(event) {
+// 	event.preventDefault();
+
+// 	$(".payment_stripe").fadeOut('slow', function() {
+		
+// 		$(".download-tab").css('opacity', '1');
+// 		$(".payment_stripe").hide();
+
+// 	});
+
+// });
 
 

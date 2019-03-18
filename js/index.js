@@ -7,7 +7,8 @@ function registerElements(elements, exampleName) {
   var example = document.querySelector(formClass);
 
   var form = example.querySelector('form');
-  var resetButton = example.querySelector('a.reset');
+  var resetButton = example.querySelector('.close_payment');
+  // var resetButton = example.querySelector('a.reset');
   var error = form.querySelector('.error');
   var errorMessage = error.querySelector('.message');
 
@@ -146,47 +147,57 @@ function registerElements(elements, exampleName) {
         })
         .done(function(response) { 
           // 4242 4242 4242 4242              
-          // console.log(response);
-          if(response.includes('pay_id')){  
+          console.log(response);
+          if(response.includes('payment_done_success')){  
               $('.reset').hide();
-              var payment_id = $.trim(response).slice(0, -2);              
+              // var payment_id = $.trim(response).slice(0, -2);              
               example.classList.add('submitted'); 
+              var file_link = $("input.file_url_compiled").val();
+
               $("h3.title").html("Payment successful");
+              
               $("p.message").html("Thank You"); 
-              var url = $("input[name='check_link_status']").val();
-              console.log(url);
-              var close_interval;
-              close_interval = setInterval(function(){
-                $.ajax({
-                  url: url,
-                  type: 'POST',
-                  data: {
-                    session_pay_id: payment_id
-                  },
-                })
-                .done(function(response) {
-                    var trimmed_res = $.trim(response);                   
-                  if(trimmed_res != ''){
-                    $('.reset').show();
-                    $(".spinner").hide();
-                    $(".div_top a").attr('href', trimmed_res);
-                    $(".div_top a").fadeIn('slow', function() {
-                      $(".div_top a").show();
-                    });
-                    clearInterval(close_interval);                    
-                  }else{
-                    $('.reset').hide();
-                    $(".spinner").show();
-                  }
-
-
-                });
-
-              }, 1000);
+              
+              // $('.reset').show();
+              
+              $(".spinner").hide();
+              
+              $(".div_top a").attr('href', file_link);
+              
+              $(".div_top a").fadeIn('slow', function() {
+                $(".div_top a").show();
+              });
+              // var url = $("input[name='check_link_status']").val();
+              // var close_interval;
+              // close_interval = setInterval(function(){
+              //   $.ajax({
+              //     url: url,
+              //     type: 'POST',
+              //     data: {
+              //       session_pay_id: payment_id
+              //     },
+              //   })
+              //   .done(function(response) {
+              //       var trimmed_res = $.trim(response);                   
+              //       if(trimmed_res != ''){
+              //       $('.reset').show();
+              //       $(".spinner").hide();
+              //       $(".div_top a").attr('href', trimmed_res);
+              //       $(".div_top a").fadeIn('slow', function() {
+              //         $(".div_top a").show();
+              //       });
+              //       clearInterval(close_interval);                    
+              //       }else{
+              //         $('.reset').hide();
+              //         $(".spinner").show();
+              //       }
+              //   });
+              // }, 1000);
               
 
           }else{
-          console.log(response);
+              console.log(response);
+              $('.reset').hide();
 
               example.classList.add('submitted');                      
               $("h3.title").html("Payment Failed");
@@ -229,10 +240,10 @@ function registerElements(elements, exampleName) {
           //     $(".icon").hide();
           // }
          
-        })
-        .fail(function(response) {
-          console.log(response);
-        });       
+        });
+        // .fail(function(response) {
+        //   console.log(response);
+        // });       
         
 
       } else {
@@ -245,6 +256,16 @@ function registerElements(elements, exampleName) {
 
   resetButton.addEventListener('click', function(e) {
     e.preventDefault();
+
+    $(".payment_stripe").fadeOut('slow', function() {
+      
+      $(".download-tab").css('opacity', '1');
+      $(".payment_stripe").hide();
+
+    });
+
+    setInterval(function(){
+      
     // Resetting the form (instead of setting the value to `''` for each input)
     // helps us clear webkit autofill styles.
       example.classList.remove('submitting');
@@ -265,5 +286,22 @@ function registerElements(elements, exampleName) {
     // Resetting the form does not un-disable inputs, so we need to do it separately:
     enableInputs();
     example.classList.remove('submitted');
+    }, 2000);
+
+    
+
   });
+
+
+  // $(document).on('click', '.close_payment', function(event) {
+  //   event.preventDefault();
+
+  //   $(".payment_stripe").fadeOut('slow', function() {
+      
+  //     $(".download-tab").css('opacity', '1');
+  //     $(".payment_stripe").hide();
+
+  //   });
+
+  // });
 }
