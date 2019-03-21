@@ -1317,16 +1317,9 @@ $(document).on('click', '.download_pay', function(event) {
 
 });
 
-// $(document).on('click', '.close_payment', function(event) {
-// 	event.preventDefault();
+jQuery(document).ready(function($) {
+	console.log($("input.is-empty").attr('placeholder'));
+});
 
-// 	$(".payment_stripe").fadeOut('slow', function() {
-		
-// 		$(".download-tab").css('opacity', '1');
-// 		$(".payment_stripe").hide();
-
-// 	});
-
-// });
 
 

@@ -1330,9 +1330,104 @@ var_dump($response);
 	$order_img = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='ORDER_IMG_URL' AND LANG_ID='$lang_id'");
 	$order_img_trans = encodes(mysqli_fetch_assoc($order_img)['TEXT']);
 
+
+	if($lang_id == 'ES'){
+
+		// LABEL_NAME
+		$label_name = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_NAME' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_name = encodes(mysqli_fetch_assoc($label_name)['TEXT']);
+		
+		// LABEL_EMAIL
+		$label_email = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_EMAIL' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_email = encodes(mysqli_fetch_assoc($label_email)['TEXT']);
+
+		// LABEL_PHONE
+		$label_phone = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_PHONE' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_phone = encodes(mysqli_fetch_assoc($label_phone)['TEXT']);
+
+		// LABEL_ADRESS
+		$label_address = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_ADRESS' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_address = encodes(mysqli_fetch_assoc($label_address)['TEXT']);
+
+		// LABEL_CITY
+		$label_city = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_CITY' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_city = encodes(mysqli_fetch_assoc($label_city)['TEXT']);
+
+		// LABEL_STATE
+		$label_state = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_STATE' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_state = encodes(mysqli_fetch_assoc($label_state)['TEXT']);
+
+		// LABEL_ZIP
+		$label_zip = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_ZIP' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_zip = encodes(mysqli_fetch_assoc($label_zip)['TEXT']);
+
+		// LABEL_CARD
+		$label_card = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_CARD' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_card = encodes(mysqli_fetch_assoc($label_card)['TEXT']);
+
+		// LABEL_VALID
+		$label_valid = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_VALID' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_valid = encodes(mysqli_fetch_assoc($label_valid)['TEXT']);
+
+		// LABEL_CVC
+		$label_cvc = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_CVC' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_cvc = encodes(mysqli_fetch_assoc($label_cvc)['TEXT']);
+
+		// LABEL__OR_ENTER
+		$label_or_enter = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL__OR_ENTER' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_or_enter = encodes(mysqli_fetch_assoc($label_or_enter)['TEXT']);
+
+	}else{
+		$label_name = 'Name';
+		$label_email = 'Email';
+		$label_phone = 'Phone';
+		$label_address = 'Address';
+		$label_city = 'City';
+		$label_state = 'State';
+		$label_zip = 'ZIP';
+		$label_card = 'Card Number:';
+		$label_valid = 'Expiration:';
+		$label_cvc = 'CVC security code:';
+		$label_or_enter = 'Or enter card details';
+	}
+
+
 	?>
 	
-			<main class="payment_stripe" style="display: none;">
+			<main class="payment_stripe" >
 				<section class="container-lg">     
 				  <!--Example 5-->
 				  	<div class="cell example example5" id="example-5">
@@ -1349,38 +1444,38 @@ var_dump($response);
 								        <legend class="payment-request-available" data-tid="elements_examples.form.enter_card_manually">Or enter card details</legend>
 								        <div class="row">
 								          <div class="field">
-								            <label for="example5-name" data-tid="elements_examples.form.name_label">Name</label>
+								            <label for="example5-name" data-tid="elements_examples.form.name_label"><?= $label_name?></label>
 								            <input id="example5-name" data-tid="elements_examples.form.name_placeholder" class="input" type="text" value="<?= $user_name?>" required="" autocomplete="name">
 								          </div>
 								        </div>
 								        <div class="row">
 								          <div class="field" style="width: 44%;">
-								            <label for="example5-email" data-tid="elements_examples.form.email_label">Email</label>
+								            <label for="example5-email" data-tid="elements_examples.form.email_label"><?= $label_email?></label>
 								            <input id="example5-email" data-tid="elements_examples.form.email_placeholder" class="input" type="text" value="<?= $user_email?>" required="" autocomplete="email">
 								          </div>
 								          <div class="field" style="width: 44%;">
-								            <label for="example5-phone" data-tid="elements_examples.form.phone_label">Phone</label>
+								            <label for="example5-phone" data-tid="elements_examples.form.phone_label"><?= $label_phone?></label>
 								            <input id="example5-phone" data-tid="elements_examples.form.phone_placeholder" class="input" type="text" placeholder="(941) 555-0123" required="" autocomplete="tel">
 								          </div>
 								        </div>
 								        <div data-locale-reversible>
 								          <div class="row">
 								            <div class="field">
-								              <label for="example5-address" data-tid="elements_examples.form.address_label">Address</label>
+								              <label for="example5-address" data-tid="elements_examples.form.address_label"><?= $label_address?></label>
 								              <input id="example5-address" data-tid="elements_examples.form.address_placeholder" class="input" type="text" placeholder="185 Berry St" required="" autocomplete="address-line1">
 								            </div>
 								          </div>
 								          <div class="row" data-locale-reversible>
 								            <div class="field" style="width: 28%;">
-								              <label for="example5-city" data-tid="elements_examples.form.city_label">City</label>
+								              <label for="example5-city" data-tid="elements_examples.form.city_label"><?= $label_city?></label>
 								              <input id="example5-city" data-tid="elements_examples.form.city_placeholder" class="input" type="text" placeholder="San Francisco" required="" autocomplete="address-level2">
 								            </div>
 								            <div class="field" style="width: 28%;">
-								              <label for="example5-state" data-tid="elements_examples.form.state_label">State</label>
+								              <label for="example5-state" data-tid="elements_examples.form.state_label"><?= $label_state?></label>
 								              <input id="example5-state" data-tid="elements_examples.form.state_placeholder" class="input empty" type="text" placeholder="CA" required="" autocomplete="address-level1">
 								            </div>
 								            <div class="field" style="width: 28%;">
-								              <label for="example5-zip" data-tid="elements_examples.form.postal_code_label">ZIP</label>
+								              <label for="example5-zip" data-tid="elements_examples.form.postal_code_label"><?= $label_zip?></label>
 								              <input id="example5-zip" data-tid="elements_examples.form.postal_code_placeholder" class="input empty" type="text" placeholder="94107" required="" autocomplete="postal-code">
 								            </div>
 								          </div>
@@ -1526,6 +1621,13 @@ var_dump($response);
 				ERROR_CODE = 3  AND
 				LANG_ID = '".$lang_id."'
 			");
+
+
+
+
+
+
+
 	?>
 
 		<input type="hidden" class="error_code_data" data-error="<?= encodes(mysqli_fetch_assoc($error_data)['TEXT'])?>" data-error-0="<?= encodes(mysqli_fetch_assoc($error_code_0)['ERROR_DESC'])?>" data-error-1="<?= encodes(mysqli_fetch_assoc($error_code_1)['ERROR_DESC'])?>" data-error-2="<?= encodes(mysqli_fetch_assoc($error_code_2)['ERROR_DESC'])?>" data-error-3="<?= encodes(mysqli_fetch_assoc($error_code_3)['ERROR_DESC'])?>">
