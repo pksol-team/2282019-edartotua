@@ -1,6 +1,13 @@
 'use strict';
+// var pk = '';
+// jQuery(document).ready(function($) {
+//   var pk = $('input.publish_key').val();
+//   console.log(pk);
+      
+//     }); 
+var element = document.getElementById('publish_key').value;
 
-var stripe = Stripe('pk_test_fu9pPdhwW3qilZxpvQ1UjF24');
+var stripe = Stripe(element);
 
 function registerElements(elements, exampleName) {
   var formClass = '.' + exampleName;

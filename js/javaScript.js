@@ -156,7 +156,8 @@ function drag_and_drop_elements($, type, counter) {
 			setScrollAndIndex($);
 			
 			element.trigger('click');
-
+			// element.trigger('click');
+			console.log(element);
 			// $('#save_data').trigger('click');
 			
 

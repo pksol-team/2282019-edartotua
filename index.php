@@ -328,6 +328,11 @@ var_dump($response);
 
 		else if($_GET['action'] == 'stripe_payment'){
 			
+			$fetch = mysqli_query($con, "SELECT * FROM `payment_keys` WHERE payment_type = 'stripe'");
+		if($fetch){
+			$s_k = mysqli_fetch_assoc($fetch)['secret_key'];
+		}
+
 			$name = $_POST['data']['name'];
 			$amount = $_POST['data']['price']*100;
 			$currency = 'EUR';
@@ -338,7 +343,7 @@ var_dump($response);
 			$date = date('Y-m-d');
 			$user_id = 0;
 			$session_id = $_POST['session_id'];
-			\Stripe\Stripe::setApiKey('sk_test_doaAddzso5GZH5xoQ4YwDbQO');
+			\Stripe\Stripe::setApiKey($s_k);
 			try{  			    
 			    //charge a credit or a debit card
 				$charge = \Stripe\Charge::create(array(
@@ -436,7 +441,12 @@ var_dump($response);
 		<!DOCTYPE html>
 	   <html lang="<?= strtolower($lang_id); ?>">
 	   <head>
-
+		<?php
+		$fetch_key = mysqli_query($con, "SELECT * FROM `payment_keys` WHERE payment_type = 'stripe'");
+		
+			$p_k = mysqli_fetch_assoc($fetch_key)['publish_key'];
+?>
+<input type="hidden" id="publish_key" value="<?= $p_k?>">	
 	   
 		<link class="all_files" rel="stylesheet" href="css/jquery-ui.css?time=<?= time(); ?>">
 		<link class="all_files" rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css?time=<?= time(); ?>" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -1788,7 +1798,7 @@ var_dump($response);
 
 
 
-
+		
 
 
 
@@ -1796,6 +1806,7 @@ var_dump($response);
 
 		<input type="hidden" class="error_code_data" data-error="<?= encodes(mysqli_fetch_assoc($error_data)['TEXT'])?>" data-error-0="<?= encodes(mysqli_fetch_assoc($error_code_0)['ERROR_DESC'])?>" data-error-1="<?= encodes(mysqli_fetch_assoc($error_code_1)['ERROR_DESC'])?>" data-error-2="<?= encodes(mysqli_fetch_assoc($error_code_2)['ERROR_DESC'])?>" data-error-3="<?= encodes(mysqli_fetch_assoc($error_code_3)['ERROR_DESC'])?>">
 	
+		
 		<input type="hidden" class="validate_visisted">	
 		<input type="hidden" class="element_data_old">
 		<input type="hidden" class="element_data_new">
@@ -1852,7 +1863,6 @@ var_dump($response);
 			});
 
 	 	});
-
  
  </script>
 
