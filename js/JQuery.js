@@ -1317,9 +1317,13 @@ $(document).on('click', '.download_pay', function(event) {
 
 });
 
-jQuery(document).ready(function($) {
-	console.log($("input.is-empty").attr('placeholder'));
-});
+// jQuery(document).ready(function($) {
+// 	console.log("testing");
+// 	console.log($("input[name='cardnumber']"));
+// 	// console.log($("input.is-empty").attr('placeholder'));
+// });
+
+
 
 
 

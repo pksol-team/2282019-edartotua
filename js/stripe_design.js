@@ -1,95 +1,72 @@
 (function() {
-  "use strict";
+  'use strict';
 
   var elements = stripe.elements({
+    fonts: [
+      {
+        cssSrc: 'https://fonts.googleapis.com/css?family=Quicksand',
+      },
+    ],
     // Stripe's examples are localized to specific languages, but if
     // you wish to have Elements automatically detect your user's locale,
     // use `locale: 'auto'` instead.
-    locale: window.__exampleLocale
+    locale: window.__exampleLocale,
   });
 
-  /**
-   * Card Element
-   */
-  var card = elements.create("card", {
-    iconStyle: "solid",
-    style: {
-      base: {
-        iconColor: "#fff",
-        color: "#fff",
-        fontWeight: 400,
-        fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif",
-        fontSize: "16px",
-        fontSmoothing: "antialiased",
+  var elementStyles = {
+    base: {
+      color: '#fff',
+      fontWeight: 600,
+      fontFamily: 'Quicksand, Open Sans, Segoe UI, sans-serif',
+      fontSize: '16px',
+      fontSmoothing: 'antialiased',
 
-        "::placeholder": {
-          color: "#fff"
-        },
-        ":-webkit-autofill": {
-          color: "#fce883"
-        }
+      ':focus': {
+        color: '#424770',
       },
-      invalid: {
-        iconColor: "#fff",
-        color: "#fff"
-      }
-    }
-  });
-  card.mount("#example5-card");
 
-  /**
-   * Payment Request Element
-   */
-  var paymentRequest = stripe.paymentRequest({
-    country: "US",
-    currency: "usd",
-    total: {
-      amount: 2500,
-      label: "Total"
+      '::placeholder': {
+        color: '#9BACC8',
+      },
+
+      ':focus::placeholder': {
+        color: '#CFD7DF',
+      },
     },
-    requestShipping: true,
-    shippingOptions: [
-      {
-        id: "free-shipping",
-        label: "Free shipping",
-        detail: "Arrives in 5 to 7 days",
-        amount: 0
-      }
-    ]
-  });
-  paymentRequest.on("token", function(result) {
-    console.log($(this));
-    var example = document.querySelector(".example5");
-    example.querySelector(".token").innerText = result.token.id;
-    example.classList.add("submitted");
-    result.complete("success");
-  });
+    invalid: {
+      color: '#fff',
+      ':focus': {
+        color: '#FA755A',
+      },
+      '::placeholder': {
+        color: '#FFCCA5',
+      },
+    },
+  };
 
-  var paymentRequestElement = elements.create("paymentRequestButton", {
-    paymentRequest: paymentRequest,
-    style: {
-      paymentRequestButton: {
-        theme: "light"
-      }
-    }
-  });
+  var elementClasses = {
+    focus: 'focus',
+    empty: 'empty',
+    invalid: 'invalid',
+  };
 
-  paymentRequest.canMakePayment().then(function(result) {
-    if (result) {
-      document.querySelector(".example5 .card-only").style.display = "none";
-      document.querySelector(
-        ".example5 .payment-request-available"
-      ).style.display =
-        "block";
-      paymentRequestElement.mount("#example5-paymentRequest");
-    }
+  var cardNumber = elements.create('cardNumber', {
+    style: elementStyles,
+    classes: elementClasses,
   });
+  cardNumber.mount('#example3-card-number');
 
-  registerElements([card], "example5");
-  
-  
+  var cardExpiry = elements.create('cardExpiry', {
+    style: elementStyles,
+    classes: elementClasses,
+  });
+  cardExpiry.mount('#example3-card-expiry');
+
+  var cardCvc = elements.create('cardCvc', {
+    style: elementStyles,
+    classes: elementClasses,
+  });
+  cardCvc.mount('#example3-card-cvc');
+
+  registerElements([cardNumber, cardExpiry, cardCvc], 'example3');
 })();
-
-
-
-

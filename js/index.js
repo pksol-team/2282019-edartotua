@@ -103,18 +103,19 @@ function registerElements(elements, exampleName) {
     // Gather additional customer data we may have collected in our form.
     var name = form.querySelector('#' + exampleName + '-name');
     var email = form.querySelector('#' + exampleName + '-email');
-    var price = form.querySelector('#' + exampleName + '-price');
-    var address1 = form.querySelector('#' + exampleName + '-address');
-    var city = form.querySelector('#' + exampleName + '-city');
-    var state = form.querySelector('#' + exampleName + '-state');
+    // var price = form.querySelector('#' + exampleName + '-price');
+    // var address1 = form.querySelector('#' + exampleName + '-address');
+    // var city = form.querySelector('#' + exampleName + '-city');
+    // var state = form.querySelector('#' + exampleName + '-state');
     var zip = form.querySelector('#' + exampleName + '-zip');
     var additionalData = {
       name: name ? name.value : undefined,
       email: email ? email.value : undefined,
       price: $("input[name='price']").val(),
-      address_line1: address1 ? address1.value : undefined,
-      address_city: city ? city.value : undefined,
-      address_state: state ? state.value : undefined,
+      description: $('p.order_desc').html(),
+      // address_line1: address1 ? address1.value : undefined,
+      // address_city: city ? city.value : undefined,
+      // address_state: state ? state.value : undefined,
       address_zip: zip ? zip.value : undefined,
     };
 
@@ -199,10 +200,15 @@ function registerElements(elements, exampleName) {
               console.log(response);
               $('.reset').hide();
 
-              example.classList.add('submitted');                      
-              $("h3.title").html("Payment Failed");
-              $("p.message").html(response);
+              // example.classList.add('submitted'); 
+              // $("h3.title").html("Payment Failed");
+              // $("p.message").html(response);
+              example.classList.remove('submitting');
+              $('button.error_text').html(response);
+              $("button.error_text").fadeIn().delay(5000).fadeOut();
               $(".icon").hide();
+              form.reset();
+              enableInputs();
           }
           // example.classList.add('submitted');                      
 
@@ -248,8 +254,16 @@ function registerElements(elements, exampleName) {
 
       } else {
         // Otherwise, un-disable inputs.
-        console.log("Token Failed");
-        enableInputs();
+        // console.log("Token Failed");
+        // enableInputs();
+
+              $('.reset').hide();
+              example.classList.remove('submitting');
+              $('button.error_text').html("Fill the form correctly");
+              $("button.error_text").fadeIn().delay(5000).fadeOut();
+              $(".icon").hide();
+              form.reset();
+              enableInputs();
       }
     });
   });
