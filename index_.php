@@ -1,9 +1,13 @@
 <?php session_start(); ?>
 <?php error_reporting(E_ALL); ?>
 <?php
+	require_once('stripe-php/init.php');
+?>
+
+<?php
 	
+	// require(dirname(dirname(dirname(dirname(dirname(__FILE__))))).'/wp-authenticate.php');
 	require('connection.php');
-	require(dirname(dirname(dirname(dirname(dirname(__FILE__))))).'/wp-authenticate.php');
 	
 	
 	global $lang_id;
@@ -12,15 +16,17 @@
 	function encodes($text) {
 				
 				if ($GLOBALS['lang_id'] == 'ES') {
-					$text = htmlentities($text, ENT_QUOTES, "ISO-8859-1");
+					// $text = htmlentities($text, ENT_QUOTES, "ISO-639-1");
+					// $text = htmlentities($text, ENT_QUOTES, "ISO-8859-1");
+					$text = htmlspecialchars($text, ENT_NOQUOTES, 'ISO-8859-1');
 					$text = html_entity_decode($text);
 					return $text;
 				} else {
 					return $text;
 				}
 			}
+// echo encodes("Telefonía Elemento para validar la entrada/salida cuando se produce en mercado un cruce de medias móviles.");
 ?>
-
 
 <?php if ($_SERVER['REQUEST_METHOD'] !== 'POST'): 
 
@@ -37,7 +43,8 @@
 
 		if ( $_GET['action'] === 'save_data' ) {		
 
-		$user_id = get_current_user_id();
+		$user_id = 0;
+		// $user_id = get_current_user_id();
 		$open_scenario = $_POST['OPEN'];
 		$modify_scenario = $_POST['MODIFY'];
 		$close_scenario = $_POST['CLOSE'];
@@ -62,7 +69,9 @@
 var_dump($response);
 	}
 	else if($_GET['action'] == 'validate_data'){
-				$user_id = get_current_user_id();
+		$user_id = 0;
+		
+				// $user_id = get_current_user_id();
 				$ticker = $_POST['ticker'];
 				$timeFrame = $_POST['time_frame'];
 				$start_time = $_POST['start-date'];
@@ -79,6 +88,73 @@ var_dump($response);
 			    
 			   	echo $last_validation_id;
 	}
+
+	
+	// OLD CODE DYNAMIC GRAPH
+		// else if($_GET['action'] == 'chart_data') {
+		// 	$sesion_val_id = $_POST['sesion_val_id'];
+		   	
+		// 	$sesion_validation_id = preg_replace( "/\r|\n/", "", $sesion_val_id );
+		// 	$status = mysqli_query($con,"SELECT * FROM `session_validation` WHERE `session_validation_id`= ".$sesion_validation_id."");
+		// 		$fetching_date = mysqli_fetch_assoc($status);
+	    	
+	 //    	$getStauts = $fetching_date['estatus'];
+	 //    	$report = $fetching_date['result_report'];
+	  		
+		    	
+	 //    	if($getStauts == 'P' || $getStauts == 'F'){
+		// 		if($_SESSION[$sesion_val_id.'previousID'] == NULL) {
+			    	
+		// 	    	$validation_id = mysqli_query($con,"SELECT * FROM session_validation_chart WHERE sesion_val_id = $sesion_val_id LIMIT 1");
+		// 		} 
+		// 		else{
+		// 			$prevCharId = $_SESSION[$sesion_val_id.'previousID'];
+		// 			$prev_id_array = '';
+		// 			foreach ($prevCharId as $key => $value) {
+		// 				$prev_id_array .= $value.',';
+		// 			}
+		// 			$not_in_list = substr($prev_id_array, 0, -1);			
+		// 			$validation_id = mysqli_query($con,"SELECT * FROM session_validation_chart WHERE sesion_val_id = $sesion_val_id AND chart_seq NOT IN (".$not_in_list.") LIMIT 1");
+		// 		}
+		//     	if(mysqli_num_rows($validation_id) > 0 ){
+		
+		// 			$fetch_data = mysqli_fetch_assoc($validation_id);
+		// 	    	$y_value = $fetch_data['value'];
+		// 	    	$chart_id = $fetch_data['chart_seq'];
+		// 	    	if($_SESSION[$sesion_val_id.'previousID'] == NULL)
+		// 	    		$_SESSION[$sesion_val_id.'previousID'] = [$chart_id];
+		// 	    	else
+		// 				array_push($_SESSION[$sesion_val_id.'previousID'], $chart_id);
+		// 	    	echo json_encode([
+		// 	    		'y_axix' => $y_value,
+		// 	    		'x_axix' => $chart_id,
+		// 	    		'status' => $getStauts,
+		// 	    		'report' => $report
+		// 	    	]);
+		//     	} 
+		//     	else {
+		//     		echo json_encode([
+		// 	    		'status' => $getStauts,
+		// 	    		'report' => $report
+		// 	    	]);
+		//     	}
+	 //    	}	
+	 //    	else
+	 //    	if($getStauts == 'F' && empty($report)){
+		//     		$report = '<p>:No: Data FOund</p>';
+		// 		    	echo json_encode([
+		// 		    		'status' => $getStauts,
+		// 		    		'no_result' => $report,
+		// 		    		'report' => ''
+		// 		    	]);
+		//     	}
+		//     	else{
+	 //    			echo json_encode([
+		// 	    		'status' => $getStauts,
+		// 	    		'report' => $report
+		// 	    	]);
+	 //    	}
+		// }
 	else if($_GET['action'] == 'chart_data') {
 
 				$y = array();
@@ -216,49 +292,162 @@ var_dump($response);
 		else if($_GET['action'] == 'system_defination') {
 
 			$check = $_POST['insert_data'];
-			if(!empty($check)){
 
-				$user_id = get_current_user_id();
+			// echo "id = ".$_POST['session_id'];
+			if(!empty($check)){
+				$user_id = 0;
 				$session_id = $_POST['session_id'];
-				$status = 'N';
+				$status = 'F';
 
 				$userAlready = $con->query("SELECT * FROM session_strategy_definition WHERE user_id = '$user_id'");
 
 		        if (mysqli_num_rows($userAlready) > 0) {
-		        	$sql = "UPDATE session_strategy_definition set `sesion_id`='$session_id', `estatus`= '$status' WHERE user_id = '$user_id' ";
+		        	$sql = "UPDATE session_strategy_definition set `sesion_id`='$session_id', `estatus`= '$status' WHERE user_id = '$user_id'";
 		        } else {
-		    	    $sql = "INSERT INTO session_strategy_definition (user_id, `sesion_id`, `estatus`)
-						 VALUES ( '$user_id', '$session_id', '$status')";
+		        	$sql = "INSERT INTO `session_strategy_definition` (`user_id`, `sesion_id`, `estatus`) VALUES ('$user_id', '$session_id', '$status')";
 		        }
 		        
-			    $con->query($sql);
+		        $con->query($sql);
 
 			    $definition_id = mysqli_query($con,"SELECT * FROM session_strategy_definition WHERE user_id = '$user_id'");
 
 			    $strategy_definition_id = mysqli_fetch_assoc($definition_id)['session_strat_def_id'];
-			    // $strategy_definition_id = $con->insert_id;
 			    
 			   	echo $strategy_definition_id;			
-			}else{
+			}
+			else{
 				$id = $_POST['strategy_definition_id'];
 				$value = mysqli_query($con,"SELECT * FROM session_strategy_definition WHERE session_strat_def_id = $id AND estatus = 'F'");
+
 				if(mysqli_num_rows($value) > 0){
-					echo encodes(mysqli_fetch_assoc($value)['definition_text']);				
+					echo encodes(mysqli_fetch_assoc($value)['definition_text']);										
 				}
 			}
 			
 		}
+
+		else if($_GET['action'] == 'stripe_payment'){
 			
+			$fetch = mysqli_query($con, "SELECT * FROM `payment_keys` WHERE payment_type = 'stripe'");
+		if($fetch){
+			$s_k = mysqli_fetch_assoc($fetch)['secret_key'];
+		}
+
+			$name = $_POST['data']['name'];
+			$amount = $_POST['data']['price']*100;
+			$currency = 'EUR';
+			$source = $_POST['stripe_token'];
+			$email = $_POST['data']['email'];
+		    $price = $_POST['data']['price'];
+			$description = $_POST['data']['description'];
+			$date = date('Y-m-d');
+			$user_id = 0;
+			$session_id = $_POST['session_id'];
+			\Stripe\Stripe::setApiKey($s_k);
+			try{  			    
+			    //charge a credit or a debit card
+				$charge = \Stripe\Charge::create(array(
+				    'source'  => $source,
+				    'amount'   => $amount,
+				    'currency' => $currency,
+				    'description' => $description			        
+				));
+
+				$json_data = explode("JSON: ", $charge);
+				// var_dump($json_data[1]);
+				if($charge->paid){
+					
+					$status = 'N';
+					// 4242 4242 4242 4242
+
+					$pay_ = "INSERT INTO `wp_payment` (`payment_id`, `session_id`, `user_id`, `payment_amount`, `date`) VALUES (NULL, '$session_id', '$user_id', '$price', '$date');";
+					$con->query($pay_);
+
+					// session_payment
+					$session_pay_ = "INSERT INTO `session_payment` (`session_pay_id`, `session_id`, `user_id`, `type_payment`, `estatus`, `estatus_text`) VALUES (NULL, '$session_id', '$user_id', 'STRIPE', 'Success', 'Payment transaction successfull');";
+					$con->query($session_pay_);
+					
+					echo $charge->paid."payment_done_success";
+	 				// $query = mysqli_query($con,"SELECT * FROM session_compiled WHERE session_comp_id = '$pay_id'");
+
+					// $sql = "INSERT INTO `session_compiled` (`session_id`, `user_id`, `estatus`) VALUES ('$session_id', '$user_id','N')";
+
+				 //    $con->query($sql);				    
+
+			  //    	$last_pay_id = $con->insert_id;
+				     
+				 //    echo $last_pay_id."pay_id";
+
+				}else{					
+					echo $charge;
+				}
+			} catch(\Exception $e){
+				$error = $e->getMessage();
+				$session_pay_ = "INSERT INTO `session_payment` (`session_pay_id`, `session_id`, `user_id`, `type_payment`, `estatus`, `estatus_text`) VALUES (NULL, '$session_id', '$user_id', 'STRIPE', 'Failed', '$error');";
+				$data = $con->query($session_pay_);				
+				echo $e->getMessage();
+			}	
+		
+		}
+
+
+		else if($_GET['action'] == 'session_compiled'){
+			$user_id = 0;
+			
+			$session_id = $_POST['session_id'];
+			
+			$sql = "INSERT INTO `session_compiled` (`session_id`, `user_id`, `estatus`) VALUES ('$session_id', '$user_id','N')";
+
+		    $con->query($sql);				    
+
+	     	$last_pay_id = $con->insert_id;
+		     
+		    echo $last_pay_id;
+		}
+
+
+		else if($_GET['action'] == 'link_status'){
+
+			$pay_id = $_POST['compile_id'];
+	 		
+	 		$query = mysqli_query($con,"SELECT * FROM session_compiled WHERE session_comp_id = '$pay_id'");
+	 		$fetched_data = mysqli_fetch_assoc($query);
+	 		if(mysqli_num_rows($query) > 0){
+
+	 			if($fetched_data['estatus'] == 'F'){
+		 			// Send download file link
+		 			echo encodes($fetched_data['url_file']);											 				
+	 			}else if($fetched_data['estatus'] == 'E'){
+	 				$error = mysqli_query($con,"SELECT * FROM error WHERE error_code = 3 AND lang_id = '$lang_id'");
+	 				if(mysqli_num_rows($error) > 0){
+		 				echo encodes(mysqli_fetch_assoc($error)['ERROR_DESC'])."complie_error";											 				
+	 				}else{
+	 					echo "error complie_error";	 					
+	 				}
+	 			}
+	 		
+	 		}
+			
+		}
 	else{
 			echo "error";
 
 	}
+
+
+	
 	?>
 <?php else: ?>
 		<!DOCTYPE html>
 	   <html lang="<?= strtolower($lang_id); ?>">
 	   <head>
+		<?php
+		$fetch_key = mysqli_query($con, "SELECT * FROM `payment_keys` WHERE payment_type = 'stripe'");
 		
+			$p_k = mysqli_fetch_assoc($fetch_key)['publish_key'];
+?>
+<input type="hidden" id="publish_key" value="<?= $p_k?>">	
+	   
 		<link class="all_files" rel="stylesheet" href="css/jquery-ui.css?time=<?= time(); ?>">
 		<link class="all_files" rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css?time=<?= time(); ?>" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 		<link class="all_files" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css?time=<?= time(); ?>" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -273,7 +462,17 @@ var_dump($response);
 	    <link class="all_files" rel="stylesheet" type="text/css" href="plugin/tooltipster/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-light.min.css?time=<?= time(); ?>">
 	    <script class="all_files" type="text/javascript" src="plugin/tooltipster/dist/js/tooltipster.bundle.min.js?time=<?= time(); ?>"></script>
 		<link class="all_files" rel="stylesheet" type="text/css" href="css/style.css?time=<?= time(); ?>">
+		
+		<!-- <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet"> -->
 
+		<script src="https://js.stripe.com/v3/"></script>
+		<script src="js/index.js" data-rel-js></script>
+		
+		<link rel="stylesheet" type="text/css" href="css/stripe_base.css" data-rel-css="" />
+		<link rel="stylesheet" type="text/css" href="css/stripe_style.css" data-rel-css="" />
+		
 
 		<meta class="all_files" name="google" content="notranslate">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -288,6 +487,14 @@ var_dump($response);
 				$('.all_files').appendTo('head');
 			});
 		</script>
+
+
+
+
+
+
+
+
 		</head>
 		<?php
 			$el_save_obj = mysqli_query($con, "SELECT * FROM `translations` WHERE 
@@ -305,7 +512,8 @@ var_dump($response);
 		?>
 
 		<body>
-
+	
+	<div class="box_shadow"></div>
 		<!-- Mobile menu closed -->
 		
 		
@@ -326,6 +534,8 @@ var_dump($response);
 			 <img src="images/help.png">
 			   <!-- &#10067  -->
 			</button>
+			
+				
 		<div class="container h-100 py-6 ">
 	
 
@@ -380,9 +590,10 @@ var_dump($response);
 				</div>				
 			</div>
 		</div>
-<hr>
-
-		<div class="build-tab">
+		<hr>
+		
+		
+		<div class="build-tab">			
 			<div class="container-fluid h-100 py-6" style="    padding-bottom: 0 !important;">				
 				<div class="row">					
 					
@@ -490,9 +701,15 @@ var_dump($response);
 															<img src="<?= $element_img_url; ?>?time=<?= time(); ?>" alt="<?= $element_name; ?>" width="96" height="90" class="img-responsive" data-elementID="<?= $element_id; ?>">
 																<img src="images/seq-add.png" class="arrow_pop pop" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" data-content="" alt="SEQ">
 
-																													    <span class="sidebar_content-<?= $index; ?>" data-template="true" style="display: none;">
+																<span class="sidebar_content-<?= $index; ?>" data-template="true" style="display: none;">
+																	
+																	<div class="main_head" >
+																		<h6><?= $element_name_tran; ?></h6>	
+																		<img src="<?= $element_img_url; ?>?time=<?= time(); ?>" alt="" class="pop_image">																		
+
+																		</div>
 																	<div class="tooltip_content_container">
-																		<h6><?= $element_name_tran; ?></h6>
+																		<!-- <h6><?= $element_name_tran; ?></h6> -->
 																		<?php
 
 																			$el_info_obj = mysqli_query($con, "SELECT * FROM `translations` WHERE 
@@ -506,7 +723,7 @@ var_dump($response);
 																		</p>
 
 																		<span class="close_tooltip"><i class="fa fa-close"></i></span>
-																		<br>
+																		<div class="testing">
 																		<?php
 
 																			$params_sql = "SELECT
@@ -542,27 +759,28 @@ var_dump($response);
 
 																					<div class="form-group" data-field-type='integer'>
 																					   <label><?= encodes($fetch_parameters['TEXT']); ?></label>
-																					   <input type="number" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= encodes($fetch_parameters['DEFAULT_PARAM']); ?>" disabled>
+																					   <input type="number" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm get_design" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= encodes($fetch_parameters['DEFAULT_PARAM']); ?>" disabled>
 																					</div>
 
 																				<?php } elseif($fetch_parameters['PARAM_TYPE'] == 'BOOL') { ?>
 
-																					<div class="form-check tooltip-check"  data-field-type='bool'>
+																					<div class="form-check tooltip-check round"  data-field-type='bool'>
 																					  <input class="form-check-input" type="checkbox" disabled id="<?= $fetch_parameters['PARAM_NAME'] ?>" name="<?= $fetch_parameters['PARAM_NAME'] ?>" <?php if($fetch_parameters['DEFAULT_PARAM'] == '1') echo 'checked'; ?> >
-																					  <label class="form-check-label"><?= encodes($fetch_parameters['TEXT']); ?></label>
+																					  <label class="form-check-label"></label>
+																						<span class="param_label"><?= $param_label; ?></span>
 																					</div>
 
 																				<?php } elseif($fetch_parameters['PARAM_TYPE'] == 'STRING') { ?>
 																					
 																					<div class="form-group" data-field-type='string'>
 																					   <label><?= encodes($fetch_parameters['TEXT']); ?></label>
-																					   <input type="text" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= encodes($fetch_parameters['DEFAULT_PARAM']); ?>" disabled>
+																					   <input type="text" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm get_design" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= encodes($fetch_parameters['DEFAULT_PARAM']); ?>" disabled>
 																					</div>																				
 																				<?php } elseif($fetch_parameters['PARAM_TYPE'] == 'DOUBLE') { ?>
 																					
 																					<div class="form-group" data-field-type='double'>
 																					   <label><?= encodes($fetch_parameters['TEXT']); ?></label>
-																					   <input type="text" step="any" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= $fetch_parameters['DEFAULT_PARAM']; ?>" disabled>
+																					   <input type="text" step="any" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm get_design" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= $fetch_parameters['DEFAULT_PARAM']; ?>" disabled>
 																					</div>
 
 																				<?php } else {
@@ -572,7 +790,7 @@ var_dump($response);
 																					
 																					<div class="form-group" data-field-type='dropdown'>
 																						<label><?= encodes($fetch_parameters['TEXT']); ?></label>
-																						<select class="form-control form-control-sm" disabled>
+																						<select class="form-control form-control-sm get_design" disabled>
 																							<?php
 																								foreach ($values as $value) {
 																									if ($fetch_parameters['DEFAULT_PARAM'] == $value) {
@@ -587,8 +805,11 @@ var_dump($response);
 																				<?php } ?>
 
 																			<?php endwhile; ?>
-																			
+																			</div>
+																			<div style="text-align: center;">
+
 																			<button type="submit" class="btn btn-success btn-block btn-outline-success d-none close_tooltip_save"><?= $save_text; ?></button>
+																		</div>
 																	</div>
 															    </span>
 														</li>
@@ -645,21 +866,42 @@ var_dump($response);
 															?>
 																
 
-																																<input type="hidden" name="unique" value="<?= $el_name_SEQ?>">
+																<input type="hidden" name="unique" value="<?= $el_name_SEQ?>">
 
 																<li class="ui-widget-content ui-corner-tr ui-state-default paramsmeters d-sort door_image_li" data-tooltip-content="#tab_one_content-<?= $indexx; ?>" data-element-append="<?= $id; ?>" data-title="<?= $fetching_omc['ELEMENT_NAME']; ?>" style="display: none;">
 																	
 																	<p style="font-size: 12px" class="v-h"><?= $el_name_ac; ?></p>								
 																				
-																	<?php if ($fetching_omc['ELEMENT_NAME'] == 'SEQ'): ?>
+																	<?php if ($fetching_omc['ELEMENT_NAME'] == 'SEQ'): 
+																		$img_src = 'images/seq-add.png';
+																		?>
 																		<i class="fa fa-remove"></i>
+
 																		<img src="images/seq-add.png" alt="<?= $fetching_omc['ELEMENT_NAME']; ?>" width="96" class="img-responsive"  >
 																		<strong><?= $add_seq_text; ?></strong>
-																	<?php else: ?>
+																	<?php else: 
+																		$img_src = $fetching_omc["IMAGE_URL"];
+																		?>
 																		<img src="<?= $fetching_omc['IMAGE_URL']; ?>?time=<?= time(); ?>" alt="<?= $fetching_omc['ELEMENT_NAME']; ?>" width="96" height="90" class="img-responsive" data-elementID="<?= $id; ?>">
 																	<?php endif ?>
 
+																	<!-- New tooltip design -->
+
+		
 																	<span class="tab_one_content-<?= $indexx; ?>" data-template="true" style="display: none;">
+
+																		<?php
+																			$open_modify_close_name = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+																				CONCEPT_NAME = 'ELEMENT_NAME' AND REG_ID = $id AND LANG_ID = '".$lang_id."'
+																			");
+																		?>
+		
+																		<div class="main_head">
+																			<h6><?= encodes(mysqli_fetch_assoc($open_modify_close_name)['TEXT']); ?></h6>																				
+																					<img src="<?= $img_src; ?>?time=<?= time(); ?>" alt="" class="pop_image">																		
+																			</div>
+		
+																		<!-- <div class="design_1"> -->
 																		<div class="tooltip_content_container">
 																			<?php																		
 																				
@@ -673,10 +915,17 @@ var_dump($response);
 																				");
 
 																			?>
-																			<h6><?= encodes(mysqli_fetch_assoc($open_modify_close_name)['TEXT']); ?></h6>
-																			<p class="el-desc"> <?= $el_description; ?>  <a href="<?= $fetching_omc['MORE_INFO_URL']; ?>" target='_blank'> <?= encodes(mysqli_fetch_assoc($el_info_obj)['TEXT']); ?> </a></p>
+																			<!-- <div style="background: black">
+																			<h6><?php //echo encodes(mysqli_fetch_assoc($open_modify_close_name)['TEXT']); ?></h6>																				
+																			</div> -->
+																			
+																			
+																			<p class="el-desc design_p"> <?= $el_description; ?>  <a href="<?= $fetching_omc['MORE_INFO_URL']; ?>" target='_blank'> <?= encodes(mysqli_fetch_assoc($el_info_obj)['TEXT']); ?> </a></p>
+																			<!-- <hr class="element_line_break"> -->
 																			<span class="close_tooltip"><i class="fa fa-close"></i></span>
-																			<br>
+																																						
+																			<div class="testing">
+																				
 																			
 																			<?php
 																				$params_sql = "SELECT
@@ -697,28 +946,31 @@ var_dump($response);
 
 																						<div class="form-group" data-field-type='integer'>
 																						   <label><?= $param_label; ?></label>
-																						   <input type="number" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm" placeholder="<?= $param_label; ?>" value="<?= encodes($fetch_parameters['DEFAULT_PARAM']); ?>" disabled>
+																						  
+																						   <input type="number" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm element_form" placeholder="<?= $param_label; ?>" value="<?= encodes($fetch_parameters['DEFAULT_PARAM']); ?>" disabled>
+																						
 																						</div>
 
 																					<?php } elseif($fetch_parameters['PARAM_TYPE'] == 'BOOL') { ?>
 
-																						<div class="form-check tooltip-check" data-field-type='bool'>
+																						<div class="form-check tooltip-check round" data-field-type='bool'>
 																						  <input class="form-check-input" type="checkbox" disabled id="<?= $fetch_parameters['PARAM_NAME'] ?>" name="<?= $fetch_parameters['PARAM_NAME'] ?>" <?php if($fetch_parameters['DEFAULT_PARAM'] == '1') echo 'checked'; ?> >
-																						  <label class="form-check-label"><?= $param_label; ?></label>
+																						  <label class="form-check-label"></label>
+																						  <span class="param_label"><?= $param_label; ?></span>
 																						</div>
 
 																					<?php } elseif($fetch_parameters['PARAM_TYPE'] == 'DOUBLE') { ?>
 																						
 																						<div class="form-group" data-field-type='double'>
 																						   <label><?= $param_label; ?></label>
-																						   <input type="text" step="any" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= $fetch_parameters['DEFAULT_PARAM']; ?>" disabled>
+																						   <input type="text" step="any" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm element_form" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= $fetch_parameters['DEFAULT_PARAM']; ?>" disabled>
 																						</div>
 
 																					<?php } elseif($fetch_parameters['PARAM_TYPE'] == 'STRING') { ?>
 																						
 																						<div class="form-group" data-field-type='string'>
 																						   <label><?= $param_label; ?></label>
-																						   <input type="text" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= $fetch_parameters['DEFAULT_PARAM']; ?>" disabled>
+																						   <input type="text" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm element_form" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= $fetch_parameters['DEFAULT_PARAM']; ?>" disabled>
 																						</div>
 
 
@@ -732,7 +984,7 @@ var_dump($response);
 																						
 																						<div class="form-group" data-field-type='dropdown'>
 																							<label><?= $param_label; ?></label>
-																							<select class="form-control form-control-sm" disabled>
+																							<select class="form-control form-control-sm element_form" disabled>
 																								<?php
 																									foreach ($values as $value) {
 																										if ($value == $fetch_parameters['DEFAULT_PARAM']) {
@@ -747,8 +999,13 @@ var_dump($response);
 																					<?php } ?>
 
 																				<?php endwhile; ?>
-																				<button type="submit" class="btn btn-success btn-block btn-outline-success d-none close_tooltip_save"><?= $save_text; ?></button>
-																		</div>
+																				</div>
+																				<div style="text-align: center;">
+																					
+																				<button type="submit" class="btn btn-success btn-block btn-outline-success d-none close_tooltip_save "><?= $save_text; ?></button>
+																				</div>
+																		
+																	</div>
 																	</span>
 																</li>
 															<?php } ?>
@@ -911,6 +1168,7 @@ var_dump($response);
 				</div>
 			</div>
 		</div>
+		
 
 	
 
@@ -992,12 +1250,14 @@ var_dump($response);
 								<!--  Extra Fields -->
 								<?php
 
-								$user_id = get_current_user_id();
-									$strategy_id = mysqli_query($con,"SELECT sesion_id FROM session_strategy WHERE user_id = $user_id");
+								$user_id = 0;
+								// $user_id = get_current_user_id();
+									$strategy_id = mysqli_query($con,"SELECT sesion_id FROM session_strategy WHERE user_id = '$user_id'");
 									
 									$id = mysqli_fetch_assoc($strategy_id);								 
 
 									?>								
+								<input type="hidden" name="user_id" value="<?= $user_id?>">
 								<input type="hidden" name="session_strategy_id" value="<?php echo $id['sesion_id'];?>">
 								<div class="submit-btn">									
 									<button type="button" id="validate-next" data-action="<?= $actual_link; ?>?action=validate_data"><?= $validate_trans?></button>	
@@ -1030,32 +1290,515 @@ var_dump($response);
 			</div>
 		</div>
 
+		<?php
+			// System defitnitoin Heading
+			$fetchcing_defintition_heading = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='STRAT_DEF_TEXT' AND LANG_ID='$lang_id'");
+			$definition_heading = encodes(mysqli_fetch_assoc($fetchcing_defintition_heading)['TEXT']);
+			
+			// Agree condition text
+			$fetchcing_condi_text = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='AGREE_COND' AND LANG_ID='$lang_id'");
+			$condi_text = encodes(mysqli_fetch_assoc($fetchcing_condi_text)['TEXT']);
 
+			$exploded = explode(" ", $condi_text);
+
+			if($lang_id == 'ES'){
+				$link_text = $exploded[0]." ".$exploded[1]." ".$exploded[2]." ".$exploded[3]." ".$exploded[4]." ";
+				$link = $exploded[5]." ".$exploded[6];
+			}else{
+				$link_text = $exploded[0]." ".$exploded[1]." ".$exploded[2]." ".$exploded[3]." ";
+				$link = $exploded[4]." ".$exploded[5];
+			}
+
+			// Link text
+
+			$fetchcing_condi_text_url = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='CONDITION_URL' AND LANG_ID='$lang_id'");
+			$condi_text_url = encodes(mysqli_fetch_assoc($fetchcing_condi_text_url)['TEXT']);
+
+			// Understand System definitoin
+			$sys_def_text_1 = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='UNDERSTAND_STRAT_TEXT' AND LANG_ID='$lang_id'");
+			$sys_def_text = encodes(mysqli_fetch_assoc($sys_def_text_1)['TEXT']);
+
+			// Download Button
+			$download_btn_text = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='DOWN_BUTTON' AND LANG_ID='$lang_id'");
+			$down_btn_trans = encodes(mysqli_fetch_assoc($download_btn_text)['TEXT']);
+
+
+
+		?>
 	
 		<div class="download-tab">	
 			<div class="container-fluid h-100 py-6">			
 				<div class="row">
 					<div class="col-sm-4">
-						<div class="system-defination">							
+						<h3 style="margin-left: 3%;"><?= $definition_heading ?></h3>
+						<div class="system-defination">	
 						</div>
 					</div>
 					<div class="col-sm-8">
 						<div class="right-options">
 							<form>
 								<div class="form-group">
-									<input type="checkbox" name="checkbox-1"> I've read and understand system definition
+									<input type="checkbox" name="read_accept"> 
+									<?= $sys_def_text?>
 								</div>
 								<div class="form-group">
-									<input type="checkbox" name="checkbox-2"> I've read and I agree with <a href="#">general condition</a>
+									<!-- Add a target balnk -->
+									<input type="checkbox" name="agree_condition"> <?= $link_text ?><a href="<?= $condi_text_url?>" target="_blank"><?= $link ?></a>
 								</div>
-								<button type="button" id="download-next">Downloaded Next</button>				
+								<button type="button" class="btn download_pay" id="download-next"><?= $down_btn_trans ?></button>				
 							</form>
 						</div>
 					</div>
 				</div>
-			</div>						
+			</div>		
 		</div>	
+			<img class="payment_loader" src="images/ajax-loader-green.gif" style="display: none; position: absolute; top: 45%; left: 43%; height: 100px;">
+	<?php
 
+	$user_info = mysqli_query($wp_con,"SELECT * FROM wp_users WHERE id = 1");
+	$user_fetched = mysqli_fetch_assoc($user_info);
+	$user_name = $user_fetched['user_nicename'];
+	$user_email = $user_fetched['user_email'];
+
+	// Pay title
+	$pay_text = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='PAY_TITLE' AND LANG_ID='$lang_id'");
+	$pay_text_trans = encodes(mysqli_fetch_assoc($pay_text)['TEXT']);
+
+	// Order title
+	$order_text = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='ORDER_TITLE' AND LANG_ID='$lang_id'");
+	$order_text_trans = encodes(mysqli_fetch_assoc($order_text)['TEXT']);
+
+	// Order Description
+	$order_desc_text = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='ORDER_DESC' AND LANG_ID='$lang_id'");
+	$order_desc_text_trans = encodes(mysqli_fetch_assoc($order_desc_text)['TEXT']);
+
+	// Price
+	$price_text = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='PRICE' AND LANG_ID='$lang_id'");
+	$price_text_trans = encodes(mysqli_fetch_assoc($price_text)['TEXT']);
+
+	// Subtotal
+	$subtotal_text = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='SUBTOTAL' AND LANG_ID='$lang_id'");
+	$subtotal_text_trans = encodes(mysqli_fetch_assoc($subtotal_text)['TEXT']);
+
+	// Total
+	$total_text = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='TOTAL' AND LANG_ID='$lang_id'");
+	$total_text_trans = encodes(mysqli_fetch_assoc($total_text)['TEXT']);
+
+	// Pay Text
+	$pay = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='PAY_TEXT' AND LANG_ID='$lang_id'");
+	$pay_trans = encodes(mysqli_fetch_assoc($pay)['TEXT']);
+
+	// Pay Text
+	$order_img = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='(DOWNLOAD SCREEN)' AND CONCEPT_NAME='ORDER_IMG_URL' AND LANG_ID='$lang_id'");
+	$order_img_trans = encodes(mysqli_fetch_assoc($order_img)['TEXT']);
+
+
+	if($lang_id == 'ES'){
+
+		// LABEL_NAME
+		$label_name = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_NAME' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_name = encodes(mysqli_fetch_assoc($label_name)['TEXT']);
+		
+		// LABEL_EMAIL
+		$label_email = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_EMAIL' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_email = encodes(mysqli_fetch_assoc($label_email)['TEXT']);
+
+		// LABEL_PHONE
+		$label_phone = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_PHONE' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_phone = encodes(mysqli_fetch_assoc($label_phone)['TEXT']);
+
+		// LABEL_ADRESS
+		$label_address = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_ADRESS' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_address = encodes(mysqli_fetch_assoc($label_address)['TEXT']);
+
+		// LABEL_CITY
+		$label_city = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_CITY' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_city = encodes(mysqli_fetch_assoc($label_city)['TEXT']);
+
+		// LABEL_STATE
+		$label_state = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_STATE' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_state = encodes(mysqli_fetch_assoc($label_state)['TEXT']);
+
+		// LABEL_ZIP
+		$label_zip = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_ZIP' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_zip = encodes(mysqli_fetch_assoc($label_zip)['TEXT']);
+
+		// LABEL_CARD
+		$label_card = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_CARD' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_card = encodes(mysqli_fetch_assoc($label_card)['TEXT']);
+
+		// LABEL_VALID
+		$label_valid = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_VALID' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_valid = encodes(mysqli_fetch_assoc($label_valid)['TEXT']);
+
+		// LABEL_CVC
+		$label_cvc = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL_CVC' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_cvc = encodes(mysqli_fetch_assoc($label_cvc)['TEXT']);
+
+		// LABEL__OR_ENTER
+		$label_or_enter = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+				TABLE_NAME = 'DOWNLOAD SCREEN)'  AND CONCEPT_NAME = 'LABEL__OR_ENTER' AND
+				LANG_ID = '".$lang_id."'
+			");
+		$label_or_enter = encodes(mysqli_fetch_assoc($label_or_enter)['TEXT']);
+
+	}else{
+		$label_name = 'Name';
+		$label_email = 'Email';
+		$label_phone = 'Phone';
+		$label_address = 'Address';
+		$label_city = 'City';
+		$label_state = 'State';
+		$label_zip = 'ZIP';
+		$label_card = 'Card Number:';
+		$label_valid = 'Expiration:';
+		$label_cvc = 'CVC security code:';
+		$label_or_enter = 'Or enter card details';
+	}
+
+
+	?>
+	
+			<!--  Payment Form -->
+<!-- <main class="payment_stripe" >
+				<section class="container-lg">
+				  	<div class="cell example example5" id="example-5">
+				  		<span class="close_payment" style="position: relative; left: 100%; top: -20px; font-weight: bold; color: white;">
+				  			X
+				  		</span>
+				  		<div class="row">
+				  			<div class="col-sm-7">
+							    <form>
+							      <div id="example5-paymentRequest">
+							      </div>
+							      	<fieldset>
+								        <legend class="card-only" data-tid="elements_examples.form.pay_with_card" style="font-weight: bold"><?= $pay_text_trans?></legend>
+								        <legend class="payment-request-available" data-tid="elements_examples.form.enter_card_manually">Or enter card details</legend>
+								        <div class="row">
+								          <div class="field">
+								            <label for="example5-name" data-tid="elements_examples.form.name_label"><?= $label_name?></label>
+								            <input id="example5-name" data-tid="elements_examples.form.name_placeholder" class="input" type="text" value="<?= $user_name?>" required="" autocomplete="name">
+								          </div>
+								        </div>
+								        <div class="row">
+								          <div class="field" style="width: 44%;">
+								            <label for="example5-email" data-tid="elements_examples.form.email_label"><?= $label_email?></label>
+								            <input id="example5-email" data-tid="elements_examples.form.email_placeholder" class="input" type="text" value="<?= $user_email?>" required="" autocomplete="email">
+								          </div>
+								          <div class="field" style="width: 44%;">
+								            <label for="example5-phone" data-tid="elements_examples.form.phone_label"><?= $label_phone?></label>
+								            <input id="example5-phone" data-tid="elements_examples.form.phone_placeholder" class="input" type="text" placeholder="(941) 555-0123" required="" autocomplete="tel">
+								          </div>
+								        </div>
+								        <div data-locale-reversible>
+								          <div class="row">
+								            <div class="field">
+								              <label for="example5-address" data-tid="elements_examples.form.address_label"><?= $label_address?></label>
+								              <input id="example5-address" data-tid="elements_examples.form.address_placeholder" class="input" type="text" placeholder="185 Berry St" required="" autocomplete="address-line1">
+								            </div>
+								          </div>
+								          <div class="row" data-locale-reversible>
+								            <div class="field" style="width: 28%;">
+								              <label for="example5-city" data-tid="elements_examples.form.city_label"><?= $label_city?></label>
+								              <input id="example5-city" data-tid="elements_examples.form.city_placeholder" class="input" type="text" placeholder="San Francisco" required="" autocomplete="address-level2">
+								            </div>
+								            <div class="field" style="width: 28%;">
+								              <label for="example5-state" data-tid="elements_examples.form.state_label"><?= $label_state?></label>
+								              <input id="example5-state" data-tid="elements_examples.form.state_placeholder" class="input empty" type="text" placeholder="CA" required="" autocomplete="address-level1">
+								            </div>
+								            <div class="field" style="width: 28%;">
+								              <label for="example5-zip" data-tid="elements_examples.form.postal_code_label"><?= $label_zip?></label>
+								              <input id="example5-zip" data-tid="elements_examples.form.postal_code_placeholder" class="input empty" type="text" placeholder="94107" required="" autocomplete="postal-code">
+								            </div>
+								          </div>
+								        </div>
+
+		
+								        <div class="row">
+								          <div class="field">
+								            <label for="example5-card" data-tid="elements_examples.form.card_label">Card</label>
+								            <div id="example5-card" class="input"></div>
+								          </div>
+								        </div>
+								      
+								        <input type="hidden" name="token">
+								        <input type="hidden" name="price" value="<?= $price_text_trans?>">
+								        <button class="pay_amount" name="pay_btn" type="submit" data-tid="elements_examples.form.pay_button"><?= $pay_trans." €". $price_text_trans?> </button>
+							    	</fieldset>
+							      <div class="error" role="alert"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17">
+							          <path class="base" fill="#000" d="M8.5,17 C3.80557963,17 0,13.1944204 0,8.5 C0,3.80557963 3.80557963,0 8.5,0 C13.1944204,0 17,3.80557963 17,8.5 C17,13.1944204 13.1944204,17 8.5,17 Z"></path>
+							          <path class="glyph" fill="#FFF" d="M8.5,7.29791847 L6.12604076,4.92395924 C5.79409512,4.59201359 5.25590488,4.59201359 4.92395924,4.92395924 C4.59201359,5.25590488 4.59201359,5.79409512 4.92395924,6.12604076 L7.29791847,8.5 L4.92395924,10.8739592 C4.59201359,11.2059049 4.59201359,11.7440951 4.92395924,12.0760408 C5.25590488,12.4079864 5.79409512,12.4079864 6.12604076,12.0760408 L8.5,9.70208153 L10.8739592,12.0760408 C11.2059049,12.4079864 11.7440951,12.4079864 12.0760408,12.0760408 C12.4079864,11.7440951 12.4079864,11.2059049 12.0760408,10.8739592 L9.70208153,8.5 L12.0760408,6.12604076 C12.4079864,5.79409512 12.4079864,5.25590488 12.0760408,4.92395924 C11.7440951,4.59201359 11.2059049,4.59201359 10.8739592,4.92395924 L8.5,7.29791847 L8.5,7.29791847 Z"></path>
+							        </svg>
+							        <span class="message"></span></div>
+							    </form>
+							   
+							    <div class="success">
+							      <div class="icon">
+							        <svg width="84px" height="84px" viewBox="0 0 84 84" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+							          <circle class="border" cx="42" cy="42" r="40" stroke-linecap="round" stroke-width="4" stroke="#000" fill="none"></circle>
+							          <path class="checkmark" stroke-linecap="round" stroke-linejoin="round" d="M23.375 42.5488281 36.8840688 56.0578969 64.891932 28.0500338" stroke-width="4" stroke="#000" fill="none"></path>
+							        </svg>
+							      </div>
+							      <h3 class="title" data-tid="elements_examples.success.title"></h3>
+							      <p class="message"><span data-tid="elements_examples.success.message"></span><span class="token"></span></p>
+							      <a class="reset" href="#">
+							        <svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+							          <path fill="#000000" d="M15,7.05492878 C10.5000495,7.55237307 7,11.3674463 7,16 C7,20.9705627 11.0294373,25 16,25 C20.9705627,25 25,20.9705627 25,16 C25,15.3627484 24.4834055,14.8461538 23.8461538,14.8461538 C23.2089022,14.8461538 22.6923077,15.3627484 22.6923077,16 C22.6923077,19.6960595 19.6960595,22.6923077 16,22.6923077 C12.3039405,22.6923077 9.30769231,19.6960595 9.30769231,16 C9.30769231,12.3039405 12.3039405,9.30769231 16,9.30769231 L16,12.0841673 C16,12.1800431 16.0275652,12.2738974 16.0794108,12.354546 C16.2287368,12.5868311 16.5380938,12.6540826 16.7703788,12.5047565 L22.3457501,8.92058924 L22.3457501,8.92058924 C22.4060014,8.88185624 22.4572275,8.83063012 22.4959605,8.7703788 C22.6452866,8.53809377 22.5780351,8.22873685 22.3457501,8.07941076 L22.3457501,8.07941076 L16.7703788,4.49524351 C16.6897301,4.44339794 16.5958758,4.41583275 16.5,4.41583275 C16.2238576,4.41583275 16,4.63969037 16,4.91583275 L16,7 L15,7 L15,7.05492878 Z M16,32 C7.163444,32 0,24.836556 0,16 C0,7.163444 7.163444,0 16,0 C24.836556,0 32,7.163444 32,16 C32,24.836556 24.836556,32 16,32 Z"></path>
+							        </svg>
+							      </a>
+							    </div>				  				
+				  			</div>
+				  			<div class="col-sm-5 popup_left_title">
+				  				<p class="p-title"><?= $order_text_trans?></p>
+								<div class="row div_top">
+									<div class="col-sm-3">
+										<img class="payment_img" src="images/FDI.png">
+										
+									</div>
+									<div class="col-sm-6"  style="margin-left: 30px;">
+										<p class="order_desc"><?= $order_desc_text_trans?></p>
+									</div>
+									<div class="col-sm-2 price_right">
+										<p><?= $price_text_trans?> &#163;</p>
+									</div>
+								</div>
+								<div class="row div_top">
+									<div class="col-sm-6">
+										<p class="sub_total_text"><?= $subtotal_text_trans?></p>										
+									</div>
+									<div class="col-sm-6 price_right">
+										<p><?= $price_text_trans?> &#163;</p>										
+									</div>
+								</div>
+								<div class="row div_top">
+									<div class="col-sm-6">
+										<p class="sub_total_text"><?= $total_text_trans?></p>										
+									</div>
+									<div class="col-sm-6 price_right">
+										<p><?= $price_text_trans?> &#163;</p>										
+									</div>
+								</div>	
+								<div class="row div_top download_loader">
+
+									<button disabled="true" style='display: none;background: #d6a7a7;color: white;' class="error_text"></button>
+		
+
+									<?php
+										// $JumperDownloadText = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='JUMPER_DOWN_TEXT' AND LANG_ID='$lang_id'");						
+									?>
+									<a class="download_link" href="" target="_blank">
+										<button>
+											<?= encodes(mysqli_fetch_assoc($JumperDownloadText)['TEXT'])?>											
+										</button>
+									</a>									
+                  					
+                  					<svg class="spinner" width="174px" height="174px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                  					     <circle class="path" fill="transparent" stroke-width="2" cx="33" cy="33" r="30" stroke="#fff"/>
+                  					       <linearGradient id="gradient">
+                  					         <stop offset="50%" stop-color="#42d179" stop-opacity="1"/>
+                  					         <stop offset="65%" stop-color="#42d179" stop-opacity=".5"/>
+                  					         <stop offset="100%" stop-color="#42d179" stop-opacity="0"/>
+                  					       </linearGradient>
+                  					    </circle>
+                  					     <svg class="spinner-dot dot" width="5px" height="5px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg" x="37" y="1.5">
+                  					       <circle class="path" fill="#fff" cx="33" cy="33" r="30"/>
+                  					      </circle>
+                  					    </svg> 
+                  					  </svg> 
+
+								</div>		  				
+				  			</div>
+				  		</div>
+				  	</div>
+				</section>
+			</main> -->
+		<main class="payment_stripe" style="display: none">
+				<section class="container-lg">
+					<div class="cell example example3" id="example-3">
+				  		<span class="close_payment" style="position: relative; left: 100%; top: -20px; font-weight: bold; color: white;">
+				  			X
+				  		</span>
+				  		<div class="row">
+				  			<div class="col-sm-7">
+					<!-- <div class="cell example example3" id="example-3"> -->
+						          <form>
+							            <div class="fieldset">
+							              <input id="example3-name" data-tid="elements_examples.form.name_label" class="field" type="text" placeholder="<?= $label_name?>" value="<?= $user_name?>" required="" autocomplete="name">
+							              <input id="example3-email" data-tid="elements_examples.form.email_label" class="field half-width" type="email" placeholder="<?= $label_email?>" value="<?= $user_email?>" required="" autocomplete="email">
+							              <input id="example3-phone" data-tid="elements_examples.form.phone_label" class="field half-width" type="tel" placeholder="<?= $label_phone?>" required="" autocomplete="tel">
+							            </div>
+							            <div class="fieldset">
+							              <div id="example3-card-number" class="field empty"></div>
+							              <div id="example3-card-expiry" class="field empty third-width"></div>
+							              <div id="example3-card-cvc" class="field empty third-width"></div>
+							              <input id="example3-zip" data-tid="elements_examples.form.postal_code_placeholder" class="field empty third-width" placeholder="94107">
+							            </div>
+							            <input type="hidden" name="token">
+								        <input type="hidden" name="price" value="<?= $price_text_trans?>">
+							            <button type="submit" data-tid="elements_examples.form.pay_button"><?= $pay_trans." €". $price_text_trans?> </button>
+							            <div class="error" role="alert"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17">
+						                <path class="base" fill="#000" d="M8.5,17 C3.80557963,17 0,13.1944204 0,8.5 C0,3.80557963 3.80557963,0 8.5,0 C13.1944204,0 17,3.80557963 17,8.5 C17,13.1944204 13.1944204,17 8.5,17 Z"></path>
+						                <path class="glyph" fill="#FFF" d="M8.5,7.29791847 L6.12604076,4.92395924 C5.79409512,4.59201359 5.25590488,4.59201359 4.92395924,4.92395924 C4.59201359,5.25590488 4.59201359,5.79409512 4.92395924,6.12604076 L7.29791847,8.5 L4.92395924,10.8739592 C4.59201359,11.2059049 4.59201359,11.7440951 4.92395924,12.0760408 C5.25590488,12.4079864 5.79409512,12.4079864 6.12604076,12.0760408 L8.5,9.70208153 L10.8739592,12.0760408 C11.2059049,12.4079864 11.7440951,12.4079864 12.0760408,12.0760408 C12.4079864,11.7440951 12.4079864,11.2059049 12.0760408,10.8739592 L9.70208153,8.5 L12.0760408,6.12604076 C12.4079864,5.79409512 12.4079864,5.25590488 12.0760408,4.92395924 C11.7440951,4.59201359 11.2059049,4.59201359 10.8739592,4.92395924 L8.5,7.29791847 L8.5,7.29791847 Z"></path>
+						              </svg>
+						              <span class="message"></span></div>
+						          </form>
+						          <div class="success">
+							            <div class="icon">
+							              <svg width="84px" height="84px" viewBox="0 0 84 84" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+							                <circle class="border" cx="42" cy="42" r="40" stroke-linecap="round" stroke-width="4" stroke="#000" fill="none"></circle>
+							                <path class="checkmark" stroke-linecap="round" stroke-linejoin="round" d="M23.375 42.5488281 36.8840688 56.0578969 64.891932 28.0500338" stroke-width="4" stroke="#000" fill="none"></path>
+							              </svg>
+							            </div>
+							            <h3 class="title" data-tid="elements_examples.success.title">Payment successful</h3>
+							            <p class="message"><span data-tid="elements_examples.success.message">Thanks for trying Stripe Elements. No money was charged, but we generated a token: </span><span class="token">tok_189gMN2eZvKYlo2CwTBv9KKh</span></p>
+							            <a class="reset" href="#">
+							              <svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+							                <path fill="#000000" d="M15,7.05492878 C10.5000495,7.55237307 7,11.3674463 7,16 C7,20.9705627 11.0294373,25 16,25 C20.9705627,25 25,20.9705627 25,16 C25,15.3627484 24.4834055,14.8461538 23.8461538,14.8461538 C23.2089022,14.8461538 22.6923077,15.3627484 22.6923077,16 C22.6923077,19.6960595 19.6960595,22.6923077 16,22.6923077 C12.3039405,22.6923077 9.30769231,19.6960595 9.30769231,16 C9.30769231,12.3039405 12.3039405,9.30769231 16,9.30769231 L16,12.0841673 C16,12.1800431 16.0275652,12.2738974 16.0794108,12.354546 C16.2287368,12.5868311 16.5380938,12.6540826 16.7703788,12.5047565 L22.3457501,8.92058924 L22.3457501,8.92058924 C22.4060014,8.88185624 22.4572275,8.83063012 22.4959605,8.7703788 C22.6452866,8.53809377 22.5780351,8.22873685 22.3457501,8.07941076 L22.3457501,8.07941076 L16.7703788,4.49524351 C16.6897301,4.44339794 16.5958758,4.41583275 16.5,4.41583275 C16.2238576,4.41583275 16,4.63969037 16,4.91583275 L16,7 L15,7 L15,7.05492878 Z M16,32 C7.163444,32 0,24.836556 0,16 C0,7.163444 7.163444,0 16,0 C24.836556,0 32,7.163444 32,16 C32,24.836556 24.836556,32 16,32 Z"></path>
+							              </svg>
+							            </a>
+						          </div>
+
+        			<!-- </div>			  				 -->
+				  			</div>
+				  			<div class="col-sm-5 popup_left_title">
+				  				<p class="p-title"><?= $order_text_trans?></p>
+								<div class="row div_top">
+									<div class="col-sm-3">
+										<img class="payment_img" src="images/FDI.png">
+										<!-- <img class="payment_img" src="<?= $order_img_trans?>"> -->
+									</div>
+									<div class="col-sm-6"  style="margin-left: 30px;">
+										<p class="order_desc"><?= $order_desc_text_trans?></p>
+									</div>
+									<div class="col-sm-2 price_right">
+										<p><?= $price_text_trans?> &#163;</p>
+									</div>
+								</div>
+								<div class="row div_top">
+									<div class="col-sm-6">
+										<p class="sub_total_text"><?= $subtotal_text_trans?></p>										
+									</div>
+									<div class="col-sm-6 price_right">
+										<p><?= $price_text_trans?> &#163;</p>										
+									</div>
+								</div>
+								<div class="row div_top">
+									<div class="col-sm-6">
+										<p class="sub_total_text"><?= $total_text_trans?></p>										
+									</div>
+									<div class="col-sm-6 price_right">
+										<p><?= $price_text_trans?> &#163;</p>										
+									</div>
+								</div>	
+								<div class="row div_top download_loader">
+
+									<button disabled="true" style='display: none;background: #d6a7a7;color: white;' class="error_text"></button>
+		
+
+									<?php
+										$JumperDownloadText = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='JUMPER_DOWN_TEXT' AND LANG_ID='$lang_id'");						
+									?>
+									<a class="download_link" href="" target="_blank">
+										<button>
+											<?= encodes(mysqli_fetch_assoc($JumperDownloadText)['TEXT'])?>											
+										</button>
+									</a>									
+                  					<!-- <i class="fa fa-refresh fa-spin" style="font-size:24px;"></i> -->
+                  					<svg class="spinner" width="174px" height="174px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                  					     <circle class="path" fill="transparent" stroke-width="2" cx="33" cy="33" r="30" stroke="#fff"/>
+                  					       <linearGradient id="gradient">
+                  					         <stop offset="50%" stop-color="#42d179" stop-opacity="1"/>
+                  					         <stop offset="65%" stop-color="#42d179" stop-opacity=".5"/>
+                  					         <stop offset="100%" stop-color="#42d179" stop-opacity="0"/>
+                  					       </linearGradient>
+                  					    </circle>
+                  					     <svg class="spinner-dot dot" width="5px" height="5px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg" x="37" y="1.5">
+                  					       <circle class="path" fill="#fff" cx="33" cy="33" r="30"/>
+                  					      </circle>
+                  					    </svg> 
+                  					  </svg> 
+
+								</div>		  				
+				  			</div>
+				  		</div>
+				  	</div>
+				</section>
+			</main>		
+	<!-- <main class="payment_stripe">
+  
+      <section class="container-lg">
+
+        <div class="cell example example3" id="example-3">
+          <form>
+	            <div class="fieldset">
+	              <input id="example3-name" data-tid="elements_examples.form.name_label" class="field" type="text" placeholder="Name" required="" autocomplete="name">
+	              <input id="example3-email" data-tid="elements_examples.form.email_label" class="field half-width" type="email" placeholder="Email" required="" autocomplete="email">
+	              <input id="example3-phone" data-tid="elements_examples.form.phone_label" class="field half-width" type="tel" placeholder="Phone" required="" autocomplete="tel">
+	            </div>
+	            <div class="fieldset">
+	              <div id="example3-card-number" class="field empty"></div>
+	              <div id="example3-card-expiry" class="field empty third-width"></div>
+	              <div id="example3-card-cvc" class="field empty third-width"></div>
+	              <input id="example3-zip" data-tid="elements_examples.form.postal_code_placeholder" class="field empty third-width" placeholder="94107">
+	            </div>
+	            <button type="submit" data-tid="elements_examples.form.pay_button">Pay $25</button>
+	            <div class="error" role="alert"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17">
+                <path class="base" fill="#000" d="M8.5,17 C3.80557963,17 0,13.1944204 0,8.5 C0,3.80557963 3.80557963,0 8.5,0 C13.1944204,0 17,3.80557963 17,8.5 C17,13.1944204 13.1944204,17 8.5,17 Z"></path>
+                <path class="glyph" fill="#FFF" d="M8.5,7.29791847 L6.12604076,4.92395924 C5.79409512,4.59201359 5.25590488,4.59201359 4.92395924,4.92395924 C4.59201359,5.25590488 4.59201359,5.79409512 4.92395924,6.12604076 L7.29791847,8.5 L4.92395924,10.8739592 C4.59201359,11.2059049 4.59201359,11.7440951 4.92395924,12.0760408 C5.25590488,12.4079864 5.79409512,12.4079864 6.12604076,12.0760408 L8.5,9.70208153 L10.8739592,12.0760408 C11.2059049,12.4079864 11.7440951,12.4079864 12.0760408,12.0760408 C12.4079864,11.7440951 12.4079864,11.2059049 12.0760408,10.8739592 L9.70208153,8.5 L12.0760408,6.12604076 C12.4079864,5.79409512 12.4079864,5.25590488 12.0760408,4.92395924 C11.7440951,4.59201359 11.2059049,4.59201359 10.8739592,4.92395924 L8.5,7.29791847 L8.5,7.29791847 Z"></path>
+              </svg>
+              <span class="message"></span></div>
+          </form>
+          <div class="success">
+	            <div class="icon">
+	              <svg width="84px" height="84px" viewBox="0 0 84 84" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	                <circle class="border" cx="42" cy="42" r="40" stroke-linecap="round" stroke-width="4" stroke="#000" fill="none"></circle>
+	                <path class="checkmark" stroke-linecap="round" stroke-linejoin="round" d="M23.375 42.5488281 36.8840688 56.0578969 64.891932 28.0500338" stroke-width="4" stroke="#000" fill="none"></path>
+	              </svg>
+	            </div>
+	            <h3 class="title" data-tid="elements_examples.success.title">Payment successful</h3>
+	            <p class="message"><span data-tid="elements_examples.success.message">Thanks for trying Stripe Elements. No money was charged, but we generated a token: </span><span class="token">tok_189gMN2eZvKYlo2CwTBv9KKh</span></p>
+	            <a class="reset" href="#">
+	              <svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	                <path fill="#000000" d="M15,7.05492878 C10.5000495,7.55237307 7,11.3674463 7,16 C7,20.9705627 11.0294373,25 16,25 C20.9705627,25 25,20.9705627 25,16 C25,15.3627484 24.4834055,14.8461538 23.8461538,14.8461538 C23.2089022,14.8461538 22.6923077,15.3627484 22.6923077,16 C22.6923077,19.6960595 19.6960595,22.6923077 16,22.6923077 C12.3039405,22.6923077 9.30769231,19.6960595 9.30769231,16 C9.30769231,12.3039405 12.3039405,9.30769231 16,9.30769231 L16,12.0841673 C16,12.1800431 16.0275652,12.2738974 16.0794108,12.354546 C16.2287368,12.5868311 16.5380938,12.6540826 16.7703788,12.5047565 L22.3457501,8.92058924 L22.3457501,8.92058924 C22.4060014,8.88185624 22.4572275,8.83063012 22.4959605,8.7703788 C22.6452866,8.53809377 22.5780351,8.22873685 22.3457501,8.07941076 L22.3457501,8.07941076 L16.7703788,4.49524351 C16.6897301,4.44339794 16.5958758,4.41583275 16.5,4.41583275 C16.2238576,4.41583275 16,4.63969037 16,4.91583275 L16,7 L15,7 L15,7.05492878 Z M16,32 C7.163444,32 0,24.836556 0,16 C0,7.163444 7.163444,0 16,0 C24.836556,0 32,7.163444 32,16 C32,24.836556 24.836556,32 16,32 Z"></path>
+	              </svg>
+	            </a>
+          </div>
+
+        </div>
+
+   
+      </section>
+    </main> -->
 
 		<div class="row system_defination_btn">
 			<div class="col-sm-12">
@@ -1063,13 +1806,15 @@ var_dump($response);
 				<?php $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>
 				
 				<input type="hidden" name="siteLink" value="<?= $actual_link?>?action=chart_data" data-validateId = "">
+				<input type="hidden" name="check_link_status" value="<?= $actual_link?>?action=link_status" data-validateId = "">
+				<input type="hidden" name="session_compiled" value="<?= $actual_link?>?action=session_compiled" data-validateId = "">
 
 				<button type="button" id="save_data" class="btn btn-success" data-action="<?= $actual_link; ?>?action=save_data" style="float: right;"> <img src="images/ajax-loader.gif" style="display: none;">  <span>Save Strategy</span> </button>
 				
 				<?php
 					$strategy_summary_text = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='STRATEGY_TEXT3' AND LANG_ID='$lang_id'");
 				?>
-				<button type="button" id="close_tooltipseter_" class="btn build-next" data-tooltip-content="#tooltip_content_definition" data-action="<?= $actual_link; ?>?action=system_defination" style="margin-top: 20px; margin-left: 7px;float: left;">  <span><?= encodes(mysqli_fetch_assoc($strategy_summary_text)['TEXT']); ?></span> </button>
+				<button type="button" id="close_tooltipseter_" class="btn build-next" data-tooltip-content="#tooltip_content_definition" data-action="<?= $actual_link; ?>?action=system_defination" style="margin-top: 20px; margin-left: 7px;float: left;">  <span><?= encodes(mysqli_fetch_assoc($strategy_summary_text)['TEXT']); ?> </span> </button>
 				<!-- <button type="button" class="btn build-next" style="margin-top: 20px; margin-left: -14px;float: left;">  <span><?= encodes(mysqli_fetch_assoc($strategy_summary_text)['TEXT']); ?></span> </button> -->
 				<br>
 
@@ -1101,13 +1846,22 @@ var_dump($response);
 				ERROR_CODE = 3  AND
 				LANG_ID = '".$lang_id."'
 			");
+
+
+
+		
+
+
+
 	?>
 
 		<input type="hidden" class="error_code_data" data-error="<?= encodes(mysqli_fetch_assoc($error_data)['TEXT'])?>" data-error-0="<?= encodes(mysqli_fetch_assoc($error_code_0)['ERROR_DESC'])?>" data-error-1="<?= encodes(mysqli_fetch_assoc($error_code_1)['ERROR_DESC'])?>" data-error-2="<?= encodes(mysqli_fetch_assoc($error_code_2)['ERROR_DESC'])?>" data-error-3="<?= encodes(mysqli_fetch_assoc($error_code_3)['ERROR_DESC'])?>">
 	
+		
 		<input type="hidden" class="validate_visisted">	
 		<input type="hidden" class="element_data_old">
 		<input type="hidden" class="element_data_new">
+		<input type="hidden" class="file_url_compiled">
 	
 		<div class="tooltip_templates">
 		    <span id="tooltip_content_definition" class="append_response">
@@ -1123,7 +1877,9 @@ var_dump($response);
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 		
 
+	<script src="js/l10n.js" data-rel-js></script>
 
+	<script src="js/stripe_design.js" data-rel-js></script>
 
 
 	<script>
@@ -1158,7 +1914,6 @@ var_dump($response);
 			});
 
 	 	});
-
  
  </script>
 

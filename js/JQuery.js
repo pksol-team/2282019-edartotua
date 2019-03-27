@@ -1,8 +1,10 @@
 $(document).ready(function() {
 
+
+
 $('li.paramsmeters').hover(function() {
 	
-
+	// $(this).trigger('click');
 	var $this = $(this);
 		console.log("hover");
 
@@ -72,8 +74,9 @@ $('li.paramsmeters').hover(function() {
 
 	$(document).on('click', 'li.paramsmeters', function(e) {
 
+		$('.box_shadow').show();
 		var $this = $(this);
-		console.log($this);
+		// console.log($this);
 
 		var tooltip_content = $this.find('span[data-template]');
 
@@ -87,16 +90,31 @@ $('li.paramsmeters').hover(function() {
 		if ($.tooltipster.instances($this).length == 0) {
 
 			$this.tooltipster({
+				animation: 'grow',
 				theme: 'tooltipster-light',
 				interactive: true,
 				onlyOne: true,
 				trigger: 'click',
-				position: "bottom",
+				arrow: false,
+				// position: "bottom",
+
+
 
 				functionReady: function(origin, tooltip) {
 
 					$('.close_tooltip').on("click", function() {
 						origin.hide();
+						$('.box_shadow').hide();
+						$(".form-control").css('width', '100%');
+						$('.tooltip_content_container').removeClass('design_1');
+						$('.tooltip_content_container').find('h6').removeClass('element_head');
+						$('p.el-desc').next('hr').remove();
+						$('.testing').removeClass('parameters');
+						$('.tooltip_content_container').find('h6').removeClass('element_head');			
+						$('.pop_image').hide();
+						$('.get_design').removeClass('element_form');
+
+					
 					});
 
 					$('.close_tooltip_save').on('click', function() {
@@ -106,6 +124,8 @@ $('li.paramsmeters').hover(function() {
 						origin.hide();
 
 					});
+
+
 
 				},
 
@@ -120,11 +140,73 @@ $('li.paramsmeters').hover(function() {
 						}
 					}, 100);
 					// $('#save_data').trigger('click');
+					$('.box_shadow').hide();
+					$(".form-control").css('width', '100%');
+					$('.design_1').addClass('tooltip_content_container');
+					$('.tooltip_content_container').removeClass('design_1');
+					$('.tooltip_content_container').next('h6').removeClass('element_head');
+					$('p.el-desc').next('hr').remove();
+					$('.testing').removeClass('parameters');
+					$('.tooltip_content_container').find('h6').removeClass('element_head');			
+					$('.pop_image').hide();
+					$('.get_design').removeClass('element_form');
+
+
 				},
 
 			});
 
+     		
+
+
+
 			$this.tooltipster('show');
+			// console.log($('div.tooltipster-base').next());
+
+
+			$('.pop_image').show();
+			$('.tooltip_content_container').addClass('design_1');			
+			$('.tooltip_content_container').removeClass('tooltip_content_container');
+			
+			$('.tooltip_content_container').next('h6').addClass('element_head');
+			$('<hr class="element_line_break">').insertAfter('p.el-desc');
+			$('.testing').addClass('parameters');
+
+			$(".parameters").next('div').find('button').addClass('element_btn');
+
+			$('.design_1').find('h6').addClass('element_head');			
+
+			$('div.tooltipster-base').removeAttr('style');
+			$('div.tooltipster-base').attr('style', '  pointer-events: auto;z-index: 9999999;left: 33%;top: 20%;right: 0px;height: 432px;width: 450px;animation-duration: 350ms;transition-duration: 350ms;');
+			$('.tooltipster-sidetip .tooltipster-content').css({
+				overflow: 'unset',
+				// padding: '18px'
+				padding: '18px 0 0 0'
+
+			});
+			$(".tooltipster-sidetip.tooltipster-light .tooltipster-box").css({
+				height: '550px',
+				borderRadius: '7%'
+			});
+
+			$('.close_tooltip').css({
+				fontSize: '17px',
+				top: '10px',
+    			right: '24px',
+    			color: 'white'
+			});
+
+			$(".form-control").css('width', 'auto');
+
+			$(".main_head").css({
+				textAlign: 'center',
+				color: 'white'
+			});
+
+			$('.tooltipster-sidetip.tooltipster-light .tooltipster-box').css('background', '#37465d');
+
+			$('.get_design').addClass('element_form');
+			
 		}
 
 	});
@@ -1386,6 +1468,34 @@ $(document).on('click', '.download_pay', function(event) {
 
 
 });
+
+function openCity(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+function openNav() {
+  document.getElementById("mySidenav").style.width = "1000px";
+  document.getElementById("main").style.marginLeft = "1000px";
+}
+
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+  document.getElementById("main").style.marginLeft= "0";
+}
+
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
 
 // jQuery(document).ready(function($) {
 // 	console.log("testing");

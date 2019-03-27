@@ -512,7 +512,8 @@ var_dump($response);
 		?>
 
 		<body>
-
+	
+	<div class="box_shadow"></div>
 		<!-- Mobile menu closed -->
 		
 		
@@ -533,6 +534,8 @@ var_dump($response);
 			 <img src="images/help.png">
 			   <!-- &#10067  -->
 			</button>
+			
+				
 		<div class="container h-100 py-6 ">
 	
 
@@ -587,9 +590,10 @@ var_dump($response);
 				</div>				
 			</div>
 		</div>
-<hr>
-
-		<div class="build-tab">
+		<hr>
+		
+		
+		<div class="build-tab">			
 			<div class="container-fluid h-100 py-6" style="    padding-bottom: 0 !important;">				
 				<div class="row">					
 					
@@ -697,9 +701,15 @@ var_dump($response);
 															<img src="<?= $element_img_url; ?>?time=<?= time(); ?>" alt="<?= $element_name; ?>" width="96" height="90" class="img-responsive" data-elementID="<?= $element_id; ?>">
 																<img src="images/seq-add.png" class="arrow_pop pop" data-toggle="tooltip" data-trigger="hover" data-placement="bottom" data-content="" alt="SEQ">
 
-																													    <span class="sidebar_content-<?= $index; ?>" data-template="true" style="display: none;">
+																<span class="sidebar_content-<?= $index; ?>" data-template="true" style="display: none;">
+																	
+																	<div class="main_head" >
+																		<h6><?= $element_name_tran; ?></h6>	
+																		<img src="<?= $element_img_url; ?>?time=<?= time(); ?>" alt="" class="pop_image">																		
+
+																		</div>
 																	<div class="tooltip_content_container">
-																		<h6><?= $element_name_tran; ?></h6>
+																		<!-- <h6><?= $element_name_tran; ?></h6> -->
 																		<?php
 
 																			$el_info_obj = mysqli_query($con, "SELECT * FROM `translations` WHERE 
@@ -713,7 +723,7 @@ var_dump($response);
 																		</p>
 
 																		<span class="close_tooltip"><i class="fa fa-close"></i></span>
-																		<br>
+																		<div class="testing">
 																		<?php
 
 																			$params_sql = "SELECT
@@ -749,27 +759,28 @@ var_dump($response);
 
 																					<div class="form-group" data-field-type='integer'>
 																					   <label><?= encodes($fetch_parameters['TEXT']); ?></label>
-																					   <input type="number" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= encodes($fetch_parameters['DEFAULT_PARAM']); ?>" disabled>
+																					   <input type="number" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm get_design" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= encodes($fetch_parameters['DEFAULT_PARAM']); ?>" disabled>
 																					</div>
 
 																				<?php } elseif($fetch_parameters['PARAM_TYPE'] == 'BOOL') { ?>
 
-																					<div class="form-check tooltip-check"  data-field-type='bool'>
+																					<div class="form-check tooltip-check round"  data-field-type='bool'>
 																					  <input class="form-check-input" type="checkbox" disabled id="<?= $fetch_parameters['PARAM_NAME'] ?>" name="<?= $fetch_parameters['PARAM_NAME'] ?>" <?php if($fetch_parameters['DEFAULT_PARAM'] == '1') echo 'checked'; ?> >
-																					  <label class="form-check-label"><?= encodes($fetch_parameters['TEXT']); ?></label>
+																					  <label class="form-check-label"></label>
+																						<span class="param_label"><?= $param_label; ?></span>
 																					</div>
 
 																				<?php } elseif($fetch_parameters['PARAM_TYPE'] == 'STRING') { ?>
 																					
 																					<div class="form-group" data-field-type='string'>
 																					   <label><?= encodes($fetch_parameters['TEXT']); ?></label>
-																					   <input type="text" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= encodes($fetch_parameters['DEFAULT_PARAM']); ?>" disabled>
+																					   <input type="text" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm get_design" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= encodes($fetch_parameters['DEFAULT_PARAM']); ?>" disabled>
 																					</div>																				
 																				<?php } elseif($fetch_parameters['PARAM_TYPE'] == 'DOUBLE') { ?>
 																					
 																					<div class="form-group" data-field-type='double'>
 																					   <label><?= encodes($fetch_parameters['TEXT']); ?></label>
-																					   <input type="text" step="any" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= $fetch_parameters['DEFAULT_PARAM']; ?>" disabled>
+																					   <input type="text" step="any" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm get_design" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= $fetch_parameters['DEFAULT_PARAM']; ?>" disabled>
 																					</div>
 
 																				<?php } else {
@@ -779,7 +790,7 @@ var_dump($response);
 																					
 																					<div class="form-group" data-field-type='dropdown'>
 																						<label><?= encodes($fetch_parameters['TEXT']); ?></label>
-																						<select class="form-control form-control-sm" disabled>
+																						<select class="form-control form-control-sm get_design" disabled>
 																							<?php
 																								foreach ($values as $value) {
 																									if ($fetch_parameters['DEFAULT_PARAM'] == $value) {
@@ -794,8 +805,11 @@ var_dump($response);
 																				<?php } ?>
 
 																			<?php endwhile; ?>
-																			
+																			</div>
+																			<div style="text-align: center;">
+
 																			<button type="submit" class="btn btn-success btn-block btn-outline-success d-none close_tooltip_save"><?= $save_text; ?></button>
+																		</div>
 																	</div>
 															    </span>
 														</li>
@@ -852,21 +866,42 @@ var_dump($response);
 															?>
 																
 
-																																<input type="hidden" name="unique" value="<?= $el_name_SEQ?>">
+																<input type="hidden" name="unique" value="<?= $el_name_SEQ?>">
 
 																<li class="ui-widget-content ui-corner-tr ui-state-default paramsmeters d-sort door_image_li" data-tooltip-content="#tab_one_content-<?= $indexx; ?>" data-element-append="<?= $id; ?>" data-title="<?= $fetching_omc['ELEMENT_NAME']; ?>" style="display: none;">
 																	
 																	<p style="font-size: 12px" class="v-h"><?= $el_name_ac; ?></p>								
 																				
-																	<?php if ($fetching_omc['ELEMENT_NAME'] == 'SEQ'): ?>
+																	<?php if ($fetching_omc['ELEMENT_NAME'] == 'SEQ'): 
+																		$img_src = 'images/seq-add.png';
+																		?>
 																		<i class="fa fa-remove"></i>
+
 																		<img src="images/seq-add.png" alt="<?= $fetching_omc['ELEMENT_NAME']; ?>" width="96" class="img-responsive"  >
 																		<strong><?= $add_seq_text; ?></strong>
-																	<?php else: ?>
+																	<?php else: 
+																		$img_src = $fetching_omc["IMAGE_URL"];
+																		?>
 																		<img src="<?= $fetching_omc['IMAGE_URL']; ?>?time=<?= time(); ?>" alt="<?= $fetching_omc['ELEMENT_NAME']; ?>" width="96" height="90" class="img-responsive" data-elementID="<?= $id; ?>">
 																	<?php endif ?>
 
+																	<!-- New tooltip design -->
+
+		
 																	<span class="tab_one_content-<?= $indexx; ?>" data-template="true" style="display: none;">
+
+																		<?php
+																			$open_modify_close_name = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+																				CONCEPT_NAME = 'ELEMENT_NAME' AND REG_ID = $id AND LANG_ID = '".$lang_id."'
+																			");
+																		?>
+		
+																		<div class="main_head">
+																			<h6><?= encodes(mysqli_fetch_assoc($open_modify_close_name)['TEXT']); ?></h6>																				
+																					<img src="<?= $img_src; ?>?time=<?= time(); ?>" alt="" class="pop_image">																		
+																			</div>
+		
+																		<!-- <div class="design_1"> -->
 																		<div class="tooltip_content_container">
 																			<?php																		
 																				
@@ -880,10 +915,17 @@ var_dump($response);
 																				");
 
 																			?>
-																			<h6><?= encodes(mysqli_fetch_assoc($open_modify_close_name)['TEXT']); ?></h6>
-																			<p class="el-desc"> <?= $el_description; ?>  <a href="<?= $fetching_omc['MORE_INFO_URL']; ?>" target='_blank'> <?= encodes(mysqli_fetch_assoc($el_info_obj)['TEXT']); ?> </a></p>
+																			<!-- <div style="background: black">
+																			<h6><?php //echo encodes(mysqli_fetch_assoc($open_modify_close_name)['TEXT']); ?></h6>																				
+																			</div> -->
+																			
+																			
+																			<p class="el-desc design_p"> <?= $el_description; ?>  <a href="<?= $fetching_omc['MORE_INFO_URL']; ?>" target='_blank'> <?= encodes(mysqli_fetch_assoc($el_info_obj)['TEXT']); ?> </a></p>
+																			<!-- <hr class="element_line_break"> -->
 																			<span class="close_tooltip"><i class="fa fa-close"></i></span>
-																			<br>
+																																						
+																			<div class="testing">
+																				
 																			
 																			<?php
 																				$params_sql = "SELECT
@@ -904,28 +946,31 @@ var_dump($response);
 
 																						<div class="form-group" data-field-type='integer'>
 																						   <label><?= $param_label; ?></label>
-																						   <input type="number" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm" placeholder="<?= $param_label; ?>" value="<?= encodes($fetch_parameters['DEFAULT_PARAM']); ?>" disabled>
+																						  
+																						   <input type="number" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm element_form" placeholder="<?= $param_label; ?>" value="<?= encodes($fetch_parameters['DEFAULT_PARAM']); ?>" disabled>
+																						
 																						</div>
 
 																					<?php } elseif($fetch_parameters['PARAM_TYPE'] == 'BOOL') { ?>
 
-																						<div class="form-check tooltip-check" data-field-type='bool'>
+																						<div class="form-check tooltip-check round" data-field-type='bool'>
 																						  <input class="form-check-input" type="checkbox" disabled id="<?= $fetch_parameters['PARAM_NAME'] ?>" name="<?= $fetch_parameters['PARAM_NAME'] ?>" <?php if($fetch_parameters['DEFAULT_PARAM'] == '1') echo 'checked'; ?> >
-																						  <label class="form-check-label"><?= $param_label; ?></label>
+																						  <label class="form-check-label"></label>
+																						  <span class="param_label"><?= $param_label; ?></span>
 																						</div>
 
 																					<?php } elseif($fetch_parameters['PARAM_TYPE'] == 'DOUBLE') { ?>
 																						
 																						<div class="form-group" data-field-type='double'>
 																						   <label><?= $param_label; ?></label>
-																						   <input type="text" step="any" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= $fetch_parameters['DEFAULT_PARAM']; ?>" disabled>
+																						   <input type="text" step="any" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm element_form" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= $fetch_parameters['DEFAULT_PARAM']; ?>" disabled>
 																						</div>
 
 																					<?php } elseif($fetch_parameters['PARAM_TYPE'] == 'STRING') { ?>
 																						
 																						<div class="form-group" data-field-type='string'>
 																						   <label><?= $param_label; ?></label>
-																						   <input type="text" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= $fetch_parameters['DEFAULT_PARAM']; ?>" disabled>
+																						   <input type="text" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm element_form" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= $fetch_parameters['DEFAULT_PARAM']; ?>" disabled>
 																						</div>
 
 
@@ -939,7 +984,7 @@ var_dump($response);
 																						
 																						<div class="form-group" data-field-type='dropdown'>
 																							<label><?= $param_label; ?></label>
-																							<select class="form-control form-control-sm" disabled>
+																							<select class="form-control form-control-sm element_form" disabled>
 																								<?php
 																									foreach ($values as $value) {
 																										if ($value == $fetch_parameters['DEFAULT_PARAM']) {
@@ -954,8 +999,13 @@ var_dump($response);
 																					<?php } ?>
 
 																				<?php endwhile; ?>
-																				<button type="submit" class="btn btn-success btn-block btn-outline-success d-none close_tooltip_save"><?= $save_text; ?></button>
-																		</div>
+																				</div>
+																				<div style="text-align: center;">
+																					
+																				<button type="submit" class="btn btn-success btn-block btn-outline-success d-none close_tooltip_save "><?= $save_text; ?></button>
+																				</div>
+																		
+																	</div>
 																	</span>
 																</li>
 															<?php } ?>
@@ -1118,6 +1168,7 @@ var_dump($response);
 				</div>
 			</div>
 		</div>
+		
 
 	
 
@@ -1199,7 +1250,7 @@ var_dump($response);
 								<!--  Extra Fields -->
 								<?php
 
-		$user_id = 0;
+								$user_id = 0;
 								// $user_id = get_current_user_id();
 									$strategy_id = mysqli_query($con,"SELECT sesion_id FROM session_strategy WHERE user_id = '$user_id'");
 									
