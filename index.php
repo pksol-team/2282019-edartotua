@@ -297,7 +297,7 @@ var_dump($response);
 			if(!empty($check)){
 				$user_id = 0;
 				$session_id = $_POST['session_id'];
-				$status = 'F';
+				$status = 'N';
 
 				$userAlready = $con->query("SELECT * FROM session_strategy_definition WHERE user_id = '$user_id'");
 
@@ -326,69 +326,69 @@ var_dump($response);
 			
 		}
 
-		else if($_GET['action'] == 'stripe_payment'){
+		// else if($_GET['action'] == 'stripe_payment'){
 			
-			$fetch = mysqli_query($con, "SELECT * FROM `payment_keys` WHERE payment_type = 'stripe'");
-		if($fetch){
-			$s_k = mysqli_fetch_assoc($fetch)['secret_key'];
-		}
+		// 	$fetch = mysqli_query($con, "SELECT * FROM `payment_keys` WHERE payment_type = 'stripe'");
+		// 	if($fetch){
+		// 		$s_k = mysqli_fetch_assoc($fetch)['secret_key'];
+		// 	}
 
-			$name = $_POST['data']['name'];
-			$amount = $_POST['data']['price']*100;
-			$currency = 'EUR';
-			$source = $_POST['stripe_token'];
-			$email = $_POST['data']['email'];
-		    $price = $_POST['data']['price'];
-			$description = $_POST['data']['description'];
-			$date = date('Y-m-d');
-			$user_id = 0;
-			$session_id = $_POST['session_id'];
-			\Stripe\Stripe::setApiKey($s_k);
-			try{  			    
-			    //charge a credit or a debit card
-				$charge = \Stripe\Charge::create(array(
-				    'source'  => $source,
-				    'amount'   => $amount,
-				    'currency' => $currency,
-				    'description' => $description			        
-				));
+		// 	$name = $_POST['data']['name'];
+		// 	$amount = $_POST['data']['price']*100;
+		// 	$currency = 'EUR';
+		// 	$source = $_POST['stripe_token'];
+		// 	$email = $_POST['data']['email'];
+		//     $price = $_POST['data']['price'];
+		// 	$description = $_POST['data']['description'];
+		// 	$date = date('Y-m-d');
+		// 	$user_id = 0;
+		// 	$session_id = $_POST['session_id'];
+		// 	\Stripe\Stripe::setApiKey($s_k);
+		// 	try{  			    
+		// 	    //charge a credit or a debit card
+		// 		$charge = \Stripe\Charge::create(array(
+		// 		    'source'  => $source,
+		// 		    'amount'   => $amount,
+		// 		    'currency' => $currency,
+		// 		    'description' => $description			        
+		// 		));
 
-				$json_data = explode("JSON: ", $charge);
-				// var_dump($json_data[1]);
-				if($charge->paid){
+		// 		$json_data = explode("JSON: ", $charge);
+		// 		// var_dump($json_data[1]);
+		// 		if($charge->paid){
 					
-					$status = 'N';
-					// 4242 4242 4242 4242
+		// 			$status = 'N';
+		// 			// 4242 4242 4242 4242
 
-					$pay_ = "INSERT INTO `wp_payment` (`payment_id`, `session_id`, `user_id`, `payment_amount`, `date`) VALUES (NULL, '$session_id', '$user_id', '$price', '$date');";
-					$con->query($pay_);
+		// 			$pay_ = "INSERT INTO `wp_payment` (`payment_id`, `session_id`, `user_id`, `payment_amount`, `date`) VALUES (NULL, '$session_id', '$user_id', '$price', '$date');";
+		// 			$con->query($pay_);
 
-					// session_payment
-					$session_pay_ = "INSERT INTO `session_payment` (`session_pay_id`, `session_id`, `user_id`, `type_payment`, `estatus`, `estatus_text`) VALUES (NULL, '$session_id', '$user_id', 'STRIPE', 'Success', 'Payment transaction successfull');";
-					$con->query($session_pay_);
+		// 			// session_payment
+		// 			$session_pay_ = "INSERT INTO `session_payment` (`session_pay_id`, `session_id`, `user_id`, `type_payment`, `estatus`, `estatus_text`) VALUES (NULL, '$session_id', '$user_id', 'STRIPE', 'Success', 'Payment transaction successfull');";
+		// 			$con->query($session_pay_);
 					
-					echo $charge->paid."payment_done_success";
-	 				// $query = mysqli_query($con,"SELECT * FROM session_compiled WHERE session_comp_id = '$pay_id'");
+		// 			echo $charge->paid."payment_done_success";
+	 // 				// $query = mysqli_query($con,"SELECT * FROM session_compiled WHERE session_comp_id = '$pay_id'");
 
-					// $sql = "INSERT INTO `session_compiled` (`session_id`, `user_id`, `estatus`) VALUES ('$session_id', '$user_id','N')";
+		// 			// $sql = "INSERT INTO `session_compiled` (`session_id`, `user_id`, `estatus`) VALUES ('$session_id', '$user_id','N')";
 
-				 //    $con->query($sql);				    
+		// 		 //    $con->query($sql);				    
 
-			  //    	$last_pay_id = $con->insert_id;
+		// 	  //    	$last_pay_id = $con->insert_id;
 				     
-				 //    echo $last_pay_id."pay_id";
+		// 		 //    echo $last_pay_id."pay_id";
 
-				}else{					
-					echo $charge;
-				}
-			} catch(\Exception $e){
-				$error = $e->getMessage();
-				$session_pay_ = "INSERT INTO `session_payment` (`session_pay_id`, `session_id`, `user_id`, `type_payment`, `estatus`, `estatus_text`) VALUES (NULL, '$session_id', '$user_id', 'STRIPE', 'Failed', '$error');";
-				$data = $con->query($session_pay_);				
-				echo $e->getMessage();
-			}	
+		// 		}else{					
+		// 			echo $charge;
+		// 		}
+		// 	} catch(\Exception $e){
+		// 		$error = $e->getMessage();
+		// 		$session_pay_ = "INSERT INTO `session_payment` (`session_pay_id`, `session_id`, `user_id`, `type_payment`, `estatus`, `estatus_text`) VALUES (NULL, '$session_id', '$user_id', 'STRIPE', 'Failed', '$error');";
+		// 		$data = $con->query($session_pay_);				
+		// 		echo $e->getMessage();
+		// 	}	
 		
-		}
+		// }
 
 
 		else if($_GET['action'] == 'session_compiled'){
@@ -421,8 +421,6 @@ var_dump($response);
 	 				$error = mysqli_query($con,"SELECT * FROM error WHERE error_code = 3 AND lang_id = '$lang_id'");
 	 				if(mysqli_num_rows($error) > 0){
 		 				echo encodes(mysqli_fetch_assoc($error)['ERROR_DESC'])."complie_error";											 				
-	 				}else{
-	 					echo "error complie_error";	 					
 	 				}
 	 			}
 	 		
@@ -463,10 +461,7 @@ var_dump($response);
 	    <script class="all_files" type="text/javascript" src="plugin/tooltipster/dist/js/tooltipster.bundle.min.js?time=<?= time(); ?>"></script>
 		<link class="all_files" rel="stylesheet" type="text/css" href="css/style.css?time=<?= time(); ?>">
 		
-		<!-- <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet"> -->
-
+	
 		<script src="https://js.stripe.com/v3/"></script>
 		<script src="js/index.js" data-rel-js></script>
 		
@@ -592,7 +587,9 @@ var_dump($response);
 		</div>
 		<hr>
 		
-		
+
+		<!-- Old build screen -->
+
 		<div class="build-tab">			
 			<div class="container-fluid h-100 py-6" style="    padding-bottom: 0 !important;">				
 				<div class="row">					
@@ -724,7 +721,7 @@ var_dump($response);
 
 																		<span class="close_tooltip"><i class="fa fa-close"></i></span>
 																		<div class="testing">
-																		<?php
+																			<?php
 
 																			$params_sql = "SELECT
 																				parameters.PARAM_ID,
@@ -805,11 +802,10 @@ var_dump($response);
 																				<?php } ?>
 
 																			<?php endwhile; ?>
-																			</div>
-																			<div style="text-align: center;">
-
-																			<button type="submit" class="btn btn-success btn-block btn-outline-success d-none close_tooltip_save"><?= $save_text; ?></button>
 																		</div>
+																			<div style="text-align: center;">
+																				<button type="submit" class="btn btn-success btn-block btn-outline-success d-none close_tooltip_save"><?= $save_text; ?></button>
+																			</div>
 																	</div>
 															    </span>
 														</li>
@@ -822,7 +818,8 @@ var_dump($response);
 															<?php $fetch_tabs_omc = mysqli_query($con,"SELECT * FROM `elements` WHERE ELEMENT_GROUP_ID = 0");
 															
 															$indexx = 0;
-															while ($fetching_omc = mysqli_fetch_array($fetch_tabs_omc)) { $indexx++;
+															while ($fetching_omc = mysqli_fetch_array($fetch_tabs_omc)) { 
+																$indexx++;
 
 																$id = $fetching_omc['ELEMENT_ID'];
 																$fetch_parameters_value = mysqli_query($con,"SELECT * FROM parameters WHERE ELEMENT_ID = $id"); 
@@ -838,12 +835,8 @@ var_dump($response);
 																} elseif($fetching_omc['ELEMENT_NAME'] == 'MODIFY') {
 																	$strategy = 'STRATEGY_MODIFY';
 																} elseif($fetching_omc['ELEMENT_NAME'] == 'SEQ') {
-																	
 																	$strategy = 'ELEMENT_NAME';
 																	$new_con = "REG_ID = '$id' AND";
-
-																	
-
 																}
 
 																$fetching_element_description = mysqli_query($con, "SELECT * FROM `translations` WHERE TABLE_NAME='ELEMENTS' AND CONCEPT_NAME='ELEMENT_DESCRIPTION' AND REG_ID=$id AND LANG_ID='$lang_id'");
@@ -863,12 +856,12 @@ var_dump($response);
 
 
 
-															?>
+																?>
 																
 
-																<input type="hidden" name="unique" value="<?= $el_name_SEQ?>">
+																<input type="hidden" name="unique" value="<?= $el_name_SEQ?>" >
 
-																<li class="ui-widget-content ui-corner-tr ui-state-default paramsmeters d-sort door_image_li" data-tooltip-content="#tab_one_content-<?= $indexx; ?>" data-element-append="<?= $id; ?>" data-title="<?= $fetching_omc['ELEMENT_NAME']; ?>" style="display: none;">
+																<li class="ui-widget-content ui-corner-tr ui-state-default paramsmeters d-sort door_image_li shadow" data-tooltip-content="#tab_one_content-<?= $indexx; ?>" data-element-append="<?= $id; ?>" data-title="<?= $fetching_omc['ELEMENT_NAME']; ?>" style="display: none;">
 																	
 																	<p style="font-size: 12px" class="v-h"><?= $el_name_ac; ?></p>								
 																				
@@ -920,7 +913,7 @@ var_dump($response);
 																			</div> -->
 																			
 																			
-																			<p class="el-desc design_p"> <?= $el_description; ?>  <a href="<?= $fetching_omc['MORE_INFO_URL']; ?>" target='_blank'> <?= encodes(mysqli_fetch_assoc($el_info_obj)['TEXT']); ?> </a></p>
+																			<p class="el-desc design_p"> <?= $el_description; ?><a href="<?= $fetching_omc['MORE_INFO_URL']; ?>" target='_blank'> <?= encodes(mysqli_fetch_assoc($el_info_obj)['TEXT']); ?> </a></p>
 																			<!-- <hr class="element_line_break"> -->
 																			<span class="close_tooltip"><i class="fa fa-close"></i></span>
 																																						
@@ -1008,7 +1001,186 @@ var_dump($response);
 																	</div>
 																	</span>
 																</li>
-															<?php } ?>
+																<?php 
+															}
+
+
+															// New element configuration
+
+															$fetch_configuration_omc = mysqli_query($con,"SELECT * FROM `elements` WHERE ELEMENT_GROUP_ID = '4' AND  ELEMENT_ID NOT IN (4, 27, 43, 44, 45)");
+															
+															$index_id = 7;
+															while ($configuration_omc = mysqli_fetch_array($fetch_configuration_omc)) { 
+																$index_id ++;
+
+																$id = $configuration_omc['ELEMENT_ID'];
+																$fetch_parameters_value = mysqli_query($con,"SELECT * FROM parameters WHERE ELEMENT_ID = $id"); 
+
+																
+
+																$el_description = '';
+																
+
+																$fetching_element_description = mysqli_query($con, "SELECT * FROM `translations` WHERE TABLE_NAME='ELEMENTS' AND CONCEPT_NAME='ELEMENT_DESCRIPTION' AND REG_ID=$id AND LANG_ID='$lang_id'");
+																	$el_description = encodes(mysqli_fetch_assoc($fetching_element_description)['TEXT']);
+
+																$el_name_obj = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+																	CONCEPT_NAME = 'ELEMENT_NAME' AND																	
+																	LANG_ID = '".$lang_id."'
+																");
+																$el_name_ac = encodes(mysqli_fetch_assoc($el_name_obj)['TEXT']);																	
+																
+																$el_name = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+																	CONCEPT_NAME = 'ELEMENT_NAME' AND TABLE_NAME='ELEMENTS'AND REG_ID=$id AND LANG_ID='$lang_id'");
+
+																$el_name_SEQ = encodes(mysqli_fetch_assoc($el_name)['TEXT']);
+
+
+
+																?>
+																
+
+																<input type="hidden" name="unique" value="<?= $el_name_SEQ?>" >
+
+																<li class="ui-widget-content ui-corner-tr ui-state-default paramsmeters d-sort door_image_li shadow" element_tab_index = '<?= $index_id; ?>' data-tooltip-content="#tab_one_content-<?= $indexx; ?>" data-element-append_conf="<?= $id; ?>" data-title="<?= $fetching_omc['ELEMENT_NAME']; ?>" style="display: none;">
+																	
+																	<p style="font-size: 12px" class="v-h"><?= $el_name_ac; ?></p>								
+																				
+																	<?php
+																		$img_src = $configuration_omc["IMAGE_URL"];
+																		?>
+																		<img src="<?= $configuration_omc['IMAGE_URL']; ?>?time=<?= time(); ?>" alt="<?= $fetching_omc['ELEMENT_NAME']; ?>" width="96" height="90" class="img-responsive" data-elementID="<?= $id; ?>">
+																	
+
+																	<!-- New tooltip design -->
+
+															
+																	<span class="tab_one_content-<?= $indexx; ?>" data-template="true" style="display: none;">
+
+																		<?php
+																			$open_modify_close_name = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+																				CONCEPT_NAME = 'ELEMENT_NAME' AND REG_ID = $id AND LANG_ID = '".$lang_id."'
+																			");
+																		?>
+															
+																		<div class="main_head">
+																			<h6><?= encodes(mysqli_fetch_assoc($open_modify_close_name)['TEXT']); ?></h6>																				
+																					<img src="<?= $img_src; ?>?time=<?= time(); ?>" alt="" class="pop_image">																		
+																			</div>
+															
+																		<!-- <div class="design_1"> -->
+																		<div class="tooltip_content_container">
+																			<?php																		
+																				
+																				$el_info_obj = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+																					CONCEPT_NAME = 'STRATEGY_TEXT7' AND
+																					LANG_ID = '".$lang_id."'
+																				");
+																				
+																				$open_modify_close_name = mysqli_query($con, "SELECT * FROM `translations` WHERE 
+																					CONCEPT_NAME = 'ELEMENT_NAME' AND REG_ID = $id AND LANG_ID = '".$lang_id."'
+																				");
+
+																			?>
+																			<!-- <div style="background: black">
+																			<h6><?php //echo encodes(mysqli_fetch_assoc($open_modify_close_name)['TEXT']); ?></h6>																				
+																			</div> -->
+																			
+																			
+																			<p class="el-desc design_p"> <?= $el_description; ?><a href="<?= $fetching_omc['MORE_INFO_URL']; ?>" target='_blank'> <?= encodes(mysqli_fetch_assoc($el_info_obj)['TEXT']); ?> </a></p>
+																			<!-- <hr class="element_line_break"> -->
+																			<span class="close_tooltip"><i class="fa fa-close"></i></span>
+																																						
+																			<div class="testing">
+																				
+																			
+																			<?php
+																				$params_sql = "SELECT
+																					*
+																					FROM
+																					parameters
+																					WHERE
+																					ELEMENT_ID = $id AND ACTIVE = '1' ORDER BY ORDER_ID ASC ";
+
+																				$fetch_parameters_value = mysqli_query($con, $params_sql);
+																				
+																				while ($fetch_parameters = mysqli_fetch_array($fetch_parameters_value)) :
+
+																					$fetching_param_label = mysqli_query($con,"SELECT * FROM `translations` WHERE TABLE_NAME='PARAMETERS' AND CONCEPT_NAME='PARAM_NAME' AND REG_ID={$fetch_parameters['PARAM_ID']} AND LANG_ID='$lang_id'");
+																					$param_label = encodes(mysqli_fetch_assoc($fetching_param_label)['TEXT']);
+
+																					if($fetch_parameters['PARAM_TYPE'] === 'INTEGER') { ?>
+
+																						<div class="form-group" data-field-type='integer'>
+																						   <label><?= $param_label; ?></label>
+																						  
+																						   <input type="number" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm element_form" placeholder="<?= $param_label; ?>" value="<?= encodes($fetch_parameters['DEFAULT_PARAM']); ?>" disabled>
+																						
+																						</div>
+
+																					<?php } elseif($fetch_parameters['PARAM_TYPE'] == 'BOOL') { ?>
+
+																						<div class="form-check tooltip-check round" data-field-type='bool'>
+																						  <input class="form-check-input" type="checkbox" disabled id="<?= $fetch_parameters['PARAM_NAME'] ?>" name="<?= $fetch_parameters['PARAM_NAME'] ?>" <?php if($fetch_parameters['DEFAULT_PARAM'] == '1') echo 'checked'; ?> >
+																						  <label class="form-check-label"></label>
+																						  <span class="param_label"><?= $param_label; ?></span>
+																						</div>
+
+																					<?php } elseif($fetch_parameters['PARAM_TYPE'] == 'DOUBLE') { ?>
+																						
+																						<div class="form-group" data-field-type='double'>
+																						   <label><?= $param_label; ?></label>
+																						   <input type="text" step="any" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm element_form" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= $fetch_parameters['DEFAULT_PARAM']; ?>" disabled>
+																						</div>
+
+																					<?php } elseif($fetch_parameters['PARAM_TYPE'] == 'STRING') { ?>
+																						
+																						<div class="form-group" data-field-type='string'>
+																						   <label><?= $param_label; ?></label>
+																						   <input type="text" name="<?= $fetch_parameters['PARAM_NAME'] ?>" class="form-control form-control-sm element_form" placeholder="<?= encodes($fetch_parameters['TEXT']); ?>" value="<?= $fetch_parameters['DEFAULT_PARAM']; ?>" disabled>
+																						</div>
+
+
+
+
+
+
+																					<?php } else {
+																						$options = $fetch_parameters['PARAM_TYPE'];
+																						$values = explode(";", $options); ?>
+																						
+																						<div class="form-group" data-field-type='dropdown'>
+																							<label><?= $param_label; ?></label>
+																							<select class="form-control form-control-sm element_form" disabled>
+																								<?php
+																									foreach ($values as $value) {
+																										if ($value == $fetch_parameters['DEFAULT_PARAM']) {
+																											echo "<option value='".encodes($value)."' selected>".encodes($value)."</option>";
+																										} else {
+																											echo "<option value='".encodes($value)."'>".encodes($value)."</option>";
+																										}
+																									}
+																								?>
+																							</select>
+																						</div>
+																					<?php } ?>
+
+																				<?php endwhile; ?>
+																				</div>
+																				<div style="text-align: center;">
+																					
+																				<button type="submit" class="btn btn-success btn-block btn-outline-success d-none close_tooltip_save "><?= $save_text; ?></button>
+																				</div>
+																		
+																	</div>
+																	</span>
+																</li>
+																<?php 
+															}
+
+
+
+															 ?>
 														<?php endif; ?>
 
 													</ul>
@@ -1020,7 +1192,7 @@ var_dump($response);
 								</div>
 							</div>
 						</section>
-					<div class="close_element_tab" style="display: none;">
+						<div class="close_element_tab" style="display: none;">
 							<i class="fa fa-remove delete_element_tab"></i>
 						</div>
 					</div>
@@ -1162,12 +1334,15 @@ var_dump($response);
 					</div>
 				</div> -->
 		
-	
+		
 
 
 				</div>
 			</div>
 		</div>
+		
+		
+		
 		
 
 	
@@ -1352,7 +1527,7 @@ var_dump($response);
 				</div>
 			</div>		
 		</div>	
-			<img class="payment_loader" src="images/ajax-loader-green.gif" style="display: none; position: absolute; top: 45%; left: 43%; height: 100px;">
+			<img class="payment_loader" src="images/25.gif" style="display: none; position: absolute; top: 45%; left: 43%; height: 100px;">
 	<?php
 
 	$user_info = mysqli_query($wp_con,"SELECT * FROM wp_users WHERE id = 1");
@@ -1861,8 +2036,8 @@ var_dump($response);
 		<input type="hidden" class="validate_visisted">	
 		<input type="hidden" class="element_data_old">
 		<input type="hidden" class="element_data_new">
-		<input type="hidden" class="file_url_compiled">
-	
+		<!-- <input type="hidden" class="file_url_compiled"> -->
+		<a href="" id="myanchor" style="display: none;">Payment</a>
 		<div class="tooltip_templates">
 		    <span id="tooltip_content_definition" class="append_response">
 		    </span>
@@ -1914,8 +2089,12 @@ var_dump($response);
 			});
 
 	 	});
+
+	 	
  
  </script>
+
+
 
 
 	</body>

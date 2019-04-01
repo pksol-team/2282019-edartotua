@@ -948,12 +948,12 @@ em > p {
 		position: absolute; top: 69px; left: 96px; z-index: 100; width: 64px; display: none;
 	}
 	
-
-	.trash li:hover img[class*="arrow_pop"]{
+/***********************************Showing sequence arrow on li hover ***************************/
+	/*.trash li:hover img[class*="arrow_pop"]{
 		display: block !important;
 		opacity: 0.4 !important;
 		width: 25%;
-	}
+	}*/
 
 	.trash li img.arrow_pop:hover{
 		opacity: 1 !important;
@@ -1197,19 +1197,17 @@ hr.element_line_break {
     border-top: 2px solid #929090 !important;
 }
 .design_1 {
-    /*background: white;
-    height: 454px;*/
         margin-top: 10%;
     background: white;
-    height: 467px;
+    /*height: 467px;*/
     border-bottom-right-radius: 7%;
     border-bottom-left-radius: 7%;
     padding: 20px;
 }
 .parameters {
     margin-bottom: 5%;
-    height: 287px;
-    overflow: auto;
+    height: 70px;
+    /*overflow-y: scroll;*/
     color: #37465d;
     font-size: 15px;
     font-weight: 500;
@@ -1218,9 +1216,10 @@ hr.element_line_break {
 	color: white;
 	background: #28a745;
 	width: 50%;
-	position: absolute;
+	/*position: absolute;
     left: 25%;
-    top: 135%;
+    top: 135%;*/
+    margin: 0 auto; 
 
 }
 h6.element_head{
@@ -1244,14 +1243,13 @@ input[type=number]::-webkit-outer-spin-button{
 	color: black;
 }
 
-.round {
+/*.round {
   position: relative;
 }
 
 .round label {
   background-color: #fff;
   border: 1px solid #ccc;
-  /*border-radius: 50%;*/
   cursor: pointer;
   height: 20px;
   left: 0;
@@ -1272,7 +1270,7 @@ input[type=number]::-webkit-outer-spin-button{
 
 .round input[type="checkbox"]:checked + label:after {
   opacity: 1;
-}
+}*/
 
 .param_label{
 	    margin-left: 3%;
@@ -1280,23 +1278,116 @@ input[type=number]::-webkit-outer-spin-button{
 
 
 
-
-
-/* New Tab*/
-
-.sidenav {
-  height: 100%;
-  width: 0;
-  position: relative;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  overflow-x: hidden;
-  transition: 0.5s;
-  
+.parameter_height{
+	height: 200px;
+	overflow-y: scroll;
 }
 
-.sidenav a {
+
+
+.round {
+  position: relative;
+}
+
+.round label {
+  background-color: #fff;
+  border: 1px solid #36455d;
+  
+  cursor: pointer;
+  height: 24px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 28px;
+}
+
+.round label:after {
+  border: 2px solid #fff;
+  border-top: none;
+  border-right: none;
+  content: "";
+  height: 6px;
+  left: 7px;
+  opacity: 0;
+  position: absolute;
+  top: 8px;
+  transform: rotate(-45deg);
+  width: 12px;
+}
+
+.round input[type="checkbox"] {
+  visibility: hidden;
+}
+
+.round input[type="checkbox"]:checked + label {
+  background-color: #36455d;
+  border-color: #36455d;
+}
+
+.round input[type="checkbox"]:checked + label:after {
+  opacity: 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* New build screen design*/
+/*
+* {box-sizing: border-box}
+body {font-family: "Lato", sans-serif;}*/
+
+.sidenav_element_tab {
+  /*height: 100%;
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: 1;*/
+  width: 0;
+  overflow-x: hidden;
+  transition: 0.5s;
+  position: absolute;
+  top: 0;
+  left: 125px;
+  z-index: 2;
+  height: 67.5vh;
+  background: #009681;
+}
+
+.sidenav_element_tab a {
   padding: 8px 8px 8px 32px;
   text-decoration: none;
   font-size: 25px;
@@ -1305,11 +1396,11 @@ input[type=number]::-webkit-outer-spin-button{
   transition: 0.3s;
 }
 
-.sidenav a:hover {
+.sidenav_element_tab a:hover {
   color: #f1f1f1;
 }
 
-.sidenav .closebtn {
+.sidenav_element_tab .closebtn {
   position: absolute;
   top: 0;
   right: 25px;
@@ -1323,8 +1414,8 @@ input[type=number]::-webkit-outer-spin-button{
 }
 
 @media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
+  .sidenav_element_tab {padding-top: 15px;}
+  .sidenav_element_tab a {font-size: 18px;}
 }
 
 * {box-sizing: border-box}
@@ -1334,17 +1425,17 @@ body {font-family: "Lato", sans-serif;}
 /* Style the tab */
 .tab {
   float: left;
-  border: 1px solid #ccc;
+ /* border: 1px solid #ccc;
   background-color: #f1f1f1;
-  width: 7%;
-  height: 300px;
+  width: 7%;*/
+  /*height: 300px;*/
 }
 
 /* Style the buttons inside the tab */
 .tab button {
   display: block;
   background-color: inherit;
-  color: black;
+  color: white;
   padding: 22px 16px;
   width: 100%;
   border: none;
@@ -1362,60 +1453,38 @@ body {font-family: "Lato", sans-serif;}
 
 /* Create an active/current "tab button" class */
 .tab button.active {
-  background-color: #ccc;
+  background-color: #37455d;
 }
 
 /* Style the tab content */
 .tabcontent {
   float: left;
   padding: 0px 12px;
-  border: 1px solid #ccc;
-  width: 70%;
+  /*border: 1px solid #ccc;*/
+  width: 100%;
   border-left: none;
-  height: 300px;
+  height: 100%;
+  /*background: #009681;*/
 }
 
 
 
-
-
-
-
-
-
-/*.popup_top {
-     background: #363636;
-    height: 500px;
-    border-radius: 7%;
- 
-}*/
-/*.tooltipster-sidetip .tooltipster-content{
-	padding: 0;
+.element_tab_{
+	background: #009681;	   
+    height: 67.5vh;
 }
 
-.tooltipster-arrow{
+.navigation_tabs{
+	border-bottom: none;
+	height: 67.5vh;
+}
+
+.element-title{
+	color: white;
+	padding: 10px 20px;
+}
+
+.testing{
 	display: none;
 }
-.tooltipster-fade.tooltipster-show{
-	width: 379px;
-}
-.tooltipster-sidetip.tooltipster-light .tooltipster-box{
-	border-radius: 10% !important;
-	border: 1px solid white;
-	background: #f6f9fc;
-}
-
-.tooltip_content_container{
-	width: 379px;	
-}
-
-.tooltipster-content{
-	overflow: hidden;
-}
-
-
-.popup_top h6{
-     font-size: 25px; 
-}*/
-
 

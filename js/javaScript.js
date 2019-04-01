@@ -68,7 +68,7 @@ function drag_and_drop_elements($, type, counter) {
 	$(".trash_dont_accept").droppable({
 		drop: function(event, ui) {
 
-			if($(this).closest('.add_new_stage').prev().find('td ul li').length > 2){
+			if($(this).closest('.add_new_stage').prev().find('td ul li').length > 3){
 				$('#addrow').trigger('click');
 				var append_ = $('table.order-list tbody:visible');
 				var cloning_data = $('table.order-list tbody:visible tr:nth-last-child(2) td').find('ul.trash');
@@ -125,8 +125,9 @@ function drag_and_drop_elements($, type, counter) {
 			$(".build-next").removeClass('button_clicked');						
 
 			$(".delete_element_tab").trigger('click');
-
 			var element = ui.draggable.clone().appendTo($(this)).hide().fadeIn();
+			
+			console.log(ui.draggable);
 			
 			var row = element.closest('td');
 
@@ -154,10 +155,10 @@ function drag_and_drop_elements($, type, counter) {
 			// $('#nav-tabContent .gallery').find('[data-title="SEQ"]').clone().removeClass('paramsmeters').addClass('add_sequence').insertAfter(element).show();
 
 			setScrollAndIndex($);
-			
+			element.addClass('shadow');
 			element.trigger('click');
 			// element.trigger('click');
-			console.log(element);
+			// console.log(element);
 			// $('#save_data').trigger('click');
 			
 
@@ -175,7 +176,7 @@ function drag_and_drop_elements($, type, counter) {
 
 		},
 		deactivate(event, ui){
-			console.log("deactivate");
+			// console.log("deactivate");
 			$(".left_elements_tab").animate({
 				left: "-999px",
 			}, 'slow');

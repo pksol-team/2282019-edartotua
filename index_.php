@@ -297,7 +297,7 @@ var_dump($response);
 			if(!empty($check)){
 				$user_id = 0;
 				$session_id = $_POST['session_id'];
-				$status = 'F';
+				$status = 'N';
 
 				$userAlready = $con->query("SELECT * FROM session_strategy_definition WHERE user_id = '$user_id'");
 
@@ -421,8 +421,6 @@ var_dump($response);
 	 				$error = mysqli_query($con,"SELECT * FROM error WHERE error_code = 3 AND lang_id = '$lang_id'");
 	 				if(mysqli_num_rows($error) > 0){
 		 				echo encodes(mysqli_fetch_assoc($error)['ERROR_DESC'])."complie_error";											 				
-	 				}else{
-	 					echo "error complie_error";	 					
 	 				}
 	 			}
 	 		
@@ -1861,8 +1859,8 @@ var_dump($response);
 		<input type="hidden" class="validate_visisted">	
 		<input type="hidden" class="element_data_old">
 		<input type="hidden" class="element_data_new">
-		<input type="hidden" class="file_url_compiled">
-	
+		<!-- <input type="hidden" class="file_url_compiled"> -->
+		<a href="" id="myanchor" style="display: none;">Payment</a>
 		<div class="tooltip_templates">
 		    <span id="tooltip_content_definition" class="append_response">
 		    </span>
