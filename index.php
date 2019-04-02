@@ -588,14 +588,15 @@ var_dump($response);
 		<hr>
 		
 
-		<!-- Old build screen -->
-
+		
+		
+		
+		<!-- New Build Screen -->
 		<div class="build-tab">			
 			<div class="container-fluid h-100 py-6" style="    padding-bottom: 0 !important;">				
 				<div class="row">					
 					
 
-					
 					<div class="col-sm-4 left_elements_tab">
 						<section class="delete-div">
 							<div>
@@ -617,7 +618,7 @@ var_dump($response);
 								</h6>
 								<div class="row">
 									<div class="col-xs-12 all_elements">
-										<nav>
+										<!-- <nav>
 											<div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
 												<?php
 
@@ -656,7 +657,7 @@ var_dump($response);
 													<?php }
 												?>
 											</div>
-										</nav>
+										</nav> -->
 
 										<div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
 											<?php
@@ -908,10 +909,6 @@ var_dump($response);
 																				");
 
 																			?>
-																			<!-- <div style="background: black">
-																			<h6><?php //echo encodes(mysqli_fetch_assoc($open_modify_close_name)['TEXT']); ?></h6>																				
-																			</div> -->
-																			
 																			
 																			<p class="el-desc design_p"> <?= $el_description; ?><a href="<?= $fetching_omc['MORE_INFO_URL']; ?>" target='_blank'> <?= encodes(mysqli_fetch_assoc($el_info_obj)['TEXT']); ?> </a></p>
 																			<!-- <hr class="element_line_break"> -->
@@ -1042,7 +1039,7 @@ var_dump($response);
 
 																<input type="hidden" name="unique" value="<?= $el_name_SEQ?>" >
 
-																<li class="ui-widget-content ui-corner-tr ui-state-default paramsmeters d-sort door_image_li shadow" element_tab_index = '<?= $index_id; ?>' data-tooltip-content="#tab_one_content-<?= $indexx; ?>" data-element-append_conf="<?= $id; ?>" data-title="<?= $fetching_omc['ELEMENT_NAME']; ?>" style="display: none;">
+																<li class="ui-widget-content ui-corner-tr ui-state-default paramsmeters d-sort shadow configuration" element_tab_index = '<?= $index_id; ?>' data-tooltip-content="#tab_one_content-<?= $indexx; ?>" data-element-append_conf="<?= $id; ?>" data-title="<?= $fetching_omc['ELEMENT_NAME']; ?>" style="display: none;">
 																	
 																	<p style="font-size: 12px" class="v-h"><?= $el_name_ac; ?></p>								
 																				
@@ -1068,7 +1065,6 @@ var_dump($response);
 																					<img src="<?= $img_src; ?>?time=<?= time(); ?>" alt="" class="pop_image">																		
 																			</div>
 															
-																		<!-- <div class="design_1"> -->
 																		<div class="tooltip_content_container">
 																			<?php																		
 																				
@@ -1082,13 +1078,8 @@ var_dump($response);
 																				");
 
 																			?>
-																			<!-- <div style="background: black">
-																			<h6><?php //echo encodes(mysqli_fetch_assoc($open_modify_close_name)['TEXT']); ?></h6>																				
-																			</div> -->
-																			
 																			
 																			<p class="el-desc design_p"> <?= $el_description; ?><a href="<?= $fetching_omc['MORE_INFO_URL']; ?>" target='_blank'> <?= encodes(mysqli_fetch_assoc($el_info_obj)['TEXT']); ?> </a></p>
-																			<!-- <hr class="element_line_break"> -->
 																			<span class="close_tooltip"><i class="fa fa-close"></i></span>
 																																						
 																			<div class="testing">
@@ -1197,14 +1188,54 @@ var_dump($response);
 						</div>
 					</div>
 					<div class="col-sm-1 add_elements_plus">
-						<i class="fa fa-plus"></i>												
-					</div>
+						<!-- <i class="fa fa-plus"></i>	 -->											
+						<nav>
+							<div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+								<?php
+
+									$group_name_results = mysqli_query($con, "
+										SELECT
+											translations.TABLE_NAME,
+											translations.CONCEPT_NAME,
+											translations.REG_ID,
+											element_group.GROUP_ID,
+											element_group.GROUP_NAME,
+											element_group.ORDER_ID,
+											element_group.ACTIVE,
+											translations.TEXT,
+											translations.LANG_ID,
+											translations.TRANS_ID 
+										FROM
+											translations
+											INNER JOIN element_group ON translations.REG_ID = element_group.GROUP_ID 
+										WHERE
+											translations.TABLE_NAME = 'element_group'
+											AND translations.CONCEPT_NAME = 'GROUP_NAME' 
+											AND translations.LANG_ID = '$lang_id'
+											AND element_group.ACTIVE = '1'
+										ORDER BY
+											element_group.ORDER_ID ASC
+									");
+
+									while ($group_name_row = mysqli_fetch_array($group_name_results)) {    
+
+									  	$element_group_id = $group_name_row['GROUP_ID'];
+										$id = $group_name_row['GROUP_NAME'].'-tab';
+										$href = '#'.$group_name_row['GROUP_NAME'];
+										$group_name = $group_name_row['GROUP_NAME'];
+									?>
+										<a class="left_panel nav-item nav-link <?php if($group_name_row['ORDER_ID'] == 1) echo 'active'; ?>" id="<?= $id; ?>" data-toggle="tab" href="<?= $href; ?>" role="tab" aria-controls="<?= $group_name; ?>" aria-selected="true"><span style="font-size: 12px;"><?= encodes($group_name_row['TEXT']); ?></span></a>
+									<?php }
+								?>
+							</div>
+						</nav>
+					</div>				
 						
 
 
-
+				<!-- Right sidebar -->
 					
-
+	
 					<div class="col-sm-11" style="padding: 0 !important; height: 567px; overflow: hidden;">
 						<section id="tabs_2">
 							<nav>
@@ -1278,17 +1309,7 @@ var_dump($response);
 																			$add_new_b = encodes(mysqli_fetch_array($fetchcing_add_stage_name)['TEXT']);
 																		?>
 																		<div class="dashed-div-2 "> <div style="overflow: hidden; height: 79px; text-align: center;"><?= ucwords($add_new_b); ?><h3 class="row_design">+</h3></div> </div>
-																	</li>
-																	<!-- <li class="dashed_image_li d-sort">
-																		<p style="font-size: 12px">DASHED iMAGE</p>
-																		<?php
-																			$fetchcing_add_stage_name = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='STRATEGY_TEXT2' AND LANG_ID='$lang_id'");
-																			$add_new_b = encodes(mysqli_fetch_array($fetchcing_add_stage_name)['TEXT']);
-																		?>
-																		<div class="dashed-div"> 
-																			<div class="dashed_title"><?= ucwords($add_new_b); ?><h3 class="row_design">+</h3></div> 
-																		</div>	
-																	</li> -->																	
+																	</li>																
 																</ul>
 															</td>
 														</tr>
@@ -1315,33 +1336,9 @@ var_dump($response);
 						<br>
 					</div>
 				</div>
-
-				<!-- <div class="row">
-					<div class="col-sm-12">
-						
-						<?php $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>
-						
-						<input type="hidden" name="siteLink" value="<?= $actual_link?>?action=chart_data" data-validateId = "">
-
-						<button type="button" id="save_data" class="btn btn-success" data-action="<?= $actual_link; ?>?action=save_data" style="float: right;"> <img src="images/ajax-loader.gif" style="display: none;">  <span>Save Strategy</span> </button>
-						
-						<?php
-							$strategy_summary_text = mysqli_query($con,"SELECT * FROM `translations` WHERE CONCEPT_NAME='STRATEGY_TEXT3' AND LANG_ID='$lang_id'");
-						?>
-						<button type="button" id="close_tooltipseter_" class="btn build-next" data-tooltip-content="#tooltip_content_definition" data-action="<?= $actual_link; ?>?action=system_defination" style="margin-top: 20px; margin-left: -14px;float: left;">  <span><?= encodes(mysqli_fetch_assoc($strategy_summary_text)['TEXT']); ?></span> </button>
-						<br>
-
-					</div>
-				</div> -->
-		
-		
-
-
-				</div>
+			</div>
 			</div>
 		</div>
-		
-		
 		
 		
 

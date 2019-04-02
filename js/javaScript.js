@@ -90,8 +90,10 @@ function drag_and_drop_elements($, type, counter) {
 				tooltip_content.attr('class', tooltipClass);
 				element.attr('data-tooltip-content', '#'+tooltipClass);
 
-				
-				row.find('.dashed_image_li').insertAfter(row.find('li:last'));
+
+
+				// Configuration
+				row.find('.configuration').insertBefore(row.find('li:first'));
 				row.find('.door_image_li').insertAfter(row.find('li:last'));
 				row.find('.dashed_image_li').hide();
 				setScrollAndIndex($);
@@ -100,7 +102,17 @@ function drag_and_drop_elements($, type, counter) {
 			}	else {
 				alert('Please drop atleast one element in previous scenario...');
 			}	
+				$(this).find('.dashed_image_li .dashed-div-2').css('border', '3px dashed #d4d3d3');
 
+		},
+		over( event, ui ){
+
+			var dashed_img = $(this).find('.dashed_image_li .dashed-div-2');
+			$(dashed_img).css('border', '5px dashed #009681');
+		},
+		out( event, ui ){
+			var dashed_img = $(this).find('.dashed_image_li .dashed-div-2');
+			$(dashed_img).css('border', '3px dashed #d4d3d3');
 		}
 
 
@@ -125,9 +137,8 @@ function drag_and_drop_elements($, type, counter) {
 			$(".build-next").removeClass('button_clicked');						
 
 			$(".delete_element_tab").trigger('click');
-			var element = ui.draggable.clone().appendTo($(this)).hide().fadeIn();
-			
-			console.log(ui.draggable);
+
+			var element = ui.draggable.clone().appendTo($(this)).hide().fadeIn();			
 			
 			var row = element.closest('td');
 
@@ -145,23 +156,16 @@ function drag_and_drop_elements($, type, counter) {
 			tooltip_content.attr('class', tooltipClass);
 			element.attr('data-tooltip-content', '#'+tooltipClass);
 
+			// Configuration 	
 			
 			row.find('.dashed_image_li').insertAfter(row.find('li:last'));
 			row.find('.door_image_li').insertAfter(row.find('li:last'));
 			row.find('.dashed_image_li').hide();
 
-
-			// row.find('.add_sequence').remove();
-			// $('#nav-tabContent .gallery').find('[data-title="SEQ"]').clone().removeClass('paramsmeters').addClass('add_sequence').insertAfter(element).show();
-
+			
 			setScrollAndIndex($);
 			element.addClass('shadow');
 			element.trigger('click');
-			// element.trigger('click');
-			// console.log(element);
-			// $('#save_data').trigger('click');
-			
-
 		},
 		activate( event, ui ){
 			if($('.tooltipster-base').is(':visible')){
@@ -169,17 +173,23 @@ function drag_and_drop_elements($, type, counter) {
 			}
 			$('.left_elements_tab').css({
 				visibility: 'hidden'
-				// zIndex: '0'
 			});
 
 			$(ui.helper[0]).css({'visibility': 'visible', 'z-index' : '1000'});
 
 		},
 		deactivate(event, ui){
-			// console.log("deactivate");
 			$(".left_elements_tab").animate({
 				left: "-999px",
 			}, 'slow');
+		},
+		over( event, ui ){
+			var dashed_img = $('table.order-list tbody:visible').find('.dashed_image_li .dashed-div');
+			$(dashed_img).css('border', '5px dashed #009681');
+		},
+		out( event, ui ){
+			var dashed_img = $('table.order-list tbody:visible').find('.dashed_image_li .dashed-div');
+			$(dashed_img).css('border', '3px dashed #d4d3d3');
 		}
 
 	});
@@ -194,12 +204,12 @@ function drag_and_drop_elements($, type, counter) {
 		},
 
 		activate( event, ui ) {
-			$('.add_elements_plus').css('z-index', '-100');
+			// $('.add_elements_plus').css('z-index', '-100');
 			$('.delete-div > div').css('z-index', '100');			
 		},
 
 		deactivate( event, ui ) {
-			$('.add_elements_plus').css('z-index', '10');
+			// $('.add_elements_plus').css('z-index', '10');
 			$('.delete-div > div').css('z-index', '-999');
 		},
 
@@ -595,6 +605,8 @@ $(document).ready(function() {
 
 	    $(document).on('click', '.delete_element', function(e) {        
 
+	    	$('.dashed_image_li  .dashed-div').css('border', '3px dashed rgb(212, 211, 211)');
+
 	    	e.stopPropagation();
 
 	    	if($.tooltipster.instances($('.build-next')).length > 0){
@@ -610,13 +622,15 @@ $(document).ready(function() {
 
 	      	var ul_length = current_td.find('ul.trash li').length;
 
+
 	      	var next_row_elements = current_td.closest('tr').next().find('ul.trash li');
+	      	// console.log(next_row_elements.length);
 
 	      	var $this = $(this);
 
 	      	$this.parent("li").fadeOut('slow', function() {
 	      		$this.parent("li").remove();
-	      		if(ul_length == 3){
+	      		if(ul_length == 4){
 		      		if(next_row_elements.length > 2){   
 		      			$(current_td).closest('tr').remove();
 		      		}

@@ -219,7 +219,9 @@ section .section-title {
     padding: 7px 0;
 }
 .nav-tabs .nav-link.active{
-background: #009681;
+/*background: #009681;*/
+background: #37455d;
+
 }
 #nav-tab2 .nav-item.show .nav-link, #nav-tab2 .nav-item{
 	background: #37465d;
@@ -989,7 +991,7 @@ em > p {
     height: 67.5vh;
     padding: 0 !important;
     min-width: 40px;
-    max-width: 40px;
+    /*max-width: 40px;*/
 	}
 	
 	.fa-plus{
@@ -1488,3 +1490,31 @@ body {font-family: "Lato", sans-serif;}
 	display: none;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+/************************/
+.nav-tabs .nav-link.active{
+	background: #37455d;
+}
+
+
+.nav-tabs{
+	border: none !important;
+}
+
+a.nav-item{
+	color: white;
+}
+
+.nav-link{
+	padding: .5rem 0.1rem;
+}
