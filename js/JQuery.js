@@ -10,8 +10,7 @@ $('li.paramsmeters').hover(function() {
 	var $this = $(this);
 	
 
-
-		var tooltip_content = $this.find('span[data-template]');
+			var tooltip_content = $this.find('span[data-template]');
 
 		var existsContentDiv = tooltip_content.attr('class');
 
@@ -19,16 +18,18 @@ $('li.paramsmeters').hover(function() {
 
 		var template = tooltip_content.clone().appendTo('.tooltip_templates').show();
 		template.attr('id', template.attr('class'));
-				
+		console.log($.tooltipster.instances($this).length);
+
 		if ($.tooltipster.instances($this).length == 0) {
 			// setTimeout(function(){
 				
-			var tooltip__ = $this.tooltipster({			
+			$this.tooltipster({			
+			// var tooltip__ = $this.tooltipster({			
 				contentCloning: true,
 		    	trigger: 'hover',													    	
 		    	theme: 'tooltipster-light',
 				interactive: true,
-				delay: [5000, 0],
+				delay: 0,
 
 
 				functionReady: function(origin, tooltip) {
@@ -36,6 +37,9 @@ $('li.paramsmeters').hover(function() {
 					$('.close_tooltip').on("click", function() {
 						// console.log(origin);
 						origin.hide();
+
+						// $this.find('span').removeClass('hover_tooltip__');
+
 					});
 
 					$('.close_tooltip_save').on('click', function() {
@@ -70,7 +74,17 @@ $('li.paramsmeters').hover(function() {
 
 
 			});
-				setTimeout(function(){ tooltip__.tooltipster('open');}, 500);
+				// setTimeout(function(){ tooltip__.tooltipster('open');}, 500);
+
+					$this.tooltipster('show');
+					$('div.tooltipster-base').css('display' , 'none');				       
+
+					setTimeout(function() {
+							
+					$('div.tooltipster-base').css('display' , 'block');				       
+									       
+				    }, 500);
+
 				
 		}
 		
@@ -1455,8 +1469,9 @@ $(document).on('click', 'li.paramsmeters', function(e) {
 // on add element plus bar hover
 $('.add_elements_plus').hover(function() {	
 
-	console.log($('.right_side').css('z-index'));
-	if($('.right_side').css('z-index') == 'auto' || $('.right_side').css('z-index') == '0'){
+	if($('.right_side').css('z-index')){
+	// if($('.right_side').css('z-index') == 'auto' || $('.right_side').css('z-index') == '0'){
+		console.log("hover");
 		$('.left_elements_tab').css('visibility', 'visible');
 		$('.left_elements_tab').animate({				
 			left: '96px',
@@ -1491,7 +1506,7 @@ $(document).on('mouseleave', '.add_elements_plus, .left_elements_tab', function(
 		}, 'slow' , function(){	
 			if(!$('.add_elements_plus').is(':hover')){
 				console.log('complete')	;				
-			$('.right_side').css('z-index', '0');						
+				$('.right_side').css('z-index', '0');						
 			}
 		});
 	}	
