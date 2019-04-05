@@ -95,24 +95,53 @@ function drag_and_drop_elements($, type, counter) {
 				// Configuration
 				row.find('.configuration').insertBefore(row.find('li:first'));
 				row.find('.door_image_li').insertAfter(row.find('li:last'));
-				row.find('.dashed_image_li').hide();
+				
 				setScrollAndIndex($);
-				element.trigger('click');
+				element.addClass('shadow');
+				
+				// dropping element from previous tr to the last tr				
+				// element.removeAttr('style');
+				element.trigger('click');					
+
+
 
 			}	else {
 				alert('Please drop atleast one element in previous scenario...');
+				$('.right_side').css('z-index', '1');
 			}	
-				$(this).find('.dashed_image_li .dashed-div-2').css('border', '3px dashed #d4d3d3');
+			
 
+			// Change dashed image color
+			$('table.order-list tbody:visible ').find('ul.trash .dashed_image_li').addClass('display_none');			
+			$(this).find('.dashed_image_li .dashed-div-2').css('border','3px dashed #d4d3d3')
+
+			// hide dashed image when drop element
+
+			$(this).find('.dashed_image_li').addClass('display_none');
+			$(this).find('.dashed_image_li .dashed-div').css('border','3px dashed #d4d3d3');
+			
+			
+		},
+		activate( event, ui ){
+
+			$('table.order-list tbody:visible ').find('ul.trash_dont_accept .dashed_image_li').removeClass('display_none');
 		},
 		over( event, ui ){
 
+
 			var dashed_img = $(this).find('.dashed_image_li .dashed-div-2');
-			$(dashed_img).css('border', '5px dashed #009681');
+			// 
+			$(dashed_img).css({
+				border: '5px dashed #009681'
+			});
 		},
 		out( event, ui ){
 			var dashed_img = $(this).find('.dashed_image_li .dashed-div-2');
-			$(dashed_img).css('border', '3px dashed #d4d3d3');
+			$(dashed_img).css({
+				border: '3px dashed #d4d3d3'
+			});
+			
+			
 		}
 
 
@@ -160,14 +189,27 @@ function drag_and_drop_elements($, type, counter) {
 			
 			row.find('.dashed_image_li').insertAfter(row.find('li:last'));
 			row.find('.door_image_li').insertAfter(row.find('li:last'));
-			row.find('.dashed_image_li').hide();
-
+			// row.find('.dashed_image_li').hide();
+			// row.find('.dashed_image_li .dashed-div').css('border', '3px dashed #d4d3d3');
 			
 			setScrollAndIndex($);
 			element.addClass('shadow');
+			
+			// Change dashed image color		
+
+			$('table.order-list tbody:visible ').find('ul.trash_dont_accept .dashed_image_li .dashed-div').css('border', '3px dashed #d4d3d3');
+			element.next('li').find('.dashed-div').css('border', '3px dashed #d4d3d3');;
+
+			// hide dashed image when drop element
+			$('table.order-list tbody:visible ').find('ul.trash .dashed_image_li').addClass('display_none');
+			$('table.order-list tbody:visible ').find('ul.trash_dont_accept .dashed_image_li').addClass('display_none');
+			
+
 			element.trigger('click');
 		},
 		activate( event, ui ){
+
+			$('table.order-list tbody:visible ').find('ul.trash .dashed_image_li').removeClass('display_none');
 			if($('.tooltipster-base').is(':visible')){
 				$('.tooltipster-base').hide();
 			}
@@ -177,6 +219,9 @@ function drag_and_drop_elements($, type, counter) {
 
 			$(ui.helper[0]).css({'visibility': 'visible', 'z-index' : '1000'});
 
+
+
+
 		},
 		deactivate(event, ui){
 			$(".left_elements_tab").animate({
@@ -184,8 +229,9 @@ function drag_and_drop_elements($, type, counter) {
 			}, 'slow');
 		},
 		over( event, ui ){
-			var dashed_img = $('table.order-list tbody:visible').find('.dashed_image_li .dashed-div');
-			$(dashed_img).css('border', '5px dashed #009681');
+
+			$('.trash.ui-droppable-hover').find('li.dashed_image_li').find('.dashed-div').css('border', '5px dashed #009681');
+			
 		},
 		out( event, ui ){
 			var dashed_img = $('table.order-list tbody:visible').find('.dashed_image_li .dashed-div');
@@ -603,7 +649,11 @@ $(document).ready(function() {
 	   	// 	});
 	    // });
 
-	    $(document).on('click', '.delete_element', function(e) {        
+	    $(document).on('click', '.delete_element', function(e) {  
+
+			$('table.order-list tbody:visible ').find('ul.trash .dashed_image_li').addClass('display_none');
+			$('table.order-list tbody:visible ').find('ul.trash_dont_accept .dashed_image_li').addClass('display_none');
+	    	    
 
 	    	$('.dashed_image_li  .dashed-div').css('border', '3px dashed rgb(212, 211, 211)');
 
@@ -638,7 +688,7 @@ $(document).ready(function() {
 		      			current_td.closest('tr').remove();
 		      		}
 		      		else{
-		      			$(current_td).find('li.dashed_image_li').css('display', 'inline-block');	      			
+		      			// $(current_td).find('li.dashed_image_li').css('display', 'inline-block');	      			
 		      		}
 		      	}
 		      	add_arrow_element($);

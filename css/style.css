@@ -282,7 +282,7 @@ table td, table tr {
 	display: flex;
 }
 
-li.door_image_li img {
+li.door_image_li img, li.configuration img {
 	cursor: pointer !important;
 }
 
@@ -525,7 +525,7 @@ em > p {
 }
 
 .tooltipster-base {
-	max-height: 370px !important;
+	/*max-height: 370px !important;*/
 }
 
 .all_elements .nav-tabs {
@@ -812,6 +812,7 @@ em > p {
 		height: 600px;
 		overflow-y: auto;
 		padding: 5%;
+		font-size: 13px;
 	}
 	.right-options{
 		top: 50%;
@@ -1029,7 +1030,7 @@ em > p {
 	.left_elements_tab{
 		left: -999px; 
 		position: absolute; 
-		z-index: 100
+		/*z-index: 100;*/
 	}
 	
 	.row_design{
@@ -1187,7 +1188,7 @@ table.order-list tr:first-child td{
 .box_shadow{
 	position: absolute;
     background: black;
-    height: 146vh;
+    height: 100vh;
     width: 100%;
     z-index: 100;
     top: 0;
@@ -1208,7 +1209,7 @@ hr.element_line_break {
 }
 .parameters {
     margin-bottom: 5%;
-    height: 70px;
+    /*height: 70px;*/
     /*overflow-y: scroll;*/
     color: #37465d;
     font-size: 15px;
@@ -1236,7 +1237,7 @@ h6.element_head{
 	position: absolute;
     left: 40%;
     height: 60px;
-    top: 15%;
+    top: 8%;
     display: none;
 }
 
@@ -1281,7 +1282,7 @@ input[type=number]::-webkit-outer-spin-button{
 
 
 .parameter_height{
-	height: 200px;
+	height: 362px;
 	overflow-y: scroll;
 }
 
@@ -1517,4 +1518,17 @@ a.nav-item{
 
 .nav-link{
 	padding: .5rem 0.1rem;
+}
+
+.left_side_tooltip{
+	top: -40px;
+}
+
+.dashed_image_li.new_dashed_img_hide{
+	visibility: hidden;
+}
+
+.display_none{
+	display: none;
+	
 }
