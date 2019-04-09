@@ -191,6 +191,7 @@
 
 				$y = array();
 
+
 				$sesion_val_id = $_POST['sesion_val_id'];			
 
 				$sesion_validation_id = preg_replace( "/\r|\n/", "", $sesion_val_id );
@@ -219,7 +220,9 @@
 									array_push($y, $data['value']);
 									array_push($_SESSION[$sesion_val_id.'previousID'], $data['chart_seq']);							
 									
-								}	
+								}							
+
+
 								echo json_encode([
 						    		'y_axix' => $y,
 						    		'status' => $getStauts,
@@ -325,27 +328,36 @@
 
 			$check = $_POST['insert_data'];
 
+			// echo $check;
+
 			// echo "id = ".$_POST['session_id'];
 			if(!empty($check)){
 				$user_id = 0;
 				$session_id = $_POST['session_id'];
 				$status = 'N';
 
-				$userAlready = $con->query("SELECT * FROM session_strategy_definition WHERE user_id = '$user_id'");
-
-		        if (mysqli_num_rows($userAlready) > 0) {
-		        	$sql = "UPDATE session_strategy_definition set `sesion_id`='$session_id', `estatus`= '$status' WHERE user_id = '$user_id'";
-		        } else {
-		        	$sql = "INSERT INTO `session_strategy_definition` (`user_id`, `sesion_id`, `estatus`) VALUES ('$user_id', '$session_id', '$status')";
-		        }
+				$userAlready = mysqli_query($con, "SELECT * FROM session_strategy_definition WHERE user_id = $user_id");
 		        
-		        $con->query($sql);
+		        if (mysqli_num_rows($userAlready) > 0) {
+		        
+		        	$query = mysqli_query($con, "UPDATE session_strategy_definition set `estatus`= 'N',  `definition_text`=''  WHERE user_id = $user_id");
+		        	
+		        } else {
 
-			    $definition_id = mysqli_query($con,"SELECT * FROM session_strategy_definition WHERE user_id = '$user_id'");
+		        	$fetch_session_id = mysqli_query($con, "SELECT * FROM session_strategy WHERE user_id = $user_id");
+					$sessoin_id = mysqli_fetch_assoc($fetch_session_id)['sesion_id'];
+					$query = mysqli_query($con, "INSERT INTO `session_strategy_definition`(`session_strat_def_id`, `user_id`, `definition_text`, `sesion_id`, `estatus`) VALUES (NULL, $user_id, '', $sessoin_id, '$status')");
+		        	
+		        }
+
+
+			    $definition_id = mysqli_query($con,"SELECT * FROM session_strategy_definition WHERE user_id = $user_id");
 
 			    $strategy_definition_id = mysqli_fetch_assoc($definition_id)['session_strat_def_id'];
 			    
 			   	echo $strategy_definition_id;			
+		        
+
 			}
 			else{
 				$id = $_POST['strategy_definition_id'];

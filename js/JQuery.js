@@ -4,94 +4,175 @@ $(document).ready(function() {
 console.log($('.left_elements_tab').css('left'));
 
 
+// $('li.paramsmeters').hover(function() {
+	
+// 	$(".testing").hide();
+// 	var $this = $(this);
+	
+
+// 			var tooltip_content = $this.find('span[data-template]');
+
+// 		var existsContentDiv = tooltip_content.attr('class');
+
+// 		$('#' + existsContentDiv).remove();
+
+// 		var template = tooltip_content.clone().appendTo('.tooltip_templates').show();
+// 		template.attr('id', template.attr('class'));
+// 		console.log($.tooltipster.instances($this).length);
+
+// 		if ($.tooltipster.instances($this).length == 0) {
+// 			// setTimeout(function(){
+				
+// 			$this.tooltipster({			
+// 			// var tooltip__ = $this.tooltipster({			
+// 				contentCloning: true,
+// 		    	trigger: 'hover',													    	
+// 		    	theme: 'tooltipster-light',
+// 				interactive: true,
+// 				delay: 0,
+
+
+// 				functionReady: function(origin, tooltip) {
+
+// 					$('.close_tooltip').on("click", function() {
+// 						// console.log(origin);
+// 						origin.hide();
+
+// 						// $this.find('span').removeClass('hover_tooltip__');
+
+// 					});
+
+// 					$('.close_tooltip_save').on('click', function() {
+
+// 						$this.find('[data-template]').remove();
+// 						var reposDiv = $(tooltip.tooltip).find('[data-template]').clone().appendTo($this).removeAttr('id').hide();
+// 						origin.hide();
+
+// 					});
+
+// 				},
+
+// 				functionAfter: function(instance, helper) {
+
+// 					console.log("closed");
+
+// 					$this.tooltipster('destroy');
+// 					setTimeout(function(){
+// 						if(!($(".left_elements_tab").is(':hover')) && !($(".add_elements_plus").is(':hover')) && !($('.tooltipster-base').is(':visible'))){						
+// 							// console.log(!($(".left_elements_tab").is(':hover')) && !($(".add_elements_plus").is(':hover')) && !($('.tooltipster-base').is(':visible')));
+// 							$(".left_elements_tab").animate({
+// 									left: "-999px",
+// 								}, 'slow', function(){
+// 									if(!$('.add_elements_plus').is(':hover')){
+// 										$('.right_side').css('z-index', '0');						
+// 									}
+// 								});
+// 						}
+// 					}, 50);
+// 				},
+
+
+
+// 			});
+// 				// setTimeout(function(){ tooltip__.tooltipster('open');}, 500);
+
+// 					$this.tooltipster('show');
+// 					$('div.tooltipster-base').css('display' , 'none');				       
+
+// 					setTimeout(function() {
+							
+// 					$('div.tooltipster-base').css('display' , 'block');				       
+									       
+// 				    }, 500);
+
+				
+// 		}
+		
+
+
+// });
+
+
 $('li.paramsmeters').hover(function() {
 	
 	$(".testing").hide();
 	var $this = $(this);
 	
 
-			var tooltip_content = $this.find('span[data-template]');
+		var tooltip_content = $this.find('span[data-template]');
 
 		var existsContentDiv = tooltip_content.attr('class');
 
 		$('#' + existsContentDiv).remove();
-
 		var template = tooltip_content.clone().appendTo('.tooltip_templates').show();
 		template.attr('id', template.attr('class'));
-		console.log($.tooltipster.instances($this).length);
 
-		if ($.tooltipster.instances($this).length == 0) {
-			// setTimeout(function(){
-				
-			$this.tooltipster({			
-			// var tooltip__ = $this.tooltipster({			
-				contentCloning: true,
-		    	trigger: 'hover',													    	
-		    	theme: 'tooltipster-light',
-				interactive: true,
-				delay: 0,
-
-
-				functionReady: function(origin, tooltip) {
-
-					$('.close_tooltip').on("click", function() {
-						// console.log(origin);
-						origin.hide();
-
-						// $this.find('span').removeClass('hover_tooltip__');
-
-					});
-
-					$('.close_tooltip_save').on('click', function() {
-
-						$this.find('[data-template]').remove();
-						var reposDiv = $(tooltip.tooltip).find('[data-template]').clone().appendTo($this).removeAttr('id').hide();
-						origin.hide();
-
-					});
-
-				},
-
-				functionAfter: function(instance, helper) {
-
-					console.log("closed");
-
-					$this.tooltipster('destroy');
-					setTimeout(function(){
-						if(!($(".left_elements_tab").is(':hover')) && !($(".add_elements_plus").is(':hover')) && !($('.tooltipster-base').is(':visible'))){						
-							// console.log(!($(".left_elements_tab").is(':hover')) && !($(".add_elements_plus").is(':hover')) && !($('.tooltipster-base').is(':visible')));
-							$(".left_elements_tab").animate({
-									left: "-999px",
-								}, 'slow', function(){
-									if(!$('.add_elements_plus').is(':hover')){
-										$('.right_side').css('z-index', '0');						
-									}
-								});
-						}
-					}, 50);
-				},
-
-
-
-			});
-				// setTimeout(function(){ tooltip__.tooltipster('open');}, 500);
-
-					$this.tooltipster('show');
-					$('div.tooltipster-base').css('display' , 'none');				       
-
-					setTimeout(function() {
-							
-					$('div.tooltipster-base').css('display' , 'block');				       
-									       
-				    }, 500);
-
-				
-		}
 		
+		if ($.tooltipster.instances($this).length == 0) {
+			
+			
+				$this.tooltipster({
+					contentCloning: true,
+			    	trigger: 'hover',													    	
+			    	theme: 'tooltipster-light',
+					delay: 200,
+					interactive: true,
+					
+					functionReady: function(origin, tooltip) {
+							
+						$('.close_tooltip').on("click", function() {
+							origin.hide();
+						});
 
+						$('.close_tooltip_save').on('click', function() {
+
+							$this.find('[data-template]').remove();
+							var reposDiv = $(tooltip.tooltip).find('[data-template]').clone().appendTo($this).removeAttr('id').hide();
+							origin.hide();
+
+						});
+
+					},
+
+					functionBefore: function(instance, helper){
+					  $.each($.tooltipster.instances(), function(i, instance){
+					    instance.close();
+					  });
+					},
+
+					functionAfter: function(instance, helper) {
+						
+						$this.tooltipster('destroy');
+						setTimeout(function(){
+							// if(!($(".left_elements_tab").is(':hover')) && !($('.tooltipster-base').is(':visible'))){						
+							if(!($(".left_elements_tab").is(':hover')) && !($(".add_elements_plus").is(':hover')) && !($('.tooltipster-base').is(':visible'))){												
+								$(".left_elements_tab").animate({
+										left: "-999px",
+									}, 'slow', function(){
+										// if(!$('.add_elements_plus').is(':hover')){
+										// 	$('.right_side').css('z-index', '0');						
+										// }
+									});
+							}
+						}, 100);
+					},
+
+				});
+
+			
+
+
+				$this.tooltipster('show');
+				$('div.tooltipster-base').css('display' , 'none');				       
+
+				setTimeout(function() {
+					$('div.tooltipster-base').css('display' , 'block');	
+
+			    }, 500);
+
+		}
 
 });
-
 
 
 
@@ -249,13 +330,33 @@ $(document).on('click', 'li.paramsmeters', function(e) {
 			$('.tooltipster-sidetip.tooltipster-light .tooltipster-box').css('background', '#37465d');
 
 			$('.get_design').addClass('element_form');
-			if($('div.tooltipster-base').css('height') > '620px'){
-				$('.tooltipster-content').find('span:first').find('div:nth-child(2)').find('.testing').addClass('parameter_height');					
+			var testing_div = $('.tooltipster-content').find('span:first').find('div:nth-child(2)').find('.testing');
+			var tooltip = $('div.tooltipster-base');
 
+			if (tooltip.length == 2) {				
+				// $(tooltip[1]).tooltipster('close');
+				if($(tooltip[1]).css('height') > '620px'){
+					$(testing_div[1]).addClass('parameter_height');
+				}else{
+					$(testing_div[1]).removeClass('parameter_height');
+				}
+				
 			}else{
-				$('.tooltipster-content').find('span:first').find('div:nth-child(2)').find('.testing').removeClass('parameter_height');					
+
+				if($(tooltip).css('height') > '620px'){
+					$(testing_div).addClass('parameter_height');
+				}else{
+					$(testing_div).removeClass('parameter_height');
+				}
 
 			}
+			// if($('div.tooltipster-base').css('height') > '620px'){
+			// 	$('.tooltipster-content').find('span:first').find('div:nth-child(2)').find('.testing').addClass('parameter_height');					
+
+			// }else{
+			// 	$('.tooltipster-content').find('span:first').find('div:nth-child(2)').find('.testing').removeClass('parameter_height');					
+
+			// }
 		}
 	}
 
@@ -1205,22 +1306,32 @@ $(document).on('click', 'li.paramsmeters', function(e) {
 				$('#validate-next').attr('disabled', true);
 				$('#validate-next').css('cursor', 'not-allowed');
 
+
+
+				// var xValue = 0;
+				// var yValue = 10;
+
+				var dps2 = [];
 				var url = $("input[name='siteLink']").val();
 				var validation_id = response;
 				var dps = []; // dataPoints
-				var y_axis_points = []; // dataPoints				
+				var y_axis_points = []; // dataPoints
 				var chart = new CanvasJS.Chart("chartContainer", {
 					axisY: {
+						// includeZero: false,   
 					},
 					axisX:{
+						// viewportMinimum: 1,
 						minimum : 1,
-						interval: 50
+						interval: 50,
 					},
 					data: [{
 						type: "line",
 						dataPoints: dps
 					}]
 				});
+
+				var count = 0;
 
 				
 				var updateInterval = 500;
@@ -1321,26 +1432,25 @@ $(document).on('click', 'li.paramsmeters', function(e) {
 
 								var y_axix = responseData.y_axix;
 
-								// console.log('y_axix : ');
-								// console.log(y_axix[0]);
-
+								
 								if(y_axix.length > 0){
+									console.log("befor Count : "+count);
 
-									dps.push({
-										y: parseFloat(y_axix[0])
-									});
+									count++;
+									// Previous
+									console.log("after Count : "+count);
+									if(count == 1){
+										dps.push({y: '', x: 0});										
+									}
+										for (var i = 0; i < y_axix.length ; i++) {										
+											dps.push({
+												y: parseFloat(y_axix[i])
+											});
 
-									y_axis_points.push(parseFloat(y_axix[0]));
+											y_axis_points.push(parseFloat(y_axix[i]));
+										}
 
-								for (var i = 0; i < y_axix.length ; i++) {										
-									dps.push({
-										y: parseFloat(y_axix[i])
-									});
-
-									y_axis_points.push(parseFloat(y_axix[i]));
-
-								}
-
+											console.log(dps);
 								
 
 								var x_interval = y_axis_points.length/4;
@@ -1383,8 +1493,8 @@ $(document).on('click', 'li.paramsmeters', function(e) {
 
 				};
 
+				
 				updateChart(validation_id);
-
 				interval = setInterval(function() {
 					updateChart(validation_id)
 				}, updateInterval);
@@ -1896,23 +2006,17 @@ $(document).on('click', '.download_pay', function(event) {
 
 function original_tooltipster_css($){
 	$('.box_shadow').hide();
-	$(".form-control").css('width', '100%');
-	$('.tooltip_content_container').removeClass('design_1');
-	$('.tooltip_content_container').find('h6').removeClass('element_head');
-	$('p.el-desc').next('hr').remove();
-	$('.testing').removeClass('parameters');
-	$('.tooltip_content_container').find('h6').removeClass('element_head');			
-	$('.pop_image').hide();
-	$('.get_design').removeClass('element_form');
-	$(".main_head").css({
-		textAlign: 'center',
-		color: 'black'
-	});
 	$('.design_1').addClass('tooltip_content_container');
-
+	$('.tooltip_content_container').removeClass('design_1');
+	$(".main_head").removeAttr('style');
+	$(".main_head").find('img').css('display', 'none');
+	$('p.el-desc').next('hr').remove();
+	$('.pop_image').hide();
 	$('.close_tooltip').removeAttr('style');
+	// $('.box_shadow').hide();
+	// $(".form-control").css('width', '100%');
 	// $('.tooltip_content_container').removeClass('design_1');
-	// $('.tooltip_content_container').next('h6').removeClass('element_head');
+	// $('.tooltip_content_container').find('h6').removeClass('element_head');
 	// $('p.el-desc').next('hr').remove();
 	// $('.testing').removeClass('parameters');
 	// $('.tooltip_content_container').find('h6').removeClass('element_head');			
@@ -1922,6 +2026,10 @@ function original_tooltipster_css($){
 	// 	textAlign: 'center',
 	// 	color: 'black'
 	// });
+	// $('.design_1').addClass('tooltip_content_container');
+
+	// $('.close_tooltip').removeAttr('style');
+	
 }
 
 
