@@ -993,6 +993,8 @@ em > p {
     padding: 0 !important;
     min-width: 40px;
     /*max-width: 40px;*/
+    z-index: 30;
+
 	}
 	
 	.fa-plus{
@@ -1030,7 +1032,11 @@ em > p {
 	.left_elements_tab{
 		left: -999px; 
 		position: absolute; 
-		/*z-index: 100;*/
+		z-index: 20;
+	}
+
+	.right_side{
+		z-index: 10;
 	}
 	
 	.row_design{
