@@ -144,11 +144,13 @@ $('li.paramsmeters').hover(function() {
 						
 						$this.tooltipster('destroy');
 						setTimeout(function(){
-							// if(!($(".left_elements_tab").is(':hover')) && !($('.tooltipster-base').is(':visible'))){						
-							if(!($(".left_elements_tab").is(':hover')) && !($(".add_elements_plus").is(':hover')) && !($('.tooltipster-base').is(':visible'))){												
+							var body_cursor = $('body').css('cursor');
+
+							if((body_cursor == 'auto') && !($(".left_elements_tab").is(':hover')) && !($(".add_elements_plus").is(':hover')) && !($('.tooltipster-base').is(':visible'))){												
 								$(".left_elements_tab").animate({
 										left: "-999px",
 									}, 'slow', function(){
+										console.log("functionafter");
 										// if(!$('.add_elements_plus').is(':hover')){
 										// 	$('.right_side').css('z-index', '0');						
 										// }
@@ -1577,51 +1579,52 @@ $(document).on('click', 'li.paramsmeters', function(e) {
 
 
 // on add element plus bar hover
-$('.add_elements_plus').hover(function() {	
+	$('.add_elements_plus').hover(function(e) {	
 
-	if($('.right_side').css('z-index')){
-	// if($('.right_side').css('z-index') == 'auto' || $('.right_side').css('z-index') == '0'){
-		console.log("hover");
-		$('.left_elements_tab').css('visibility', 'visible');
-		$('.left_elements_tab').animate({				
-			left: '96px',
-			zIndex: '0'
-		}, 'slow');	
-
-		$('.right_side').css('z-index', '-1');		
-	}
-});
-
-	$(document).on('click', 'a.left_panel', function(event) {
-		event.preventDefault();
-
-		$('.left_elements_tab').css('visibility', 'visible');
-		$('.left_elements_tab').animate({				
-			left: '96px',
-			zIndex: '0'
-		}, 'slow');
-		$('.right_side').css('z-index', '-1');
-
-			
-	});
-
-$(document).on('mouseleave', '.add_elements_plus, .left_elements_tab', function(event) {
-	event.preventDefault();
-	console.log('testing');
-	var body_cursor = $('body').css('cursor');
-	
-	if(body_cursor == 'auto' && !$('.left_elements_tab').is(":hover") && !$('.add_elements_plus').is(":hover") && !($('.tooltipster-base').is(':visible'))){
-		$(".left_elements_tab").animate({
-			left: "-999px",
-		}, 'slow' , function(){	
-			if(!$('.add_elements_plus').is(':hover')){
-				console.log('complete')	;				
-				$('.right_side').css('z-index', '0');						
+			var body_cursor = $('body').css('cursor');
+			if (body_cursor == 'auto') {
+				if($('.right_side').css('z-index')){
+					$('.left_elements_tab').css('visibility', 'visible');
+					setTimeout(function(){
+						if ($('.add_elements_plus').is(':hover')) {
+							$('.left_elements_tab').animate({				
+								left: '96px'
+								// zIndex: '0'
+							}, 'slow');														
+						}
+					}, 500);
+					
+				}				
 			}
 		});
-	}	
 
-});
+	$(document).on('click', 'a.left_panel', function(event) {
+			event.preventDefault();
+			$('.left_elements_tab').css('visibility', 'visible');
+			
+			$('.left_elements_tab').animate({				
+				left: '84px'
+				// zIndex: '0'
+				}, 'slow');
+
+				// $('.right_side').css('z-index', '-1');
+				
+		});
+
+$(document).on('mouseleave', '.add_elements_plus, .left_elements_tab', function(event) {
+			event.preventDefault();
+			var body_cursor = $('body').css('cursor');
+			if(body_cursor == 'auto' && !$('.left_elements_tab').is(":hover") && !$('.add_elements_plus').is(":hover") && !($('.tooltipster-base').is(':visible'))){
+				
+				$(".left_elements_tab").animate({
+					left: "-999px",
+				}, 'slow', function(){
+					console.log("mouseleave");
+
+				});
+
+			}
+		});
 
 	
 

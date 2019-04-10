@@ -882,7 +882,9 @@ em > p {
 		border-top: 2px solid #009681 !important;
 	}
 	body{
-		overflow-x: hidden;
+		/*overflow-x: hidden;*/
+		position: fixed;
+		width: 100%;
 	}
 	.canvasjs-chart-credit{
 		display: none;
